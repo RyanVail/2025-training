@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public class PathManager {
     private static SendableChooser<PathPlannerPath> chooser = new SendableChooser<>();
     private static Command pathingCommand;
-
+    
     private static final String[] paths = {
         "Example Path"
     };

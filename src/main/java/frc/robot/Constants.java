@@ -67,12 +67,12 @@ public final class Constants {
         public static final double POS_X = 0.0;
         public static final double POS_Y = 0.05;
         
-        public static final double P = 6.25;
-        public static final double I = 2.25;
-        public static final double D = 0.5;
+        public static final double P = 2.0;
+        public static final double I = 1.35;
+        public static final double D = 0.75;
 
-        public static final double S = 0.025;
-        public static final double G = 0.15;
-        public static final double V = 0.0;
+        public static final double S = 0.35;
+        public static final double G = 2.0;
+        public static final double V = 0.025;
     }
 }

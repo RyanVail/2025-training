@@ -20,7 +20,6 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotInit() {
 
-        Commands.print("Robot init").schedule();
         if (Robot.isReal()) {
             // Logger.addDataReceiver(new WPILOGWriter()); // TODO: Change this!
             Logger.addDataReceiver(new NT4Publisher());

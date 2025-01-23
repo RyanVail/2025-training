@@ -45,8 +45,8 @@ public class RobotContainer {
         // commandGenericHID.button(1).onTrue(flywheel.setVelocity(1000));
         // commandGenericHID.button(1).onFalse(flywheel.setVelocity(0));
 
-        // commandGenericHID.button(2).onTrue(elevator.setHeight(0.25));
-        // commandGenericHID.button(2).onFalse(elevator.setHeight(0.75));
+        commandGenericHID.button(2).onTrue(elevator.setHeight(0.25));
+        commandGenericHID.button(2).onFalse(elevator.setHeight(0.75));
 
         /*
          * Set the drive subsystem to use the command returned by getTeleopCommand
