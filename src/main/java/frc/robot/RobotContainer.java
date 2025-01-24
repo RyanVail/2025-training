@@ -11,6 +11,8 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystemIOSim;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
+import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystemIOSim;
 
 public class RobotContainer {
     CommandGenericHID commandGenericHID;
@@ -18,6 +20,7 @@ public class RobotContainer {
     DriveSubsystem drive;
     Flywheel flywheel;
     ElevatorSubsystem elevator;
+    VisionSubsystem vision;
 
     public RobotContainer() {
         commandGenericHID = new CommandGenericHID(Constants.CONTROLLER_PORT);
@@ -26,6 +29,7 @@ public class RobotContainer {
             drive = new DriveSubsystem(new DriveSubsystemIOSwerve());
             flywheel = new Flywheel(new FlywheelIOSim());
             elevator = new ElevatorSubsystem(new ElevatorSubsystemIOSim());
+            vision = new VisionSubsystem(new VisionSubsystemIOSim());
         } else {
             drive = new DriveSubsystem(new DriveSubsystemIOSwerve());
         }
