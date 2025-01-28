@@ -3,32 +3,18 @@ package frc.robot.subsystems.drive;
 import java.io.File;
 import java.io.IOException;
 
-import org.dyn4j.geometry.Rotation;
-
-import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj2.command.Commands;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
-import swervelib.parser.PIDFConfig;
 import swervelib.parser.SwerveParser;
-import swervelib.telemetry.SwerveDriveTelemetry;
 
 public class DriveSubsystemIOSwerve implements DriveSubsystemIO {
     private SwerveDrive swerveDrive;

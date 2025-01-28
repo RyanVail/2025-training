@@ -81,6 +81,20 @@ public final class Constants {
     }
 
     public class VisionConstants {
+        public static final String FRONT_CAMERA_NAME = "Front";
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d();
+        public static final int FRONT_CAMERA_WIDTH = 640;
+        public static final int FRONT_CAMERA_HEIGHT = 640;
+        public static final Rotation2d FRONT_CAMERA_FOV = Rotation2d.fromDegrees(90.0);
+        public static final int FRONT_CAMERA_FPS = 15;
+        public static final double FRONT_CAMERA_AVG_LATENCY_MS = 50.0;
+        public static final double FRONT_CAMERA_LATENCY_STD_DEV_MS = 15.0;
+        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(
+                0.0,
+                0.0,
+                0.0,
+                new Rotation3d());
+
         public static final String BACK_CAMERA_NAME = "Back";
         public static final Pose3d BACK_CAMERA_POSE = new Pose3d();
         public static final int BACK_CAMERA_WIDTH = 640;
@@ -93,6 +107,6 @@ public final class Constants {
                 0.0,
                 0.0,
                 0.0,
-                new Rotation3d());
+                new Rotation3d(0, 0, Units.degreesToRadians(90)));
     }
 }

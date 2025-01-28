@@ -9,5 +9,5 @@ public interface VisionSubsystemIO {
 
     public default void simulationPeriodic(Pose2d pose) {};
 
-    public void init(PhotonCamera backCam);
+    public void init(PhotonCamera frontCam, PhotonCamera backCam);
 }
