@@ -29,7 +29,7 @@ public class RobotContainer {
             drive = new DriveSubsystem(new DriveSubsystemIOSwerve());
             flywheel = new Flywheel(new FlywheelIOSim());
             elevator = new ElevatorSubsystem(new ElevatorSubsystemIOSim());
-            vision = new VisionSubsystem(new VisionSubsystemIOSim());
+            vision = new VisionSubsystem(new VisionSubsystemIOSim(), drive.getPoseSupplier());
         } else {
             drive = new DriveSubsystem(new DriveSubsystemIOSwerve());
         }

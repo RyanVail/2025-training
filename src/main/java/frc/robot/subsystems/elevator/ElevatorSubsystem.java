@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
     ElevatorSubsystemIO io;
@@ -26,24 +26,24 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorSubsystem(ElevatorSubsystemIO io) {
         this.io = io;
         this.pid = new PIDController(
-                Constants.ElevatorConstants.P,
-                Constants.ElevatorConstants.I,
-                Constants.ElevatorConstants.D);
+                ElevatorConstants.P,
+                ElevatorConstants.I,
+                ElevatorConstants.D);
 
         this.feedForward = new ElevatorFeedforward(
-                Constants.ElevatorConstants.S,
-                Constants.ElevatorConstants.G,
-                Constants.ElevatorConstants.V);
+                ElevatorConstants.S,
+                ElevatorConstants.G,
+                ElevatorConstants.V);
 
         this.mechanism = new Mechanism2d(0, 0);
         MechanismRoot2d root = mechanism.getRoot(
                 "elevator",
-                Constants.ElevatorConstants.POS_X,
-                Constants.ElevatorConstants.POS_Y);
+                ElevatorConstants.POS_X,
+                ElevatorConstants.POS_Y);
 
         realLigament = root.append(
                 new MechanismLigament2d("realElevator",
-                        Constants.ElevatorConstants.HEIGHT,
+                        ElevatorConstants.HEIGHT,
                         90));
 
         realLigament.setLineWeight(5);
@@ -51,7 +51,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         setpointLigament = root.append(
                 new MechanismLigament2d("elevatorSetpoint",
-                        Constants.ElevatorConstants.HEIGHT,
+                        ElevatorConstants.HEIGHT,
                         90));
 
         setpointLigament.setLineWeight(2);

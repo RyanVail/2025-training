@@ -1,16 +1,19 @@
 package frc.robot.subsystems.vision;
 
-import org.photonvision.PhotonCamera;
+import java.util.function.Supplier;
 
+import org.photonvision.PhotonCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
     private VisionSubsystemIO io;
     private PhotonCamera frontCamera = new PhotonCamera("front");
+    private Supplier<Pose2d> poseSupplier;
 
-    public VisionSubsystem(VisionSubsystemIO io) {
+    public VisionSubsystem(VisionSubsystemIO io, Supplier<Pose2d> poseSupplier) {
         this.io = io;
+        this.poseSupplier = poseSupplier;
         io.init(frontCamera);
     }
 
@@ -19,9 +22,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
-        // TODO: Can this be the real pose?
-        Pose2d pose = new Pose2d();
-        io.periodic(pose);
+    public void simulationPeriodic() {
+        io.simulationPeriodic(poseSupplier.get());
     }
 }

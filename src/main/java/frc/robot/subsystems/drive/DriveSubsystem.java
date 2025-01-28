@@ -1,5 +1,7 @@
 package frc.robot.subsystems.drive;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -11,18 +13,25 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TeleopCommand;
 
 public class DriveSubsystem extends SubsystemBase {
+    public class PoseSupplier implements Supplier<Pose2d> {
+        public DriveSubsystem drive;
+        public PoseSupplier(DriveSubsystem drive) {
+            this.drive = drive;
+        }
+
+        public Pose2d get() {
+            return drive.getPose();
+        }
+    }
+
     private DriveSubsystemIO io;
 
     public DriveSubsystem(DriveSubsystemIO io) {
@@ -68,6 +77,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void resetPose(Pose2d pose) {
         io.resetPose(pose);
+    }
+
+    public Supplier<Pose2d> getPoseSupplier() {
+        return new PoseSupplier(this);
     }
 
     public Pose2d getPose() {

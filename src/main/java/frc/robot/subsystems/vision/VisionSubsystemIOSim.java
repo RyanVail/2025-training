@@ -5,18 +5,12 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
-
-import javax.xml.transform.TransformerConfigurationException;
-
-import org.dyn4j.geometry.Vector3;
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import frc.robot.Constants.VisionConstants;
 
 public class VisionSubsystemIOSim implements VisionSubsystemIO {
     private VisionSystemSim visionSim;
@@ -27,28 +21,28 @@ public class VisionSubsystemIOSim implements VisionSubsystemIO {
         visionSim = new VisionSystemSim("main");
 
         try {
-            AprilTagFieldLayout tagLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
+            AprilTagFieldLayout tagLayout = AprilTagFieldLayout
+                    .loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
             visionSim.addAprilTags(tagLayout);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         cameraProp = new SimCameraProperties();
-        cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
         cameraProp.setCalibError(0.35, 0.10);
-        cameraProp.setFPS(15);
-        cameraProp.setAvgLatencyMs(50);
-        cameraProp.setLatencyStdDevMs(15);
+        cameraProp.setCalibration(VisionConstants.BACK_CAMERA_WIDTH, VisionConstants.BACK_CAMERA_HEIGHT,
+                VisionConstants.BACK_CAMERA_FOV);
+        cameraProp.setFPS(VisionConstants.BACK_CAMERA_FPS);
+        cameraProp.setAvgLatencyMs(VisionConstants.BACK_CAMERA_AVG_LATENCY_MS);
+        cameraProp.setLatencyStdDevMs(VisionConstants.BACK_CAMERA_LATENCY_STD_DEV_MS);
     }
 
     @Override
-    public void init(PhotonCamera backCam)
-    {
+    public void init(PhotonCamera backCam) {
         backCameraSim = new PhotonCameraSim(backCam, cameraProp);
         backCameraSim.enableDrawWireframe(true);
 
-        // TODO: Make this a constant.
-        visionSim.addCamera(backCameraSim, new Transform3d());
+        visionSim.addCamera(backCameraSim, VisionConstants.BACK_CAMERA_TRANSFORM);
     }
 
     @Override
@@ -57,7 +51,7 @@ public class VisionSubsystemIOSim implements VisionSubsystemIO {
     }
 
     @Override
-    public void periodic(Pose2d pose) {
+    public void simulationPeriodic(Pose2d pose) {
         visionSim.update(pose);
         SmartDashboard.putData("VisionField", visionSim.getDebugField());
     }
