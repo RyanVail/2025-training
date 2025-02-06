@@ -65,6 +65,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        Logger.recordOutput("RobotPose", io.getPose());
         Logger.recordOutput("SwerveStates", io.getSwerveStates());
     }
 

@@ -140,16 +140,21 @@ public final class Constants {
         public static final Pose2d[] CORAL_SCORE_POSES = {
                 new Pose2d(4.09, 5.2, new Rotation2d(Units.degreesToRadians(-65))),
                 new Pose2d(3.71, 5.02, new Rotation2d(Units.degreesToRadians(-65))),
+
                 new Pose2d(),
                 new Pose2d(),
+
                 new Pose2d(),
                 new Pose2d(),
+
                 new Pose2d(),
                 new Pose2d(),
+
                 new Pose2d(),
                 new Pose2d(),
-                new Pose2d(),
-                new Pose2d()
+
+                new Pose2d(4.92, 5.13, new Rotation2d(Units.degreesToRadians(-120))),
+                new Pose2d(5.19, 4.97, new Rotation2d(Units.degreesToRadians(-120))),
         };
 
         public static final Pose2d[] ALGAE_REEF_POSES = {
@@ -158,7 +163,7 @@ public final class Constants {
                 new Pose2d(),
                 new Pose2d(),
                 new Pose2d(),
-                new Pose2d(),
+                new Pose2d(5.06, 5.05, new Rotation2d(Units.degreesToRadians(-120))),
         };
 
         public static final double[] CORAL_LEVEL_HEIGHTS = {
