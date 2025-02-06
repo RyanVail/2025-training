@@ -4,6 +4,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.config.PIDConstants;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -27,6 +28,12 @@ public final class Constants {
         public static final double MOMENT_OF_INERTIA = 0.002; // From CAD, in units of kilogram * meters squared
 
         public static final int FLYWHEEL_PORT = 9;
+
+        public static final double ALGAE_SCORE_VEL = 100.0;
+        public static final double ALGAE_SCORE_TIME = 1.0;
+
+        public static final double CORAL_SCORE_VEL = 10.0;
+        public static final double CORAL_SCORE_TIME = 1.0;
     }
 
     public class ArmConstants {
@@ -56,6 +63,8 @@ public final class Constants {
         public static final PPHolonomicDriveController driveController = new PPHolonomicDriveController(
                 new PIDConstants(2.0, 0.0, 0.0),
                 new PIDConstants(2.0, 0.0, 0.0));
+
+        public static final double ALIGN_DIST = Units.feetToMeters(0.1);
     }
 
     public class ElevatorConstants {
@@ -78,6 +87,10 @@ public final class Constants {
         public static final double S = 1.25;
         public static final double G = 0.5;
         public static final double V = 0.025;
+
+        public static final double CORAL_OFFSET = 0.0;
+
+        public static final double ELEVATOR_ALIGN_DIST = 0.075;
     }
 
     public class VisionConstants {
@@ -108,5 +121,39 @@ public final class Constants {
                 0.0,
                 0.0,
                 new Rotation3d(0, 0, Units.degreesToRadians(90)));
+    }
+
+    // TODO: Real values here.
+    public class FieldConstants {
+        public static final Pose2d[] CORAL_SCORE_POSES = {
+            new Pose2d(5, 5, new Rotation2d()),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d()
+        };
+
+        public static final Pose2d[] ALGAE_REEF_POSES = {
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+            new Pose2d(),
+        };
+
+        public static final double[] CORAL_LEVEL_HEIGHTS = {
+            0.0,
+            1.0,
+            2.0,
+            3.0
+        };
     }
 }

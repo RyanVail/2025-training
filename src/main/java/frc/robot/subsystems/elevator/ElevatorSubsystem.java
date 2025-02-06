@@ -74,10 +74,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putData(LPREFIX + "Mech2D", mechanism);
     }
 
-    public Command setHeight(double setpoint) {
-        return Commands.runOnce(() -> {
-            pid.setSetpoint(setpoint);
-            setpointLigament.setLength(setpoint);
-        });
+    // TODO: This should be setSetPoint and then setPoint should be another command that waits till it reaches the set point.
+    public void setSetPoint(double setpoint) {
+        pid.setSetpoint(setpoint);
+        setpointLigament.setLength(setpoint);
+    }
+
+    public double getHeight() {
+        return io.getHeight();
     }
 }

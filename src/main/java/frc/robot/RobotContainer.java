@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.commands.auto.AutoCommands;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystemIOSwerve;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -51,6 +52,8 @@ public class RobotContainer {
 
         commandGenericHID.button(2).onTrue(elevator.setHeight(0.25));
         commandGenericHID.button(2).onFalse(elevator.setHeight(0.75));
+
+        commandGenericHID.button(3).onTrue(AutoCommands.alignReef());
 
         /*
          * Set the drive subsystem to use the command returned by getTeleopCommand

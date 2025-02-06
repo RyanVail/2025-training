@@ -13,16 +13,18 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TeleopCommand;
-    
+
 public class DriveSubsystem extends SubsystemBase {
     public class PoseSupplier implements Supplier<Pose2d> {
         public DriveSubsystem drive;
+
         public PoseSupplier(DriveSubsystem drive) {
             this.drive = drive;
         }
@@ -45,20 +47,20 @@ public class DriveSubsystem extends SubsystemBase {
             e.printStackTrace();
         }
 
-        // AutoBuilder.configure(
-        // this::getPose,
-        // this::resetPose,
-        // this::getRobotRelativeSpeeds,
-        // (speeds, feedforwards) -> driveRobotRelative(speeds),
-        // Constants.DriveConstants.driveController,
-        // config,
-        // () -> {
-        // var alliance = DriverStation.getAlliance();
-        // return (alliance.isPresent())
-        // ? alliance.get() == DriverStation.Alliance.Red
-        // : false;
-        // },
-        // this);
+        AutoBuilder.configure(
+                this::getPose,
+                this::resetPose,
+                this::getRobotRelativeSpeeds,
+                (speeds, feedforwards) -> driveRobotRelative(speeds),
+                DriveConstants.driveController,
+                config,
+                () -> {
+                    var alliance = DriverStation.getAlliance();
+                    return (alliance.isPresent())
+                            ? alliance.get() == DriverStation.Alliance.Red
+                            : false;
+                },
+                this);
 
         this.io.resetPose(new Pose2d(new Translation2d(1.0, 1.0), new Rotation2d()));
     }
