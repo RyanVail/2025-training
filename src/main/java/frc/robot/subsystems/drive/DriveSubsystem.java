@@ -7,8 +7,7 @@ import org.littletonrobotics.junction.Logger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -39,7 +38,6 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem(DriveSubsystemIO io) {
         this.io = io;
 
-        Commands.print("Drive subsystem is init");
         RobotConfig config = null;
         try {
             config = RobotConfig.fromGUISettings();
@@ -52,7 +50,7 @@ public class DriveSubsystem extends SubsystemBase {
                 this::resetPose,
                 this::getRobotRelativeSpeeds,
                 (speeds, feedforwards) -> driveRobotRelative(speeds),
-                DriveConstants.driveController,
+                DriveConstants.PPDriveController,
                 config,
                 () -> {
                     var alliance = DriverStation.getAlliance();
@@ -75,6 +73,16 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public Command getTeleopCommand(CommandGenericHID controller) {
         return new TeleopCommand(this, controller);
+    }
+
+    /**
+     * Finds a path to a pose and creates a command to follow that path.
+     * 
+     * @param pose The pose to align to.
+     * @return The command to follow the found path.
+     */
+    public Command getPathCommand(Pose2d pose) {
+        return AutoBuilder.pathfindToPose(pose, DriveConstants.pathConstraints, 0.0);
     }
 
     public void resetPose(Pose2d pose) {
@@ -102,7 +110,7 @@ public class DriveSubsystem extends SubsystemBase {
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         x * DriveConstants.MAX_SPEED,
                         y * DriveConstants.MAX_SPEED,
-                        omega,
+                        omega * DriveConstants.MAX_SPEED,
                         io.getRotation()));
     }
 

@@ -32,6 +32,6 @@ public class TeleopCommand extends Command {
         drive.drive(
                 processAxis(controller.getRawAxis(1)),
                 processAxis(controller.getRawAxis(0)),
-                processAxis(controller.getRawAxis(4)));
+                processAxis(controller.getRawAxis(4) * 5));
     }
 }

@@ -55,14 +55,14 @@ public class VisionSubsystem extends SubsystemBase {
 
     public int getScorableLevel(int reef_id)
     {
-        if (!coral[reef_id][2]) return 3;
+        if (!coral[2][reef_id]) return 3;
 
         // Can't score coral on L1 or L2 when there's algae.
         if (algae[0][reef_id / 2] || algae[1][reef_id / 2])
             return 0;
 
-        if (!coral[reef_id][1]) return 2;
-        if (!coral[reef_id][0]) return 1;
+        if (!coral[1][reef_id]) return 2;
+        if (!coral[0][reef_id]) return 1;
 
         // No valid level was found.
         return 0;

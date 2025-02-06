@@ -18,8 +18,6 @@ import swervelib.parser.SwerveParser;
 
 public class DriveSubsystemIOSwerve implements DriveSubsystemIO {
     private SwerveDrive swerveDrive;
-    // SparkFlex moby = new SparkFlex(1, MotorType.kBrushless); // TODO: This is
-    // tmp!
 
     public DriveSubsystemIOSwerve() {
         try {
@@ -35,11 +33,6 @@ public class DriveSubsystemIOSwerve implements DriveSubsystemIO {
         for (SwerveModule mod : swerveDrive.getModules()) {
             mod.setAntiJitter(false);
         }
-
-        // SparkFlexConfig config = new SparkFlexConfig();
-        // config.apply(config.closedLoop.pid(0.002, 0.0, 0.0));
-        // moby.configure(config, ResetMode.kNoResetSafeParameters,
-        // PersistMode.kPersistParameters);
     }
 
     @Override
@@ -70,10 +63,6 @@ public class DriveSubsystemIOSwerve implements DriveSubsystemIO {
     @Override
     public void drive(ChassisSpeeds speeds) {
         swerveDrive.drive(speeds);
-        // SwerveModuleState states[] = swerveDrive.kinematics
-        // .toSwerveModuleStates(ChassisSpeeds.fromRobotRelativeSpeeds(10, 0, 0,
-        // Rotation2d.fromDegrees(0)));
-        // swerveDrive.setModuleStates(states, false);
     }
 
     @Override

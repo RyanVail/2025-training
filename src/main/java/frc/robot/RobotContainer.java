@@ -1,11 +1,8 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import frc.robot.commands.auto.AutoCommands;
+import frc.robot.commands.AutoScoreCoral;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystemIOSwerve;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -50,10 +47,11 @@ public class RobotContainer {
         // commandGenericHID.button(1).onTrue(flywheel.setVelocity(1000));
         // commandGenericHID.button(1).onFalse(flywheel.setVelocity(0));
 
-        commandGenericHID.button(2).onTrue(elevator.setHeight(0.25));
-        commandGenericHID.button(2).onFalse(elevator.setHeight(0.75));
+        commandGenericHID.button(2).onTrue(Commands.runOnce(() -> elevator.setSetPoint(0.25)));
+        commandGenericHID.button(2).onFalse(Commands.runOnce(() -> elevator.setSetPoint(0.75)));
 
-        commandGenericHID.button(3).onTrue(AutoCommands.alignReef());
+        commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator, vision, true));
+        commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator, vision, false));
 
         /*
          * Set the drive subsystem to use the command returned by getTeleopCommand

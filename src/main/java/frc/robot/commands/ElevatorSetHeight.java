@@ -15,7 +15,12 @@ public class ElevatorSetHeight extends Command {
     }
 
     @Override
+    public void initialize() {
+        this.elevator.setSetPoint(height);
+    }
+
+    @Override
     public boolean isFinished() {
-        return Math.abs(elevator.getHeight()) <= ElevatorConstants.ELEVATOR_ALIGN_DIST;
+        return Math.abs(elevator.getHeight() - height) <= ElevatorConstants.ELEVATOR_ALIGN_DIST;
     }
 }
