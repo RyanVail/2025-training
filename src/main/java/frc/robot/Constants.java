@@ -20,12 +20,12 @@ public final class Constants {
     public static final int CONTROLLER_PORT = 0;
 
     public class FlywheelConstants {
-        public static final double P = 0.0125;
+        public static final double P = 8.25;
         public static final double I = 0.025;
         public static final double D = 0.0;
 
         // TODO: This doesn't go to zero.
-        public static final double S = 1.1;
+        public static final double S = 2.5;
         public static final double V = 0.0;
         public static final double A = 0.0;
 
@@ -85,7 +85,7 @@ public final class Constants {
     }
 
     public class ElevatorConstants {
-        public static final double GEAR_RATIO = 1.0;
+        public static final double GEAR_RATIO = 32.0;
         public static final double MASS = Units.lbsToKilograms(25.0);
         public static final double RADIUS = Units.inchesToMeters(2.5);
 
@@ -94,16 +94,17 @@ public final class Constants {
 
         public static final double HEIGHT = MAX_HEIGHT - MIN_HEIGHT;
 
+        // TODO: Translation.
         public static final double POS_X = 0.0;
         public static final double POS_Y = 0.05;
 
-        public static final double P = 12.0;
-        public static final double I = 1.1;
-        public static final double D = 2.0;
+        public static final double P = 25.0;
+        public static final double I = 0.0;
+        public static final double D = 0.0;
 
-        public static final double S = 1.25;
-        public static final double G = 0.5;
-        public static final double V = 0.025;
+        public static final double S = 0.0;
+        public static final double G = 0.0;
+        public static final double V = 0.0;
 
         public static final double CORAL_OFFSET = 0.0;
 
