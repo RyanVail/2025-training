@@ -85,8 +85,8 @@ public final class Constants {
     }
 
     public class ElevatorConstants {
-        public static final double GEAR_RATIO = 32.0;
-        public static final double MASS = Units.lbsToKilograms(25.0);
+        public static final double GEAR_RATIO = 36.0;
+        public static final double MASS = Units.lbsToKilograms(50.0);
         public static final double RADIUS = Units.inchesToMeters(2.5);
 
         public static final double MIN_HEIGHT = Units.inchesToMeters(8.0);
@@ -98,9 +98,9 @@ public final class Constants {
         public static final double POS_X = 0.0;
         public static final double POS_Y = 0.05;
 
-        public static final double P = 25.0;
+        public static final double P = 85.0;
         public static final double I = 0.0;
-        public static final double D = 0.0;
+        public static final double D = 2.0;
 
         public static final double S = 0.0;
         public static final double G = 0.0;
