@@ -77,11 +77,13 @@ public final class Constants {
                 new PIDConstants(2.0, 0.0, 0.0));
 
         public static final double ALIGN_DIST = Units.feetToMeters(0.1);
+
+        public static final double ELEVATOR_HEIGHT_DIMMER = 0.9;
     }
 
     public class ElevatorConstants {
         public static final double GEAR_RATIO = 1.0;
-        public static final double MASS = Units.lbsToKilograms(2.0);
+        public static final double MASS = Units.lbsToKilograms(25.0);
         public static final double RADIUS = Units.inchesToMeters(2.5);
 
         public static final double MIN_HEIGHT = Units.inchesToMeters(8.0);
@@ -168,8 +170,8 @@ public final class Constants {
 
         public static final double[] CORAL_LEVEL_HEIGHTS = {
                 Units.inchesToMeters(12),
-                Units.inchesToMeters(30),
-                Units.inchesToMeters(40),
+                Units.inchesToMeters(29),
+                Units.inchesToMeters(48),
                 Units.inchesToMeters(65)
         };
     }

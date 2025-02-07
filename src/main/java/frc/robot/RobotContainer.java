@@ -1,7 +1,11 @@
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AutoScoreCoral;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystemIOSwerve;
@@ -47,8 +51,11 @@ public class RobotContainer {
         // commandGenericHID.button(1).onTrue(flywheel.setVelocity(1000));
         // commandGenericHID.button(1).onFalse(flywheel.setVelocity(0));
 
-        commandGenericHID.button(2).onTrue(Commands.runOnce(() -> elevator.setSetPoint(0.25)));
-        commandGenericHID.button(2).onFalse(Commands.runOnce(() -> elevator.setSetPoint(0.75)));
+        commandGenericHID.button(1).onTrue(Commands.runOnce(() -> elevator.setSetPoint(ElevatorConstants.MIN_HEIGHT)));
+        commandGenericHID.povDown().onTrue(Commands.runOnce(() -> elevator.setSetPoint(FieldConstants.CORAL_LEVEL_HEIGHTS[0])));
+        commandGenericHID.povUp().onTrue(Commands.runOnce(() -> elevator.setSetPoint(FieldConstants.CORAL_LEVEL_HEIGHTS[1])));
+        commandGenericHID.button(5).onTrue(Commands.runOnce(() -> elevator.setSetPoint(FieldConstants.CORAL_LEVEL_HEIGHTS[2])));
+        commandGenericHID.axisGreaterThan(2, 0.4).onTrue(Commands.runOnce(() -> elevator.setSetPoint(FieldConstants.CORAL_LEVEL_HEIGHTS[3])));
 
         commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator, vision, true));
         commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator, vision, false));
@@ -57,6 +64,6 @@ public class RobotContainer {
          * Set the drive subsystem to use the command returned by getTeleopCommand
          * if no other command is scheduled for the subsystem
          */
-        drive.setDefaultCommand(drive.getTeleopCommand(commandGenericHID));
+        drive.setDefaultCommand(drive.getTeleopCommand(elevator, commandGenericHID));
     }
 }

@@ -16,7 +16,7 @@ public class ElevatorSubsystemIOSim implements ElevatorSubsystemIO {
                 Constants.ElevatorConstants.MIN_HEIGHT,
                 Constants.ElevatorConstants.MAX_HEIGHT,
                 true,
-                Constants.ElevatorConstants.MIN_HEIGHT);
+                0.0);
     }
 
     @Override

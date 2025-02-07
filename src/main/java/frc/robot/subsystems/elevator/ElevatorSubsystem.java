@@ -20,6 +20,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     Mechanism2d mechanism;
     MechanismLigament2d realLigament;
     MechanismLigament2d setpointLigament;
+    double setpoint;
 
     private static final String LPREFIX = "/Subsystems/Elevator/";
 
@@ -76,8 +77,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // TODO: This should be setSetPoint and then setPoint should be another command that waits till it reaches the set point.
     public void setSetPoint(double setpoint) {
+        this.setpoint = setpoint;
         pid.setSetpoint(setpoint);
         setpointLigament.setLength(setpoint);
+    }
+
+    public double getSetPoint() {
+        return setpoint;
     }
 
     public double getHeight() {

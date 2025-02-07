@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TeleopCommand;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
 
 public class DriveSubsystem extends SubsystemBase {
     public class PoseSupplier implements Supplier<Pose2d> {
@@ -72,8 +73,8 @@ public class DriveSubsystem extends SubsystemBase {
     /**
      * @return Instance of TeleopCommand
      */
-    public Command getTeleopCommand(CommandGenericHID controller) {
-        return new TeleopCommand(this, controller);
+    public Command getTeleopCommand(ElevatorSubsystem elevator, CommandGenericHID controller) {
+        return new TeleopCommand(this, elevator, controller);
     }
 
     /**
