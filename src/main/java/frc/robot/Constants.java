@@ -24,7 +24,6 @@ public final class Constants {
         public static final double I = 0.025;
         public static final double D = 0.0;
 
-        // TODO: This doesn't go to zero.
         public static final double S = 2.5;
         public static final double V = 0.0;
         public static final double A = 0.0;
@@ -94,9 +93,7 @@ public final class Constants {
 
         public static final double HEIGHT = MAX_HEIGHT - MIN_HEIGHT;
 
-        // TODO: Translation.
-        public static final double POS_X = 0.0;
-        public static final double POS_Y = 0.05;
+        public static final Translation2d POS = new Translation2d(0.0, 0.05);
 
         public static final double P = 85.0;
         public static final double I = 0.0;

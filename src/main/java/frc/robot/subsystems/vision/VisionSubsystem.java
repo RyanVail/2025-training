@@ -29,7 +29,6 @@ public class VisionSubsystem extends SubsystemBase {
     public VisionSubsystem(VisionSubsystemIO io, Supplier<Pose2d> poseSupplier) {
         this.io = io;
         this.poseSupplier = poseSupplier;
-        // TODO: Add back and front
         io.init(frontCamera, backCamera);
     }
 
@@ -42,7 +41,7 @@ public class VisionSubsystem extends SubsystemBase {
         //
     }
 
-    // TODO: Finish this.
+    // TODO: Implement this.
     public Optional<Integer> getCoralLevel(PhotonTrackedTarget target) {
         Optional<Integer> result = Optional.empty();
         return result;

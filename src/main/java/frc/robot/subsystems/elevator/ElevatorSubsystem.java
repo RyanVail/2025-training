@@ -39,8 +39,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.mechanism = new Mechanism2d(0, 0);
         MechanismRoot2d root = mechanism.getRoot(
                 "elevator",
-                ElevatorConstants.POS_X,
-                ElevatorConstants.POS_Y);
+                ElevatorConstants.POS.getX(),
+                ElevatorConstants.POS.getY());
 
         realLigament = root.append(
                 new MechanismLigament2d("realElevator",
@@ -75,7 +75,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putData(LPREFIX + "Mech2D", mechanism);
     }
 
-    // TODO: This should be setSetPoint and then setPoint should be another command that waits till it reaches the set point.
     public void setSetPoint(double setpoint) {
         this.setpoint = setpoint;
         pid.setSetpoint(setpoint);

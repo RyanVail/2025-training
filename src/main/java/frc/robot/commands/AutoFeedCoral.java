@@ -19,8 +19,6 @@ public class AutoFeedCoral extends Command {
     @Override
     public void initialize() {
         int index = getFeederIndex(drive.getPose());
-
-        // TODO: This is dumb.
         new AlignPose(drive, FieldConstants.FEEDER_POSES[index]).schedule();
     }
 
