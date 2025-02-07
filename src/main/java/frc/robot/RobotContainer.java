@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.commands.AutoFeedCoral;
 import frc.robot.commands.AutoScoreCoral;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystemIOSwerve;
@@ -59,6 +60,9 @@ public class RobotContainer {
 
         commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator, vision, true));
         commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator, vision, false));
+
+        commandGenericHID.button(2).onTrue(new AutoFeedCoral(drive, false));
+        commandGenericHID.button(3).onTrue(new AutoFeedCoral(drive, true));
 
         /*
          * Set the drive subsystem to use the command returned by getTeleopCommand

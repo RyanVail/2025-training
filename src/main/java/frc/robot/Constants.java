@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
@@ -70,7 +71,9 @@ public final class Constants {
                 new ProfiledPIDController(2.0, 0.0, 0.0,
                         new TrapezoidProfile.Constraints(0.0, 0.0)));
 
-        static { driveController.setTolerance(new Pose2d(0.05, 0.05, new Rotation2d(0.05))); }
+        static {
+            driveController.setTolerance(new Pose2d(0.05, 0.05, new Rotation2d(0.05)));
+        }
 
         public static final PPHolonomicDriveController PPDriveController = new PPHolonomicDriveController(
                 new PIDConstants(2.0, 0.0, 0.0),
@@ -172,7 +175,19 @@ public final class Constants {
                 Units.inchesToMeters(12),
                 Units.inchesToMeters(29),
                 Units.inchesToMeters(48),
-                Units.inchesToMeters(65)
+                Units.inchesToMeters(65),
+        };
+
+        public static final Pose2d[] FEEDER_POSES = {
+            new Pose2d(1.65, 0.75, new Rotation2d(Units.degreesToRadians(54))),
+            new Pose2d(0.63, 1.46, new Rotation2d(Units.degreesToRadians(54))),
+            new Pose2d(0.63, 6.66, new Rotation2d(Units.degreesToRadians(-54))),
+            new Pose2d(1.65, 7.33, new Rotation2d(Units.degreesToRadians(-54))),
+        };
+
+        public static final Translation2d[] FEEDER_POSITIONS = {
+            new Translation2d(1.14, 1.1),
+            new Translation2d(1.14, 7),
         };
     }
 }
