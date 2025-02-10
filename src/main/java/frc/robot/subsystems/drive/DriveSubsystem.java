@@ -36,6 +36,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     private DriveSubsystemIO io;
 
+    private static final String LPREFIX = "/Subsystems/Drive/";
+
     public DriveSubsystem(DriveSubsystemIO io) {
         this.io = io;
 
@@ -66,8 +68,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Logger.recordOutput("RobotPose", io.getPose());
-        Logger.recordOutput("SwerveStates", io.getSwerveStates());
+        Logger.recordOutput(LPREFIX + "Pose", io.getPose());
+        Logger.recordOutput(LPREFIX + "SwerveStates", io.getSwerveStates());
     }
 
     /**

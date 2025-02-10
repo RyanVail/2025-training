@@ -15,6 +15,8 @@ public class EndEffector extends SubsystemBase {
     private PIDController pid;
     private double setpoint;
 
+    private static final String LPREFIX = "/Subsystems/EndEffector/";
+
     public EndEffector(EndEffectorIO io) {
         this.io = io;
         this.pid = new PIDController(
@@ -31,12 +33,9 @@ public class EndEffector extends SubsystemBase {
         volts = Math.max(volts, -RobotController.getBatteryVoltage());
         this.io.setVoltage(volts);
 
-        SmartDashboard.putData("EndEffectorPID", pid);
-
-        // TODO: Make this real.
-        Logger.recordOutput("EndEffectorSetpoint", setpoint);
-        Logger.recordOutput("EndEffectorVolts", volts);
-        Logger.recordOutput("EndEffectorAngle", getAngle());
+        Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
+        Logger.recordOutput(LPREFIX + "Volts", volts);
+        Logger.recordOutput(LPREFIX + "Angle", getAngle());
     }
 
     @Override
