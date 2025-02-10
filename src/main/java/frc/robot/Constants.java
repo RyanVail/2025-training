@@ -88,7 +88,7 @@ public final class Constants {
         public static final double MASS = Units.lbsToKilograms(50.0);
         public static final double RADIUS = Units.inchesToMeters(2.5);
 
-        public static final double MIN_HEIGHT = Units.inchesToMeters(8.0);
+        public static final double MIN_HEIGHT = Units.inchesToMeters(4.0);
         public static final double MAX_HEIGHT = Units.inchesToMeters(72.0);
 
         public static final double HEIGHT = MAX_HEIGHT - MIN_HEIGHT;
@@ -105,7 +105,8 @@ public final class Constants {
 
         public static final double CORAL_OFFSET = 0.0;
 
-        public static final double ELEVATOR_ALIGN_DIST = 0.15;
+        // TODO: What units is this in?
+        public static final double ALIGN_DIST = 0.15;
     }
 
     public class VisionConstants {
@@ -187,5 +188,24 @@ public final class Constants {
             new Translation2d(1.14, 1.1),
             new Translation2d(1.14, 7),
         };
+    }
+
+    public class EndEffectorConstants {
+        public static final double P = 0.35;
+        public static final double I = 12.0;
+        public static final double D = 0.06;
+
+        public static final double LENGTH = Units.inchesToMeters(12);
+
+        public static final double GEAR_RATIO = 36;
+
+        public static final double MOMENT_OF_INERTIA = 0.5;
+
+        public static final double MIN_ANGLE = Units.radiansToDegrees(0);
+        public static final double MAX_ANGLE = Units.radiansToDegrees(240);
+
+        public static final double STARTING_ANGLE = Units.radiansToDegrees(0);
+
+        public static final double ALIGN_ANGLE = 1.5;
     }
 }

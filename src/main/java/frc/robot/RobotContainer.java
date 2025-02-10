@@ -12,6 +12,10 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystemIOSwerve;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystemIOSim;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.EndEffectorIO;
+import frc.robot.subsystems.endeffector.EndEffectorIOSim;
+import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -24,6 +28,7 @@ public class RobotContainer {
     Flywheel flywheel;
     ElevatorSubsystem elevator;
     VisionSubsystem vision;
+    EndEffector endEffector;
 
     public RobotContainer() {
         commandGenericHID = new CommandGenericHID(Constants.CONTROLLER_PORT);
@@ -33,8 +38,10 @@ public class RobotContainer {
             flywheel = new Flywheel(new FlywheelIOSim());
             elevator = new ElevatorSubsystem(new ElevatorSubsystemIOSim());
             vision = new VisionSubsystem(new VisionSubsystemIOSim(), drive.getPoseSupplier());
+            endEffector = new EndEffector(new EndEffectorIOSim());
         } else {
             drive = new DriveSubsystem(new DriveSubsystemIOSwerve());
+            endEffector = new EndEffector(new EndEffectorIOSpark());
         }
 
         configureBindings();
@@ -63,6 +70,9 @@ public class RobotContainer {
 
         commandGenericHID.button(2).onTrue(new AutoFeedCoral(drive, false));
         commandGenericHID.button(3).onTrue(new AutoFeedCoral(drive, true));
+
+        commandGenericHID.button(4).onTrue(Commands.runOnce(() -> endEffector.setSetpoint(0)));
+        commandGenericHID.button(4).onFalse(Commands.runOnce(() -> endEffector.setSetpoint(120)));
 
         /*
          * Set the drive subsystem to use the command returned by getTeleopCommand
