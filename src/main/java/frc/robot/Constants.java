@@ -201,11 +201,11 @@ public final class Constants {
 
         public static final double MOMENT_OF_INERTIA = 0.5;
 
-        public static final double MIN_ANGLE = Units.radiansToDegrees(0);
+        public static final double MIN_ANGLE = Units.radiansToDegrees(-40);
         public static final double MAX_ANGLE = Units.radiansToDegrees(240);
 
         public static final double STARTING_ANGLE = Units.radiansToDegrees(0);
 
-        public static final double ALIGN_ANGLE = 1.5;
+        public static final double ALIGN_ANGLE = 1.85;
     }
 }

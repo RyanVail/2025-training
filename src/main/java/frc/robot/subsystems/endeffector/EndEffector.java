@@ -33,6 +33,8 @@ public class EndEffector extends SubsystemBase {
         volts = Math.max(volts, -RobotController.getBatteryVoltage());
         this.io.setVoltage(volts);
 
+        SmartDashboard.putData(LPREFIX + "PID", pid);
+
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
         Logger.recordOutput(LPREFIX + "Volts", volts);
         Logger.recordOutput(LPREFIX + "Angle", getAngle());

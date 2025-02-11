@@ -8,6 +8,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AutoFeedCoral;
 import frc.robot.commands.AutoScoreCoral;
+import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystemIOSwerve;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -71,8 +72,8 @@ public class RobotContainer {
         commandGenericHID.button(2).onTrue(new AutoFeedCoral(drive, false));
         commandGenericHID.button(3).onTrue(new AutoFeedCoral(drive, true));
 
-        commandGenericHID.button(4).onTrue(Commands.runOnce(() -> endEffector.setSetpoint(0)));
-        commandGenericHID.button(4).onFalse(Commands.runOnce(() -> endEffector.setSetpoint(120)));
+        commandGenericHID.button(4).onTrue(new EndEffectorSetAngle(endEffector, 0));
+        commandGenericHID.button(4).onFalse(new EndEffectorSetAngle(endEffector, 120));
 
         /*
          * Set the drive subsystem to use the command returned by getTeleopCommand
