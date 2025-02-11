@@ -34,7 +34,7 @@ public class AutoScoreCoral extends Command {
     public void initialize() {
         int index = getCoralScoreIndex(drive.getPose());
         int level = vision.getScorableLevel(index);
-        double height = FieldConstants.CORAL_LEVEL_HEIGHTS[level] + ElevatorConstants.CORAL_OFFSET;
+        double height = FieldConstants.CORAL_LEVEL_HEIGHTS[level] + ElevatorConstants.CORAL_SCORE_OFFSET;
 
         new AlignPose(drive, FieldConstants.CORAL_SCORE_POSES[index])
             .alongWith(new ElevatorSetHeight(elevator, height))

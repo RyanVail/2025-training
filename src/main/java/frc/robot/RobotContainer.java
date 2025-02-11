@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -8,7 +10,10 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AutoFeedCoral;
 import frc.robot.commands.AutoScoreCoral;
+import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
+import frc.robot.commands.FeedCoral;
+import frc.robot.commands.ScoreCoral;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystemIOSwerve;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -51,6 +56,15 @@ public class RobotContainer {
 
     private void configureAuto() {
         PathManager.configurePaths();
+
+        NamedCommands.registerCommand("ElevatorL1", new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_SCORE_OFFSET + FieldConstants.CORAL_LEVEL_HEIGHTS[0]));
+        NamedCommands.registerCommand("ElevatorL2", new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_SCORE_OFFSET + FieldConstants.CORAL_LEVEL_HEIGHTS[1]));
+        NamedCommands.registerCommand("ElevatorL3", new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_SCORE_OFFSET + FieldConstants.CORAL_LEVEL_HEIGHTS[2]));
+        NamedCommands.registerCommand("ElevatorL4", new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_SCORE_OFFSET + FieldConstants.CORAL_LEVEL_HEIGHTS[3]));
+
+        NamedCommands.registerCommand("ScoreCoral", new ScoreCoral(endEffector, elevator, flywheel));
+
+        NamedCommands.registerCommand("FeedCoral", new FeedCoral(flywheel));
     }
 
     /**
@@ -72,8 +86,10 @@ public class RobotContainer {
         commandGenericHID.button(2).onTrue(new AutoFeedCoral(drive, false));
         commandGenericHID.button(3).onTrue(new AutoFeedCoral(drive, true));
 
-        commandGenericHID.button(4).onTrue(new EndEffectorSetAngle(endEffector, 0));
-        commandGenericHID.button(4).onFalse(new EndEffectorSetAngle(endEffector, 120));
+        // commandGenericHID.button(4).onTrue(new EndEffectorSetAngle(endEffector, 0));
+        // commandGenericHID.button(4).onFalse(new EndEffectorSetAngle(endEffector, 120));
+
+        commandGenericHID.button(4).onTrue(new ScoreCoral(endEffector, elevator, flywheel));
 
         /*
          * Set the drive subsystem to use the command returned by getTeleopCommand

@@ -22,6 +22,8 @@ public interface FlywheelIO {
      */
     public double getVelocity();
 
+    public boolean hasCoral();
+
     public void updateInputs(FlywheelIOInputs inputs);
 
     public default void updateSimulation() {}

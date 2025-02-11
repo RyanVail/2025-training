@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Flywheel extends SubsystemBase {
-    private FlywheelIO io;
-    private FlywheelIOInputsAutoLogged inputs;
+    FlywheelIO io;
+    FlywheelIOInputsAutoLogged inputs;
 
-    private PIDController pid;
-    private SimpleMotorFeedforward feedforward;
+    PIDController pid;
+    SimpleMotorFeedforward feedforward;
 
     private static final String LPREFIX = "/Subsystems/Flywheel/";
 
@@ -47,5 +47,9 @@ public class Flywheel extends SubsystemBase {
         return Commands.runOnce(() -> {
             this.pid.setSetpoint(velocity);
         });
+    }
+
+    public boolean hasCoral() {
+        return io.hasCoral();
     }
 }

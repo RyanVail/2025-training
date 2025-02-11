@@ -6,15 +6,16 @@ import com.revrobotics.sim.SparkMaxSim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.FlywheelConstants;
 
 public class FlywheelIOSim implements FlywheelIO {
-
-    private FlywheelSim flywheelSim;
-    private SparkMaxSim flywheelSparkSim;
-    private SparkMax flywheelSpark;
-    private double setVoltage;
+    FlywheelSim flywheelSim;
+    SparkMaxSim flywheelSparkSim;
+    SparkMax flywheelSpark;
+    DigitalInput sensor;
+    double setVoltage;
 
     public FlywheelIOSim() {
         flywheelSpark = new SparkMax(
@@ -41,6 +42,11 @@ public class FlywheelIOSim implements FlywheelIO {
     @Override
     public double getVelocity() {
         return this.flywheelSim.getAngularVelocityRPM();
+    }
+
+    @Override
+    public boolean hasCoral() {
+        return sensor.get();
     }
 
     @Override

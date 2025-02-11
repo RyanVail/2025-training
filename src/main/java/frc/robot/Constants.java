@@ -37,21 +37,10 @@ public final class Constants {
         public static final double ALGAE_SCORE_TIME = 1.0;
 
         public static final double CORAL_SCORE_VEL = 10.0;
-        public static final double CORAL_SCORE_TIME = 1.0;
-    }
+        public static final double CORAL_SCORE_WAIT = 0.5;
+        public static final double CORAL_SCORE_WAIT_BACK = 0.125;
 
-    public class ArmConstants {
-        public static final double P = 5.25;
-        public static final double I = 0.025;
-        public static final double D = 0.0;
-
-        public static final double LENGTH = Units.inchesToMeters(29.240);
-        public static final double MASS = Units.lbsToKilograms(21.853);
-
-        public static final double GEAR_RATIO = 200.0;
-
-        public static final double MIN_ANGLE = 0;
-        public static final double MAX_ANGLE = (3.0 * Math.PI) / 4.0;
+        public static final double CORAL_FEED_VEL = -50.0;
     }
 
     public class DriveConstants {
@@ -103,7 +92,7 @@ public final class Constants {
         public static final double G = 0.0;
         public static final double V = 0.0;
 
-        public static final double CORAL_OFFSET = 0.0;
+        public static final double CORAL_SCORE_OFFSET = 0.0;
 
         // TODO: What units is this in?
         public static final double ALIGN_DIST = 0.15;
@@ -201,11 +190,18 @@ public final class Constants {
 
         public static final double MOMENT_OF_INERTIA = 0.5;
 
-        public static final double MIN_ANGLE = Units.radiansToDegrees(-40);
-        public static final double MAX_ANGLE = Units.radiansToDegrees(240);
+        public static final double MIN_ANGLE = Units.degreesToRadians(-40);
+        public static final double MAX_ANGLE = Units.degreesToRadians(240);
 
-        public static final double STARTING_ANGLE = Units.radiansToDegrees(0);
+        public static final double STARTING_ANGLE = Units.degreesToRadians(0);
 
         public static final double ALIGN_ANGLE = 1.85;
+
+        public static final double[] SCORING_ANGLES = {
+            Units.degreesToRadians(20),
+            Units.degreesToRadians(45),
+            Units.degreesToRadians(45),
+            Units.degreesToRadians(45)
+        };
     }
 }
