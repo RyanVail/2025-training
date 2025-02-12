@@ -55,7 +55,7 @@ public class RobotContainer {
     }
 
     private void configureAuto() {
-        PathManager.configurePaths();
+        AutoManager.configureAutos();
 
         NamedCommands.registerCommand("ElevatorL1", new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_SCORE_OFFSET + FieldConstants.CORAL_LEVEL_HEIGHTS[0]));
         NamedCommands.registerCommand("ElevatorL2", new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_SCORE_OFFSET + FieldConstants.CORAL_LEVEL_HEIGHTS[1]));

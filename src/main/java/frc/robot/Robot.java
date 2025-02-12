@@ -42,10 +42,11 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void autonomousInit() {
+        AutoManager.start();
     }
 
     @Override
     public void teleopInit() {
-        PathManager.cancelPath();
+        AutoManager.cancel();
     }
 }
