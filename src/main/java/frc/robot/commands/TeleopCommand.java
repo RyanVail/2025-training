@@ -30,7 +30,7 @@ public class TeleopCommand extends Command {
         axis = (neg ? -1 : 1) * Math.pow(axis, 1.4);
 
         // Slow the speed based on the elevator height.
-        return axis * (1 - (this.elevator.getSetPoint() / ElevatorConstants.MAX_HEIGHT)
+        return axis * (1 - (this.elevator.getSetpoint() / ElevatorConstants.MAX_HEIGHT)
                 * DriveConstants.ELEVATOR_HEIGHT_DIMMER);
     }
 

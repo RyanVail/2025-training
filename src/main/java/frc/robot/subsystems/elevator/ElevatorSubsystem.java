@@ -59,9 +59,17 @@ public class ElevatorSubsystem extends SubsystemBase {
         setpointLigament.setColor(new Color8Bit(0, 255, 0));
     }
 
+    public MechanismLigament2d getRealMech() {
+        return realLigament;
+    }
+
+    public MechanismLigament2d getSetpointMech() {
+        return setpointLigament;
+    }
+
     @Override
     public void periodic() {
-        io.updateSimulation();
+        io.updateSimulation(); // TODO: Why isn't simulationPeriodic.
 
         double height = io.getHeight();
         double voltage = pid.calculate(height);
@@ -75,13 +83,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putData(LPREFIX + "Mech2D", mechanism);
     }
 
-    public void setSetPoint(double setpoint) {
+    public void setSetpoint(double setpoint) {
         this.setpoint = setpoint;
         pid.setSetpoint(setpoint);
         setpointLigament.setLength(setpoint);
     }
 
-    public double getSetPoint() {
+    public double getSetpoint() {
         return setpoint;
     }
 

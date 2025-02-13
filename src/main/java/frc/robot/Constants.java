@@ -82,7 +82,7 @@ public final class Constants {
 
         public static final double HEIGHT = MAX_HEIGHT - MIN_HEIGHT;
 
-        public static final Translation2d POS = new Translation2d(0.0, 0.05);
+        public static final Translation2d POS = new Translation2d(0.35, 0.0);
 
         public static final double P = 85.0;
         public static final double I = 0.0;
@@ -94,8 +94,10 @@ public final class Constants {
 
         public static final double CORAL_SCORE_OFFSET = 0.0;
 
+        public static final double CORAL_INTAKE_HEIGHT = Units.inchesToMeters(12.0);
+
         // TODO: What units is this in?
-        public static final double ALIGN_DIST = 0.15;
+        public static final double ALIGN_DIST = 0.5;
     }
 
     public class VisionConstants {
@@ -186,6 +188,8 @@ public final class Constants {
 
         public static final double LENGTH = Units.inchesToMeters(12);
 
+        public static final Translation2d POS = new Translation2d(0.0, 0.0);
+
         public static final double GEAR_RATIO = 36;
 
         public static final double MOMENT_OF_INERTIA = 0.5;
@@ -194,14 +198,14 @@ public final class Constants {
         public static final double MAX_ANGLE = Units.degreesToRadians(240);
 
         public static final double STARTING_ANGLE = Units.degreesToRadians(0);
+        public static final double VISUALIZATION_BASE_ANGLE = -90;
 
-        public static final double ALIGN_ANGLE = 1.85;
+        // TODO: This is very wrong and will remain wrong till the PID is fixed.
+        public static final double ALIGN_ANGLE = 6.0;
 
-        public static final double[] SCORING_ANGLES = {
-            Units.degreesToRadians(20),
-            Units.degreesToRadians(45),
-            Units.degreesToRadians(45),
-            Units.degreesToRadians(45)
-        };
+        public static final double PRESCORING_ANGLE = 145;
+        public static final double[] SCORING_ANGLES = { 20, 45, 45, 45 };
+
+        public static final double IDLE_ANGLE = 175;
     }
 }

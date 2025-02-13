@@ -1,18 +1,12 @@
 package frc.robot.subsystems.endeffector;
 
-import com.revrobotics.sim.SparkMaxSim;
-import com.revrobotics.spark.SparkAbsoluteEncoder;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.EndEffectorConstants;
 
 public class EndEffectorIOSim implements EndEffectorIO {
-    private SingleJointedArmSim sim;
+    SingleJointedArmSim sim;
 
     public EndEffectorIOSim() {
         // A single jointed arm is a good subsitute to simulate our end effector.
@@ -27,6 +21,9 @@ public class EndEffectorIOSim implements EndEffectorIO {
             EndEffectorConstants.STARTING_ANGLE
         );
     }
+
+    @Override
+    public void periodic() {}
 
     @Override
     public void simulationPeriodic() {

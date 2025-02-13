@@ -14,7 +14,6 @@ public class FlywheelIOSim implements FlywheelIO {
     FlywheelSim flywheelSim;
     SparkMaxSim flywheelSparkSim;
     SparkMax flywheelSpark;
-    DigitalInput sensor;
     double setVoltage;
 
     public FlywheelIOSim() {
@@ -46,7 +45,7 @@ public class FlywheelIOSim implements FlywheelIO {
 
     @Override
     public boolean hasCoral() {
-        return sensor.get();
+        return true; // TODO: The coral state should be handled somewhere.
     }
 
     @Override

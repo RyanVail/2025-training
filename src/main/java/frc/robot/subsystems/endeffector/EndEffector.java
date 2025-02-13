@@ -5,25 +5,51 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.EndEffectorConstants;
 
 public class EndEffector extends SubsystemBase {
-    private EndEffectorIO io;
-    private PIDController pid;
-    private double setpoint;
+    EndEffectorIO io;
+    PIDController pid;
+    double setpoint;
+    MechanismLigament2d realLigament;
+    MechanismLigament2d setpointLigament;
 
     private static final String LPREFIX = "/Subsystems/EndEffector/";
 
-    public EndEffector(EndEffectorIO io) {
+    public EndEffector(EndEffectorIO io, MechanismLigament2d realElevatorMech, MechanismLigament2d setpointElevatorMech) {
         this.io = io;
         this.pid = new PIDController(
             EndEffectorConstants.P,
             EndEffectorConstants.I,
             EndEffectorConstants.D
         );
+
+        realLigament = realElevatorMech.append(
+            new MechanismLigament2d (
+                "realEffector",
+                EndEffectorConstants.LENGTH,
+                0)
+        );
+
+        realLigament.setLineWeight(5);
+        realLigament.setColor(new Color8Bit(0, 0, 255));
+
+        setpointLigament = setpointElevatorMech.append(
+            new MechanismLigament2d(
+                "EffectorSetpoint",
+                EndEffectorConstants.LENGTH,
+                0)
+        );
+
+        setpointLigament.setLineWeight(2);
+        setpointLigament.setColor(new Color8Bit(0, 255, 0));
     }
 
     @Override
@@ -31,23 +57,28 @@ public class EndEffector extends SubsystemBase {
         double volts = this.pid.calculate(getAngle());
         volts = Math.min(volts, RobotController.getBatteryVoltage());
         volts = Math.max(volts, -RobotController.getBatteryVoltage());
-        this.io.setVoltage(volts);
+        io.setVoltage(volts);
+
+        realLigament.setAngle(EndEffectorConstants.VISUALIZATION_BASE_ANGLE + getAngle());
 
         SmartDashboard.putData(LPREFIX + "PID", pid);
 
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
         Logger.recordOutput(LPREFIX + "Volts", volts);
         Logger.recordOutput(LPREFIX + "Angle", getAngle());
+
+        this.io.periodic();
     }
 
     @Override
     public void simulationPeriodic() {
-        this.io.simulationPeriodic();
+        io.simulationPeriodic();
     }
 
     public void setSetpoint(double angle) {
-        this.setpoint = angle;
-        this.pid.setSetpoint(angle);
+        setpoint = angle;
+        pid.setSetpoint(angle);
+        setpointLigament.setAngle(EndEffectorConstants.VISUALIZATION_BASE_ANGLE + angle);
     }
 
     // TODO: This doesn't work like this.

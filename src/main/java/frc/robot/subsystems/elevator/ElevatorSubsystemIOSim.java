@@ -24,12 +24,10 @@ public class ElevatorSubsystemIOSim implements ElevatorSubsystemIO {
         sim.update(0.02);
     }
 
-    @Override
     public double getHeight() {
         return sim.getPositionMeters();
     }
 
-    @Override
     public void setVoltage(double voltage) {
         sim.setInputVoltage(voltage);
     }

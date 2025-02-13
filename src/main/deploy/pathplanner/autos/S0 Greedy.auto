@@ -15,6 +15,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "PrescoreCoral"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -68,6 +74,12 @@
                 "type": "path",
                 "data": {
                   "pathName": "F0 to F14"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PrescoreCoral"
                 }
               },
               {
@@ -127,6 +139,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "PrescoreCoral"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -152,6 +170,12 @@
           "type": "named",
           "data": {
             "name": "ScoreCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorIntake"
           }
         }
       ]

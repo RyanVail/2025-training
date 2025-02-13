@@ -13,6 +13,8 @@ public class EndEffectorIOSpark implements EndEffectorIO {
         spark = new SparkMax(0, MotorType.kBrushless);
     }
 
+    public void periodic() {}
+
     public void setVoltage(double voltage) {
         this.spark.setVoltage(voltage);
     }

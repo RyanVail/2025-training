@@ -33,25 +33,18 @@ public class ScoreCoral extends SequentialCommandGroup {
     }
 
     public ScoreCoral(EndEffector effector, ElevatorSubsystem elevator, Flywheel flywheel) {
-        super.addRequirements(effector, flywheel);
+        super.addRequirements(effector, elevator, flywheel);
         this.effector = effector;
         this.elevator = elevator;
         this.flywheel = flywheel;
 
         int level = findClosestLevel();
-
-        super.addCommands(new EndEffectorSetAngle(
-                effector,
-                EndEffectorConstants.SCORING_ANGLES[level]));
-
-        // TODO: This should be using its own command.
-        super.addCommands(flywheel.setVelocity(FlywheelConstants.CORAL_SCORE_VEL));
-        super.addCommands(Commands.waitSeconds(FlywheelConstants.CORAL_SCORE_WAIT));
-
-        super.addCommands(new EndEffectorSetAngle(
-                effector,
-                EndEffectorConstants.SCORING_ANGLES[level]));
-
-        super.addCommands(Commands.waitSeconds(FlywheelConstants.CORAL_SCORE_WAIT_BACK));
+        super.addCommands(
+                new EndEffectorSetAngle(effector, EndEffectorConstants.SCORING_ANGLES[level]),
+                // TODO: This should be using its own command.
+                flywheel.setVelocity(FlywheelConstants.CORAL_SCORE_VEL),
+                Commands.waitSeconds(FlywheelConstants.CORAL_SCORE_WAIT),
+                new EndEffectorSetAngle(effector, EndEffectorConstants.IDLE_ANGLE),
+                Commands.waitSeconds(FlywheelConstants.CORAL_SCORE_WAIT_BACK));
     }
 }
