@@ -3,15 +3,11 @@ package frc.robot.subsystems.endeffector;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.Constants.EndEffectorConstants;
 
 public class EndEffector extends SubsystemBase {
@@ -81,7 +77,6 @@ public class EndEffector extends SubsystemBase {
         setpointLigament.setAngle(EndEffectorConstants.VISUALIZATION_BASE_ANGLE + angle);
     }
 
-    // TODO: This doesn't work like this.
     public double getAngle() {
         return io.getAngle();
     }

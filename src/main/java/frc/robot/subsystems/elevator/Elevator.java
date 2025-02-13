@@ -7,13 +7,11 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
-public class ElevatorSubsystem extends SubsystemBase {
-    ElevatorSubsystemIO io;
+public class Elevator extends SubsystemBase {
+    ElevatorIO io;
     PIDController pid;
     ElevatorFeedforward feedForward;
 
@@ -24,7 +22,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private static final String LPREFIX = "/Subsystems/Elevator/";
 
-    public ElevatorSubsystem(ElevatorSubsystemIO io) {
+    public Elevator(ElevatorIO io) {
         this.io = io;
         this.pid = new PIDController(
                 ElevatorConstants.P,

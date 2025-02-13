@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
-public interface DriveSubsystemIO {
+public interface DriveIO {
     public void drive(ChassisSpeeds speeds);
 
     public SwerveModuleState[] getSwerveStates();

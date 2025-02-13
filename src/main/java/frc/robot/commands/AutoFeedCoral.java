@@ -4,13 +4,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.Drive;
 
 public class AutoFeedCoral extends Command {
-    DriveSubsystem drive;
+    Drive drive;
     boolean left;
 
-    public AutoFeedCoral(DriveSubsystem drive, boolean left) {
+    public AutoFeedCoral(Drive drive, boolean left) {
         super.addRequirements(drive);
         this.drive = drive;
         this.left = left;

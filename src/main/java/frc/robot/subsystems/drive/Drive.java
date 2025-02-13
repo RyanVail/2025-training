@@ -7,25 +7,23 @@ import org.littletonrobotics.junction.Logger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TeleopCommand;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.elevator.Elevator;
 
-public class DriveSubsystem extends SubsystemBase {
+public class Drive extends SubsystemBase {
     public class PoseSupplier implements Supplier<Pose2d> {
-        public DriveSubsystem drive;
+        public Drive drive;
 
-        public PoseSupplier(DriveSubsystem drive) {
+        public PoseSupplier(Drive drive) {
             this.drive = drive;
         }
 
@@ -34,11 +32,11 @@ public class DriveSubsystem extends SubsystemBase {
         }
     }
 
-    private DriveSubsystemIO io;
+    private DriveIO io;
 
     private static final String LPREFIX = "/Subsystems/Drive/";
 
-    public DriveSubsystem(DriveSubsystemIO io) {
+    public Drive(DriveIO io) {
         this.io = io;
 
         RobotConfig config = null;
@@ -75,7 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
     /**
      * @return Instance of TeleopCommand
      */
-    public Command getTeleopCommand(ElevatorSubsystem elevator, CommandGenericHID controller) {
+    public Command getTeleopCommand(Elevator elevator, CommandGenericHID controller) {
         return new TeleopCommand(this, elevator, controller);
     }
 

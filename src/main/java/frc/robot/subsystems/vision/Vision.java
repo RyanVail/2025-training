@@ -1,21 +1,17 @@
 package frc.robot.subsystems.vision;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import com.ctre.phoenix6.hardware.core.CoreTalonFX;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
-public class VisionSubsystem extends SubsystemBase {
-    private VisionSubsystemIO io;
+public class Vision extends SubsystemBase {
+    private VisionIO io;
     private PhotonCamera frontCamera = new PhotonCamera(VisionConstants.FRONT_CAMERA_NAME);
     private PhotonCamera backCamera = new PhotonCamera(VisionConstants.BACK_CAMERA_NAME);
     private Supplier<Pose2d> poseSupplier;
@@ -26,7 +22,7 @@ public class VisionSubsystem extends SubsystemBase {
     // Coral on the reef.
     private boolean[][] coral = new boolean[3][12];
 
-    public VisionSubsystem(VisionSubsystemIO io, Supplier<Pose2d> poseSupplier) {
+    public Vision(VisionIO io, Supplier<Pose2d> poseSupplier) {
         this.io = io;
         this.poseSupplier = poseSupplier;
         io.init(frontCamera, backCamera);
@@ -41,7 +37,7 @@ public class VisionSubsystem extends SubsystemBase {
         //
     }
 
-    // TODO: Implement this.
+    // TODO: Implement this or remove it.
     public Optional<Integer> getCoralLevel(PhotonTrackedTarget target) {
         Optional<Integer> result = Optional.empty();
         return result;

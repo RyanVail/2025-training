@@ -4,10 +4,10 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.Constants;
 
-public class ElevatorSubsystemIOSim implements ElevatorSubsystemIO {
+public class ElevatorIOSim implements ElevatorIO {
     ElevatorSim sim;
 
-    public ElevatorSubsystemIOSim() {
+    public ElevatorIOSim() {
         sim = new ElevatorSim(
                 DCMotor.getNEO(2),
                 Constants.ElevatorConstants.GEAR_RATIO,

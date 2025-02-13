@@ -1,20 +1,16 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.FlywheelConstants;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.flywheel.Flywheel;
 
 public class ScoreCoral extends SequentialCommandGroup {
     EndEffector effector;
-    ElevatorSubsystem elevator;
+    Elevator elevator;
     Flywheel flywheel;
 
     private int findClosestLevel() {
@@ -32,7 +28,7 @@ public class ScoreCoral extends SequentialCommandGroup {
         return closest_level;
     }
 
-    public ScoreCoral(EndEffector effector, ElevatorSubsystem elevator, Flywheel flywheel) {
+    public ScoreCoral(EndEffector effector, Elevator elevator, Flywheel flywheel) {
         super.addRequirements(effector, elevator, flywheel);
         this.effector = effector;
         this.elevator = elevator;

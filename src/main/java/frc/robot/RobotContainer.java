@@ -2,8 +2,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.ElevatorConstants;
@@ -15,39 +13,37 @@ import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.FeedCoral;
 import frc.robot.commands.ScoreCoral;
-import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.DriveSubsystemIOSwerve;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.elevator.ElevatorSubsystemIOSim;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveIOSim;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.endeffector.EndEffector;
-import frc.robot.subsystems.endeffector.EndEffectorIO;
 import frc.robot.subsystems.endeffector.EndEffectorIOSim;
-import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
-import frc.robot.subsystems.vision.VisionSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystemIOSim;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIOSim;
 
 public class RobotContainer {
     CommandGenericHID commandGenericHID;
 
-    DriveSubsystem drive;
+    Drive drive;
     Flywheel flywheel;
-    ElevatorSubsystem elevator;
-    VisionSubsystem vision;
+    Elevator elevator;
+    Vision vision;
     EndEffector endEffector;
 
     public RobotContainer() {
         commandGenericHID = new CommandGenericHID(Constants.CONTROLLER_PORT);
 
         if (Robot.isSimulation()) {
-            drive = new DriveSubsystem(new DriveSubsystemIOSwerve());
+            drive = new Drive(new DriveIOSim());
             flywheel = new Flywheel(new FlywheelIOSim());
-            elevator = new ElevatorSubsystem(new ElevatorSubsystemIOSim());
-            vision = new VisionSubsystem(new VisionSubsystemIOSim(), drive.getPoseSupplier());
+            elevator = new Elevator(new ElevatorIOSim());
+            vision = new Vision(new VisionIOSim(), drive.getPoseSupplier());
             endEffector = new EndEffector(new EndEffectorIOSim(), elevator.getRealMech(), elevator.getSetpointMech());
         } else {
-            drive = new DriveSubsystem(new DriveSubsystemIOSwerve());
+            drive = new Drive(new DriveIOSim());
             // endEffector = new EndEffector(new EndEffectorIOSpark(), elevator.getRealMech(), elevator.getSetpoint());
         }
 

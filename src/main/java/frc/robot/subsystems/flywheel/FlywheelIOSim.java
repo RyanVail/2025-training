@@ -6,7 +6,6 @@ import com.revrobotics.sim.SparkMaxSim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.FlywheelConstants;
 

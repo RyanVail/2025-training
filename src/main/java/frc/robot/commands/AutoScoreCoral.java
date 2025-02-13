@@ -5,23 +5,23 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.vision.Vision;
 
 public class AutoScoreCoral extends Command {
-    DriveSubsystem drive;
-    ElevatorSubsystem elevator;
-    VisionSubsystem vision;
+    Drive drive;
+    Elevator elevator;
+    Vision vision;
     boolean left;
 
     /***
      * Auto scores coral. The robot must be aligned with the algae reef segment.
      */
     public AutoScoreCoral(
-            DriveSubsystem drive,
-            ElevatorSubsystem elevator,
-            VisionSubsystem vision,
+            Drive drive,
+            Elevator elevator,
+            Vision vision,
             boolean left) {
         super.addRequirements(drive, elevator, vision);
         this.drive = drive;

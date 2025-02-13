@@ -1,10 +1,7 @@
 package frc.robot.subsystems.endeffector;
 
-import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class EndEffectorIOSpark implements EndEffectorIO {
     private SparkMax spark;

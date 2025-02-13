@@ -4,15 +4,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.elevator.Elevator;
 
 public class TeleopCommand extends Command {
-    private DriveSubsystem drive;
-    private ElevatorSubsystem elevator;
+    private Drive drive;
+    private Elevator elevator;
     private CommandGenericHID controller;
 
-    public TeleopCommand(DriveSubsystem drive, ElevatorSubsystem elevator, CommandGenericHID controller) {
+    public TeleopCommand(Drive drive, Elevator elevator, CommandGenericHID controller) {
         super.addRequirements(drive, elevator);
         this.drive = drive;
         this.elevator = elevator;

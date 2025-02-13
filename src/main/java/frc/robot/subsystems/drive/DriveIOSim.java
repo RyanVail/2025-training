@@ -16,10 +16,10 @@ import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.parser.SwerveParser;
 
-public class DriveSubsystemIOSwerve implements DriveSubsystemIO {
+public class DriveIOSim implements DriveIO {
     private SwerveDrive swerveDrive;
 
-    public DriveSubsystemIOSwerve() {
+    public DriveIOSim() {
         try {
             File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
             swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(12.5));

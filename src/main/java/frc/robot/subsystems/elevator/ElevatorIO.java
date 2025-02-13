@@ -1,6 +1,6 @@
 package frc.robot.subsystems.elevator;
 
-public interface ElevatorSubsystemIO {
+public interface ElevatorIO {
     public void setVoltage(double voltage);
 
     public default void simulationPeriodic() {};

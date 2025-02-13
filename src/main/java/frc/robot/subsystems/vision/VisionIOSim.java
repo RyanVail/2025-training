@@ -10,14 +10,14 @@ import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import frc.robot.Constants.VisionConstants;
 
-public class VisionSubsystemIOSim implements VisionSubsystemIO {
+public class VisionIOSim implements VisionIO {
     private VisionSystemSim visionSim;
     private PhotonCameraSim frontCameraSim;
     private PhotonCameraSim backCameraSim;
     private SimCameraProperties frontCameraProp;
     private SimCameraProperties backCameraProp;
 
-    public VisionSubsystemIOSim() {
+    public VisionIOSim() {
         visionSim = new VisionSystemSim("main");
 
         try {
