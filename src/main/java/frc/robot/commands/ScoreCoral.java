@@ -41,10 +41,7 @@ public class ScoreCoral extends SequentialCommandGroup {
         int level = findClosestLevel();
         super.addCommands(
                 new EndEffectorSetAngle(effector, EndEffectorConstants.SCORING_ANGLES[level]),
-                // TODO: This should be using its own command.
-                flywheel.setVelocity(FlywheelConstants.CORAL_SCORE_VEL),
-                Commands.waitSeconds(FlywheelConstants.CORAL_SCORE_WAIT),
-                new EndEffectorSetAngle(effector, EndEffectorConstants.IDLE_ANGLE),
-                Commands.waitSeconds(FlywheelConstants.CORAL_SCORE_WAIT_BACK));
+                new EjectCoral(flywheel),
+                new EndEffectorSetAngle(effector, EndEffectorConstants.IDLE_ANGLE));
     }
 }

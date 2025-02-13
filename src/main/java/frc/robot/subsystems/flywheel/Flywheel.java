@@ -43,10 +43,8 @@ public class Flywheel extends SubsystemBase {
         io.setVoltage(volts);
     }
 
-    public Command setVelocity(double velocity) {
-        return Commands.runOnce(() -> {
-            this.pid.setSetpoint(velocity);
-        });
+    public void setVelocitySetpoint(double velocity) {
+        pid.setSetpoint(velocity);
     }
 
     public boolean hasCoral() {

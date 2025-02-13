@@ -45,7 +45,7 @@ public class FlywheelIOSim implements FlywheelIO {
 
     @Override
     public boolean hasCoral() {
-        return true; // TODO: The coral state should be handled somewhere.
+        return true;
     }
 
     @Override

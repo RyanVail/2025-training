@@ -37,8 +37,6 @@ public final class Constants {
         public static final double ALGAE_SCORE_TIME = 1.0;
 
         public static final double CORAL_SCORE_VEL = 10.0;
-        public static final double CORAL_SCORE_WAIT = 0.5;
-        public static final double CORAL_SCORE_WAIT_BACK = 0.125;
 
         public static final double CORAL_FEED_VEL = -50.0;
     }
