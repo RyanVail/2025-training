@@ -55,7 +55,7 @@ public class FlywheelIOSim implements FlywheelIO {
     }
 
     @Override
-    public void updateSimulation() {
+    public void simulationPeriodic() {
         flywheelSim.update(0.02);
         // flywheelSparkSim.iterate();
     }

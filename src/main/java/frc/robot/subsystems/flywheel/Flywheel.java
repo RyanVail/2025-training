@@ -36,7 +36,7 @@ public class Flywheel extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs(LPREFIX + "Inputs", inputs);
 
-        io.updateSimulation();
+        io.simulationPeriodic();
 
         double vel = inputs.velocity;
         double volts = pid.calculate(vel) + feedforward.calculate(vel);

@@ -69,8 +69,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        io.updateSimulation(); // TODO: Why isn't simulationPeriodic.
-
         double height = io.getHeight();
         double voltage = pid.calculate(height);
         voltage += feedForward.calculate(height);
@@ -81,6 +79,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(LPREFIX + "Voltage", voltage);
         realLigament.setLength(height);
         SmartDashboard.putData(LPREFIX + "Mech2D", mechanism);
+    }
+
+    public void simulationPeriodic() {
+        io.simulationPeriodic();
     }
 
     public void setSetpoint(double setpoint) {

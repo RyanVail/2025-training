@@ -20,7 +20,7 @@ public class ElevatorSubsystemIOSim implements ElevatorSubsystemIO {
     }
 
     @Override
-    public void updateSimulation() {
+    public void simulationPeriodic() {
         sim.update(0.02);
     }
 

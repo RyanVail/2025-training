@@ -26,5 +26,5 @@ public interface FlywheelIO {
 
     public void updateInputs(FlywheelIOInputs inputs);
 
-    public default void updateSimulation() {}
+    public default void simulationPeriodic() {}
 }
