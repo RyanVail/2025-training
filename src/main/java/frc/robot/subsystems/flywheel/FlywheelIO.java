@@ -9,13 +9,7 @@ public interface FlywheelIO {
         double velocity = 0.0;
     }
 
-    /**
-     * Sets the desired RPM of the flywheel
-     * 
-     * @param setpoint Prescribed flywheel velocity,
-     *                 in units of rotations per minute
-     */
-    public void setVoltage(double setpoint);
+    public void setVoltage(double voltage);
 
     /**
      * @return Measured flywheel velocity in units of rotations per minute
@@ -23,6 +17,8 @@ public interface FlywheelIO {
     public double getVelocity();
 
     public boolean hasCoral();
+
+    public boolean isCoralLoaded();
 
     public void updateInputs(FlywheelIOInputs inputs);
 

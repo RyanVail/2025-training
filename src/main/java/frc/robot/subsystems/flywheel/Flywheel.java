@@ -48,4 +48,8 @@ public class Flywheel extends SubsystemBase {
     public boolean hasCoral() {
         return io.hasCoral();
     }
+
+    public boolean isCoralLoaded() {
+        return io.isCoralLoaded();
+    }
 }

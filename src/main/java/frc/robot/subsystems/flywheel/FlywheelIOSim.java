@@ -17,17 +17,15 @@ public class FlywheelIOSim implements FlywheelIO {
 
     public FlywheelIOSim() {
         flywheelSpark = new SparkMax(
-                FlywheelConstants.FLYWHEEL_PORT,
+                FlywheelConstants.PORT,
                 MotorType.kBrushless);
         flywheelSparkSim = new SparkMaxSim(flywheelSpark, DCMotor.getNEO(1));
-        flywheelSim = new FlywheelSim (
-            LinearSystemId.createFlywheelSystem (
-                DCMotor.getNEO(1),
-                FlywheelConstants.GEAR_RATIO,
-                FlywheelConstants.MOMENT_OF_INERTIA
-            ),
-            DCMotor.getNEO(1)
-        );
+        flywheelSim = new FlywheelSim(
+                LinearSystemId.createFlywheelSystem(
+                        DCMotor.getNEO(1),
+                        FlywheelConstants.GEAR_RATIO,
+                        FlywheelConstants.MOMENT_OF_INERTIA),
+                DCMotor.getNEO(1));
     }
 
     @Override
@@ -44,6 +42,11 @@ public class FlywheelIOSim implements FlywheelIO {
 
     @Override
     public boolean hasCoral() {
+        return true;
+    }
+
+    @Override
+    public boolean isCoralLoaded() {
         return true;
     }
 

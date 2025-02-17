@@ -31,7 +31,10 @@ public final class Constants {
         public static final double GEAR_RATIO = 1.0; // Direct drive
         public static final double MOMENT_OF_INERTIA = 0.002; // From CAD, in units of kilogram * meters squared
 
-        public static final int FLYWHEEL_PORT = 9;
+        public static final int PORT = 9;
+
+        public static final int FIRST_SENSOR_ID = 0;
+        public static final int END_SENSOR_ID = 1;
 
         public static final double ALGAE_SCORE_VEL = 100.0;
         public static final double ALGAE_SCORE_TIME = 1.0;
@@ -71,7 +74,12 @@ public final class Constants {
     }
 
     public class ElevatorConstants {
-        public static final double GEAR_RATIO = 36.0;
+        public static final double GEAR_RATIO = 20.0;
+
+        public static final double ENCODER_RESOLUTION = 42;
+        public static final double GEAR_PERIMETER = Units.inchesToMeters((1 + (10 / 16)) * Math.PI);
+        public static final double METER_PER_ENCODER_UNIT = GEAR_PERIMETER / (GEAR_RATIO * ENCODER_RESOLUTION);
+
         public static final double MASS = Units.lbsToKilograms(50.0);
         public static final double RADIUS = Units.inchesToMeters(2.5);
 
@@ -96,6 +104,8 @@ public final class Constants {
 
         // TODO: What units is this in?
         public static final double ALIGN_DIST = 0.5;
+
+        public static final int PORT = 1;
     }
 
     public class VisionConstants {

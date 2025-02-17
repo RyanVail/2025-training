@@ -17,7 +17,7 @@ public class FeedCoral extends Command {
 
     @Override
     public boolean isFinished() {
-        return Robot.isSimulation() ? true : flywheel.hasCoral();
+        return Robot.isSimulation() ? true : flywheel.isCoralLoaded();
     }
 
     @Override
