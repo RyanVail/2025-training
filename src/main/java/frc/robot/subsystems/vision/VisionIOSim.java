@@ -21,8 +21,9 @@ public class VisionIOSim implements VisionIO {
         visionSim = new VisionSystemSim("main");
 
         try {
+            // TODO: Choose the right layout.
             AprilTagFieldLayout tagLayout = AprilTagFieldLayout
-                    .loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
+                    .loadFromResource(AprilTagFields.k2025ReefscapeWelded.m_resourceFile);
             visionSim.addAprilTags(tagLayout);
         } catch (Exception e) {
             e.printStackTrace();

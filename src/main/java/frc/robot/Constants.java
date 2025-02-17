@@ -198,7 +198,8 @@ public final class Constants {
 
         public static final Translation2d POS = new Translation2d(0.0, 0.0);
 
-        public static final double GEAR_RATIO = 36;
+        public static final double GEAR_RATIO = 36.0;
+        public static final double ENCODER_RESOLUTION = 42.0;
 
         public static final double MOMENT_OF_INERTIA = 0.5;
 

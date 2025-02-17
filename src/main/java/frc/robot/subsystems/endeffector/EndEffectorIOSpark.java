@@ -3,6 +3,8 @@ package frc.robot.subsystems.endeffector;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import frc.robot.Constants.EndEffectorConstants;
+
 public class EndEffectorIOSpark implements EndEffectorIO {
     private SparkMax spark;
 
@@ -17,7 +19,6 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     }
 
     public double getAngle() {
-        // TODO: Convert this to an angle.
-        return spark.getAbsoluteEncoder().getPosition();
+        return spark.getAbsoluteEncoder().getPosition() / (EndEffectorConstants.GEAR_RATIO * EndEffectorConstants.ENCODER_RESOLUTION);
     }
 }

@@ -14,7 +14,7 @@ import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.FeedCoral;
 import frc.robot.commands.ScoreCoral;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.DriveIOSim;
+import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.endeffector.EndEffector;
@@ -37,13 +37,13 @@ public class RobotContainer {
         commandGenericHID = new CommandGenericHID(Constants.CONTROLLER_PORT);
 
         if (Robot.isSimulation()) {
-            drive = new Drive(new DriveIOSim());
+            drive = new Drive(new DriveIOSwerve());
             flywheel = new Flywheel(new FlywheelIOSim());
             elevator = new Elevator(new ElevatorIOSim());
             vision = new Vision(new VisionIOSim(), drive.getPoseSupplier());
             endEffector = new EndEffector(new EndEffectorIOSim(), elevator.getRealMech(), elevator.getSetpointMech());
         } else {
-            drive = new Drive(new DriveIOSim());
+            drive = new Drive(new DriveIOSwerve());
             // endEffector = new EndEffector(new EndEffectorIOSpark(), elevator.getRealMech(), elevator.getSetpoint());
         }
 
