@@ -217,4 +217,8 @@ public final class Constants {
 
         public static final double IDLE_ANGLE = 175;
     }
+
+    public class BeaterBarConstants {
+        public static final int PORT = 2;
+    }
 }
