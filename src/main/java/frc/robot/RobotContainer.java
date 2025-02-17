@@ -14,7 +14,7 @@ import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.FeedCoral;
 import frc.robot.commands.ScoreCoral;
-import frc.robot.subsystems.beaterbar.BearterBarIOFlex;
+import frc.robot.subsystems.beaterbar.BeaterBarIOFlex;
 import frc.robot.subsystems.beaterbar.BeaterBar;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIOSwerve;
@@ -56,7 +56,7 @@ public class RobotContainer {
             elevator = new Elevator(new ElevatorIOSpark());
             // TODO: Vision real.
             endEffector = new EndEffector(new EndEffectorIOSpark(), elevator.getRealMech(), elevator.getSetpointMech());
-            beaterBar = new BeaterBar(new BearterBarIOFlex());
+            beaterBar = new BeaterBar(new BeaterBarIOFlex());
         }
 
         configureBindings();

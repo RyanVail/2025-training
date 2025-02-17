@@ -5,10 +5,10 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import frc.robot.Constants.BeaterBarConstants;
 
-public class BearterBarIOFlex implements BeaterBarIO {
+public class BeaterBarIOFlex implements BeaterBarIO {
     SparkFlex flex;
 
-    public BearterBarIOFlex() {
+    public BeaterBarIOFlex() {
         flex = new SparkFlex(BeaterBarConstants.PORT, MotorType.kBrushless);
     }
 
