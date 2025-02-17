@@ -13,14 +13,19 @@ import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.FeedCoral;
 import frc.robot.commands.ScoreCoral;
+import frc.robot.subsystems.beaterbar.BearterBarIOFlex;
+import frc.robot.subsystems.beaterbar.BeaterBar;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorIOSpark;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.EndEffectorIOSim;
+import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
+import frc.robot.subsystems.flywheel.FlywheelIOSpark;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOSim;
 
@@ -32,6 +37,7 @@ public class RobotContainer {
     Elevator elevator;
     Vision vision;
     EndEffector endEffector;
+    BeaterBar beaterBar;
 
     public RobotContainer() {
         commandGenericHID = new CommandGenericHID(Constants.CONTROLLER_PORT);
@@ -42,9 +48,14 @@ public class RobotContainer {
             elevator = new Elevator(new ElevatorIOSim());
             vision = new Vision(new VisionIOSim(), drive.getPoseSupplier());
             endEffector = new EndEffector(new EndEffectorIOSim(), elevator.getRealMech(), elevator.getSetpointMech());
+            // TODO: Beatbar sim. 
         } else {
             drive = new Drive(new DriveIOSwerve());
-            // endEffector = new EndEffector(new EndEffectorIOSpark(), elevator.getRealMech(), elevator.getSetpoint());
+            flywheel = new Flywheel(new FlywheelIOSpark());
+            elevator = new Elevator(new ElevatorIOSpark());
+            // TODO: Vision real.
+            endEffector = new EndEffector(new EndEffectorIOSpark(), elevator.getRealMech(), elevator.getSetpointMech());
+            beaterBar = new BeaterBar(new BearterBarIOFlex());
         }
 
         configureBindings();
