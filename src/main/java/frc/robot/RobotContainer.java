@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
@@ -107,6 +108,9 @@ public class RobotContainer {
 
         commandGenericHID.button(4).onTrue(new EndEffectorSetAngle(endEffector, 0));
         commandGenericHID.button(4).onFalse(new EndEffectorSetAngle(endEffector, 120));
+
+        commandGenericHID.button(6).toggleOnTrue(Commands.runOnce(() -> beaterBar.setSpeed(BeaterBarConstants.FEED_SPEED)));
+        commandGenericHID.button(6).toggleOnFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
 
         // commandGenericHID.button(4).onTrue(new ScoreCoral(endEffector, elevator,
         // flywheel));

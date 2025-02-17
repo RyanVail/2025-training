@@ -220,5 +220,7 @@ public final class Constants {
 
     public class BeaterBarConstants {
         public static final int PORT = 2;
+
+        public static final double FEED_SPEED = 0.5;
     }
 }
