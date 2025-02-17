@@ -33,6 +33,8 @@ public class Flywheel extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs(LPREFIX + "Inputs", inputs);
+        Logger.recordOutput(LPREFIX + "HasCoral", hasCoral());
+        Logger.recordOutput(LPREFIX + "IsCoralLoaded", isCoralLoaded());
 
         io.simulationPeriodic();
 

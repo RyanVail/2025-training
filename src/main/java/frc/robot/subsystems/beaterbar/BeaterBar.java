@@ -1,9 +1,15 @@
 package frc.robot.subsystems.beaterbar;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BeaterBar extends SubsystemBase {
-    public BeaterBarIO io;
+    BeaterBarIO io;
+    double setSpeed;
+
+    private static final String LPREFIX = "/Subsystems/Elevator/";
 
     public BeaterBar(BeaterBarIO io) {
         this.io = io;
@@ -11,5 +17,12 @@ public class BeaterBar extends SubsystemBase {
 
     public void setSpeed(double speed) {
         io.setSpeed(speed);
+        setSpeed = speed;
+    }
+
+    @Override
+    public void periodic() {
+        Logger.recordOutput(LPREFIX + "SetSpeed", setSpeed);
+        Logger.recordOutput(LPREFIX + "Velocity", io.getVelocity());
     }
 }

@@ -1,5 +1,7 @@
 package frc.robot.subsystems.elevator;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -74,9 +76,12 @@ public class Elevator extends SubsystemBase {
 
         SmartDashboard.putData(LPREFIX + "PID", pid);
 
-        SmartDashboard.putNumber(LPREFIX + "Voltage", voltage);
         realLigament.setLength(height);
         SmartDashboard.putData(LPREFIX + "Mech2D", mechanism);
+
+        Logger.recordOutput(LPREFIX + "Voltage", voltage);
+        Logger.recordOutput(LPREFIX + "Height", height);
+        Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
     }
 
     public void simulationPeriodic() {

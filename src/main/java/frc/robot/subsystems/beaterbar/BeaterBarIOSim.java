@@ -7,4 +7,8 @@ public class BeaterBarIOSim implements BeaterBarIO {
     @Override
     public void setSpeed(double speed) {
     }
+
+    public double getVelocity() {
+        return 0;
+    }
 }

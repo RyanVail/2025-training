@@ -16,4 +16,9 @@ public class BeaterBarIOFlex implements BeaterBarIO {
     public void setSpeed(double speed) {
         flex.set(speed);
     }
+
+    @Override
+    public double getVelocity() {
+        return flex.getEncoder().getVelocity();
+    }
 }
