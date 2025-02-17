@@ -2,7 +2,6 @@ package frc.robot.subsystems.beaterbar;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BeaterBar extends SubsystemBase {

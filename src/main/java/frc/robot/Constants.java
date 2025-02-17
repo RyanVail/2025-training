@@ -102,8 +102,7 @@ public final class Constants {
 
         public static final double CORAL_INTAKE_HEIGHT = Units.inchesToMeters(12.0);
 
-        // TODO: What units is this in?
-        public static final double ALIGN_DIST = 0.5;
+        public static final double ALIGN_DIST_METERS = 0.5;
 
         public static final int PORT = 1;
     }
@@ -177,15 +176,15 @@ public final class Constants {
         };
 
         public static final Pose2d[] FEEDER_POSES = {
-            new Pose2d(1.65, 0.75, new Rotation2d(Units.degreesToRadians(54))),
-            new Pose2d(0.63, 1.46, new Rotation2d(Units.degreesToRadians(54))),
-            new Pose2d(0.63, 6.66, new Rotation2d(Units.degreesToRadians(-54))),
-            new Pose2d(1.65, 7.33, new Rotation2d(Units.degreesToRadians(-54))),
+                new Pose2d(1.65, 0.75, new Rotation2d(Units.degreesToRadians(54))),
+                new Pose2d(0.63, 1.46, new Rotation2d(Units.degreesToRadians(54))),
+                new Pose2d(0.63, 6.66, new Rotation2d(Units.degreesToRadians(-54))),
+                new Pose2d(1.65, 7.33, new Rotation2d(Units.degreesToRadians(-54))),
         };
 
         public static final Translation2d[] FEEDER_POSITIONS = {
-            new Translation2d(1.14, 1.1),
-            new Translation2d(1.14, 7),
+                new Translation2d(1.14, 1.1),
+                new Translation2d(1.14, 7),
         };
     }
 

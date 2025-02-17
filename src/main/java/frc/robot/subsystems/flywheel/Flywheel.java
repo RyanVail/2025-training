@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -40,6 +41,8 @@ public class Flywheel extends SubsystemBase {
 
         double vel = inputs.velocity;
         double volts = pid.calculate(vel) + feedforward.calculate(vel);
+        volts = Math.min(volts, RobotController.getBatteryVoltage());
+        volts = Math.max(volts, -RobotController.getBatteryVoltage());
         io.setVoltage(volts);
     }
 

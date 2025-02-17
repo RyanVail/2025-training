@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -72,6 +73,8 @@ public class Elevator extends SubsystemBase {
         double height = io.getHeight();
         double voltage = pid.calculate(height);
         voltage += feedForward.calculate(height);
+        voltage = Math.min(voltage, RobotController.getBatteryVoltage());
+        voltage = Math.max(voltage, -RobotController.getBatteryVoltage());
         io.setVoltage(voltage);
 
         SmartDashboard.putData(LPREFIX + "PID", pid);

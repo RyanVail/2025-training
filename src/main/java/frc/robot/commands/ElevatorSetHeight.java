@@ -21,6 +21,6 @@ public class ElevatorSetHeight extends Command {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(elevator.getHeight() - height) <= ElevatorConstants.ALIGN_DIST;
+        return Math.abs(elevator.getHeight() - height) <= ElevatorConstants.ALIGN_DIST_METERS;
     }
 }

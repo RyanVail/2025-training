@@ -19,30 +19,28 @@ public class EndEffector extends SubsystemBase {
 
     private static final String LPREFIX = "/Subsystems/EndEffector/";
 
-    public EndEffector(EndEffectorIO io, MechanismLigament2d realElevatorMech, MechanismLigament2d setpointElevatorMech) {
+    public EndEffector(EndEffectorIO io, MechanismLigament2d realElevatorMech,
+            MechanismLigament2d setpointElevatorMech) {
         this.io = io;
         this.pid = new PIDController(
-            EndEffectorConstants.P,
-            EndEffectorConstants.I,
-            EndEffectorConstants.D
-        );
+                EndEffectorConstants.P,
+                EndEffectorConstants.I,
+                EndEffectorConstants.D);
 
         realLigament = realElevatorMech.append(
-            new MechanismLigament2d (
-                "realEffector",
-                EndEffectorConstants.LENGTH,
-                0)
-        );
+                new MechanismLigament2d(
+                        "realEffector",
+                        EndEffectorConstants.LENGTH,
+                        0));
 
         realLigament.setLineWeight(5);
         realLigament.setColor(new Color8Bit(0, 0, 255));
 
         setpointLigament = setpointElevatorMech.append(
-            new MechanismLigament2d(
-                "EffectorSetpoint",
-                EndEffectorConstants.LENGTH,
-                0)
-        );
+                new MechanismLigament2d(
+                        "EffectorSetpoint",
+                        EndEffectorConstants.LENGTH,
+                        0));
 
         setpointLigament.setLineWeight(2);
         setpointLigament.setColor(new Color8Bit(0, 255, 0));
