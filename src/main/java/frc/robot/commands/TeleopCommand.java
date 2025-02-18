@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
@@ -17,6 +18,8 @@ public class TeleopCommand extends Command {
         this.drive = drive;
         this.elevator = elevator;
         this.controller = controller;
+
+        SmartDashboard.putNumber("ControlPow", 1.8);
     }
 
     private double processAxis(double axis) {
@@ -27,7 +30,7 @@ public class TeleopCommand extends Command {
         axis = (axis > DriveConstants.DEADZONE) ? axis : 0;
 
         // Make the drive speed exponential.
-        axis = (neg ? -1 : 1) * Math.pow(axis, 1.4);
+        axis = (neg ? -1 : 1) * Math.pow(axis, SmartDashboard.getNumber("ControlPow", 1.8));
 
         // Slow the speed based on the elevator height.
         return axis * (1 - (this.elevator.getSetpoint() / ElevatorConstants.MAX_HEIGHT)
