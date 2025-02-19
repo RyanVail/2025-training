@@ -1,24 +1,28 @@
 package frc.robot.subsystems.elevator;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import frc.robot.Constants.ElevatorConstants;
 
 public class ElevatorIOSpark implements ElevatorIO {
-    SparkMax spark;
+    SparkMax leftSpark;
+    SparkMax rightSpark;
 
     public ElevatorIOSpark() {
-        // spark = new SparkMax(ElevatorConstants.PORT, MotorType.kBrushless);
+        leftSpark = new SparkMax(ElevatorConstants.LEFT_PORT, MotorType.kBrushless);
+        rightSpark = new SparkMax(ElevatorConstants.RIGHT_PORT, MotorType.kBrushless);
     }
 
     @Override
     public void setVoltage(double voltage) {
-        // spark.setVoltage(voltage);
+        leftSpark.setVoltage(voltage);
+        rightSpark.setVoltage(-voltage);
     }
 
+    // TODO: The inital value has to be calibrated.
     @Override
     public double getHeight() {
-        return ElevatorConstants.MIN_HEIGHT;
-        // return spark.getEncoder().getPosition() / ElevatorConstants.METER_PER_ENCODER_UNIT;
+        return leftSpark.getEncoder().getPosition();// * ElevatorConstants.METER_PER_ENCODER_UNIT;
     }
 }

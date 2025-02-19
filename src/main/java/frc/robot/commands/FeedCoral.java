@@ -1,27 +1,27 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Robot;
-import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.intake.Intake;
 
 public class FeedCoral extends Command {
-    Flywheel flywheel;
+    Intake intake;
 
-    public FeedCoral(Flywheel flywheel) {
-        super.addRequirements(flywheel);
-        this.flywheel = flywheel;
+    public FeedCoral(Intake intake) {
+        super.addRequirements(intake);
+        this.intake = intake;
 
-        flywheel.setVelocitySetpoint(FlywheelConstants.CORAL_FEED_VEL);
+        intake.setVoltage(IntakeConstants.CORAL_FEED_VOLTAGE);
     }
 
     @Override
     public boolean isFinished() {
-        return Robot.isSimulation() ? true : flywheel.isCoralLoaded();
+        return Robot.isSimulation() ? true : intake.isCoralLoaded();
     }
 
     @Override
     public void end(boolean interrupted) {
-        flywheel.setVelocitySetpoint(0);
+        intake.setVoltage(0);
     }
 }

@@ -6,12 +6,12 @@ import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
-import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.intake.Intake;
 
 public class ScoreCoral extends SequentialCommandGroup {
     EndEffector effector;
     Elevator elevator;
-    Flywheel flywheel;
+    Intake intake;
 
     private int findClosestLevel() {
         double height = elevator.getHeight() - ElevatorConstants.CORAL_SCORE_OFFSET;
@@ -28,16 +28,16 @@ public class ScoreCoral extends SequentialCommandGroup {
         return closest_level;
     }
 
-    public ScoreCoral(EndEffector effector, Elevator elevator, Flywheel flywheel) {
-        super.addRequirements(effector, elevator, flywheel);
+    public ScoreCoral(EndEffector effector, Elevator elevator, Intake intake) {
+        super.addRequirements(effector, elevator, intake);
         this.effector = effector;
         this.elevator = elevator;
-        this.flywheel = flywheel;
+        this.intake = intake;
 
         int level = findClosestLevel();
         super.addCommands(
                 new EndEffectorSetAngle(effector, EndEffectorConstants.SCORING_ANGLES[level]),
-                new EjectCoral(flywheel),
-                new EndEffectorSetAngle(effector, EndEffectorConstants.IDLE_ANGLE));
+                new EjectCoral(intake),
+                new EndEffectorSetAngle(effector, EndEffectorConstants.INTAKE_ANGLE));
     }
 }

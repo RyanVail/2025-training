@@ -2,26 +2,26 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Constants.FlywheelConstants;
-import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.intake.Intake;
 
 public class EjectCoral extends Command {
-    Flywheel flywheel;
+    Intake intake;
 
-    public EjectCoral(Flywheel flywheel) {
-        super.addRequirements(flywheel);
-        this.flywheel = flywheel;
+    public EjectCoral(Intake intake) {
+        super.addRequirements(intake);
+        this.intake = intake;
 
-        flywheel.setVelocitySetpoint(FlywheelConstants.CORAL_SCORE_VEL);
+        intake.setVoltage(IntakeConstants.CORAL_SCORE_VOLTAGE);
     }
 
     @Override
     public boolean isFinished() {
-        return Robot.isSimulation() ? true : !flywheel.hasCoral();
+        return Robot.isSimulation() ? true : !intake.hasCoral();
     }
 
     @Override
     public void end(boolean interrupted) {
-        flywheel.setVelocitySetpoint(0);
+        intake.setVoltage(0);
     }
 }

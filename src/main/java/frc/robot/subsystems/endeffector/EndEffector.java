@@ -76,6 +76,6 @@ public class EndEffector extends SubsystemBase {
     }
 
     public double getAngle() {
-        return io.getAngle();
+        return io.getAngle() * 10;
     }
 }

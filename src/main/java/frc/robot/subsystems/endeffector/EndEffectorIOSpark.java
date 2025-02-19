@@ -1,19 +1,22 @@
 package frc.robot.subsystems.endeffector;
 
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
+import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.util.Units;
+import com.revrobotics.spark.SparkMax;
+
 import frc.robot.Constants.EndEffectorConstants;
+
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class EndEffectorIOSpark implements EndEffectorIO {
     private SparkMax spark;
 
     public EndEffectorIOSpark() {
-        spark = new SparkMax(0, MotorType.kBrushless);
+        spark = new SparkMax(EndEffectorConstants.PORT, MotorType.kBrushless);
     }
 
     public void periodic() {
+        Logger.recordOutput("EndEffectorAngle", spark.getEncoder().getPosition());
     }
 
     public void setVoltage(double voltage) {
@@ -21,7 +24,6 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     }
 
     public double getAngle() {
-        return Units.degreesToRadians(2 * Math.PI * spark.getAbsoluteEncoder().getPosition()
-                / (EndEffectorConstants.GEAR_RATIO * EndEffectorConstants.ENCODER_RESOLUTION));
+        return spark.getEncoder().getPosition();
     }
 }

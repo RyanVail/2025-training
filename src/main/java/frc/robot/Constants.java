@@ -19,19 +19,19 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final int CONTROLLER_PORT = 0;
 
-    public class FlywheelConstants {
-        public static final double P = 8.25;
-        public static final double I = 0.025;
+    public class IntakeConstants {
+        public static final double P = 0.05;
+        public static final double I = 0.0;
         public static final double D = 0.0;
 
-        public static final double S = 2.5;
+        public static final double S = 0.0;
         public static final double V = 0.0;
         public static final double A = 0.0;
 
         public static final double GEAR_RATIO = 1.0; // Direct drive
         public static final double MOMENT_OF_INERTIA = 0.002; // From CAD, in units of kilogram * meters squared
 
-        public static final int PORT = 9;
+        public static final int PORT = 13;
 
         public static final int FIRST_SENSOR_ID = 0;
         public static final int END_SENSOR_ID = 1;
@@ -39,9 +39,8 @@ public final class Constants {
         public static final double ALGAE_SCORE_VEL = 100.0;
         public static final double ALGAE_SCORE_TIME = 1.0;
 
-        public static final double CORAL_SCORE_VEL = 10.0;
-
-        public static final double CORAL_FEED_VEL = -50.0;
+        public static final double CORAL_SCORE_VOLTAGE = -4.5;
+        public static final double CORAL_FEED_VOLTAGE = 4.5;
     }
 
     public class DriveConstants {
@@ -76,23 +75,23 @@ public final class Constants {
     public class ElevatorConstants {
         public static final double GEAR_RATIO = 20.0;
 
-        public static final double ENCODER_RESOLUTION = 42;
-        public static final double GEAR_PERIMETER = Units.inchesToMeters((1 + (10 / 16)) * Math.PI);
-        public static final double METER_PER_ENCODER_UNIT = GEAR_PERIMETER / (GEAR_RATIO * ENCODER_RESOLUTION);
+        public static final double GEAR_PERIMETER = (1 + (11 / 16)) * Math.PI;
+        public static final double METER_PER_ENCODER_UNIT = GEAR_PERIMETER / (GEAR_RATIO);
 
         public static final double MASS = Units.lbsToKilograms(50.0);
         public static final double RADIUS = Units.inchesToMeters(2.5);
 
-        public static final double MIN_HEIGHT = Units.inchesToMeters(4.0);
+        // TODO: Set to real values.
+        public static final double MIN_HEIGHT = Units.inchesToMeters(4);
         public static final double MAX_HEIGHT = Units.inchesToMeters(72.0);
 
         public static final double HEIGHT = MAX_HEIGHT - MIN_HEIGHT;
 
         public static final Translation2d POS = new Translation2d(0.35, 0.0);
 
-        public static final double P = 85.0;
+        public static final double P = 12.0;
         public static final double I = 0.0;
-        public static final double D = 2.0;
+        public static final double D = 0.0;
 
         public static final double S = 0.0;
         public static final double G = 0.0;
@@ -100,11 +99,12 @@ public final class Constants {
 
         public static final double CORAL_SCORE_OFFSET = 0.0;
 
-        public static final double CORAL_INTAKE_HEIGHT = Units.inchesToMeters(12.0);
+        public static final double CORAL_INTAKE_HEIGHT = Units.inchesToMeters(3.65      );
 
         public static final double ALIGN_DIST_METERS = 0.5;
 
-        public static final int PORT = 1;
+        public static final int LEFT_PORT = 8;
+        public static final int RIGHT_PORT = 9;
     }
 
     public class VisionConstants {
@@ -169,10 +169,10 @@ public final class Constants {
         };
 
         public static final double[] CORAL_LEVEL_HEIGHTS = {
+                Units.inchesToMeters(1),
+                Units.inchesToMeters(7),
                 Units.inchesToMeters(12),
-                Units.inchesToMeters(29),
-                Units.inchesToMeters(48),
-                Units.inchesToMeters(65),
+                Units.inchesToMeters(28),
         };
 
         public static final Pose2d[] FEEDER_POSES = {
@@ -189,16 +189,17 @@ public final class Constants {
     }
 
     public class EndEffectorConstants {
-        public static final double P = 0.35;
-        public static final double I = 12.0;
-        public static final double D = 0.06;
+        public static final double P = 0.05;
+        public static final double I = 0.0;
+        public static final double D = 0.0;
 
         public static final double LENGTH = Units.inchesToMeters(12);
+
+        public static final int PORT = 11;
 
         public static final Translation2d POS = new Translation2d(0.0, 0.0);
 
         public static final double GEAR_RATIO = 36.0;
-        public static final double ENCODER_RESOLUTION = 42.0;
 
         public static final double MOMENT_OF_INERTIA = 0.5;
 
@@ -212,13 +213,13 @@ public final class Constants {
         public static final double ALIGN_ANGLE = 6.0;
 
         public static final double PRESCORING_ANGLE = 145;
-        public static final double[] SCORING_ANGLES = { 20, 45, 45, 45 };
+        public static final double[] SCORING_ANGLES = { 47.8, 75, 120 };
 
-        public static final double IDLE_ANGLE = 175;
+        public static final double INTAKE_ANGLE = 212;
     }
 
     public class BeaterBarConstants {
-        public static final int PORT = 2;
+        public static final int PORT = 14;
 
         public static final double FEED_SPEED = 0.5;
     }

@@ -1,20 +1,20 @@
-package frc.robot.subsystems.flywheel;
+package frc.robot.subsystems.intake;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.IntakeConstants;
 
-public class FlywheelIOSpark implements FlywheelIO {
+public class IntakeIOSpark implements IntakeIO {
     SparkMax spark;
     DigitalInput firstSensor;
     DigitalInput endSensor;
 
-    public FlywheelIOSpark() {
-        spark = new SparkMax(FlywheelConstants.PORT, MotorType.kBrushless);
-        firstSensor = new DigitalInput(FlywheelConstants.FIRST_SENSOR_ID);
-        endSensor = new DigitalInput(FlywheelConstants.END_SENSOR_ID);
+    public IntakeIOSpark() {
+        spark = new SparkMax(IntakeConstants.PORT, MotorType.kBrushless);
+        firstSensor = new DigitalInput(IntakeConstants.FIRST_SENSOR_ID);
+        endSensor = new DigitalInput(IntakeConstants.END_SENSOR_ID);
     }
 
     @Override
@@ -28,9 +28,8 @@ public class FlywheelIOSpark implements FlywheelIO {
     }
 
     @Override
-    public void updateInputs(FlywheelIOInputs inputs) {
-        inputs.velocity = getVelocity();
-        inputs.voltage = spark.getBusVoltage();
+    public double getVoltage() {
+        return spark.getBusVoltage();
     }
 
     @Override

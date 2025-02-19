@@ -1,4 +1,4 @@
-package frc.robot.subsystems.flywheel;
+package frc.robot.subsystems.intake;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -7,24 +7,24 @@ import com.revrobotics.sim.SparkMaxSim;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.IntakeConstants;
 
-public class FlywheelIOSim implements FlywheelIO {
+public class IntakeIOSim implements IntakeIO {
     FlywheelSim flywheelSim;
     SparkMaxSim flywheelSparkSim;
     SparkMax flywheelSpark;
     double setVoltage;
 
-    public FlywheelIOSim() {
+    public IntakeIOSim() {
         flywheelSpark = new SparkMax(
-                FlywheelConstants.PORT,
+            IntakeConstants.PORT,
                 MotorType.kBrushless);
         flywheelSparkSim = new SparkMaxSim(flywheelSpark, DCMotor.getNEO(1));
         flywheelSim = new FlywheelSim(
                 LinearSystemId.createFlywheelSystem(
                         DCMotor.getNEO(1),
-                        FlywheelConstants.GEAR_RATIO,
-                        FlywheelConstants.MOMENT_OF_INERTIA),
+                        IntakeConstants.GEAR_RATIO,
+                        IntakeConstants.MOMENT_OF_INERTIA),
                 DCMotor.getNEO(1));
     }
 
@@ -41,6 +41,11 @@ public class FlywheelIOSim implements FlywheelIO {
     }
 
     @Override
+    public double getVoltage() {
+        return this.flywheelSim.getInputVoltage();
+    }
+
+    @Override
     public boolean hasCoral() {
         return true;
     }
@@ -48,12 +53,6 @@ public class FlywheelIOSim implements FlywheelIO {
     @Override
     public boolean isCoralLoaded() {
         return true;
-    }
-
-    @Override
-    public void updateInputs(FlywheelIOInputs inputs) {
-        inputs.velocity = getVelocity();
-        inputs.voltage = setVoltage;
     }
 
     @Override
