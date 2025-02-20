@@ -1,5 +1,7 @@
 package frc.robot.subsystems.drive;
 
+import org.photonvision.EstimatedRobotPose;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,12 +25,7 @@ public interface DriveIO {
 
     public ChassisSpeeds getRobotRelativeSpeeds();
 
-    public void addVisionMeasurement(
-        Pose2d visionMeasurement,
-        double timestampSeconds,
-        Matrix<N3, N1> stdDevs);
-
-    public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds);
+    public void addVisionEstimations(EstimatedRobotPose[] poses);
 
     public void periodic();
 }

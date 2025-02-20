@@ -3,6 +3,11 @@ package frc.robot.subsystems.drive;
 import java.io.File;
 import java.io.IOException;
 
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
+
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,6 +17,9 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.parser.SwerveParser;
@@ -55,6 +63,8 @@ public class DriveIOSwerve implements DriveIO {
         return swerveDrive.getFieldVelocity();
     }
 
+    PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
+
     @Override
     public void periodic() {
         swerveDrive.updateOdometry();
@@ -76,18 +86,9 @@ public class DriveIOSwerve implements DriveIO {
     }
 
     @Override
-    public void addVisionMeasurement(
-            Pose2d visionMeasurement,
-            double timestampSeconds,
-            Matrix<N3, N1> stdDevs) {
-        swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(
-                visionMeasurement,
-                timestampSeconds,
-                stdDevs);
-    }
-
-    @Override
-    public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
-        swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
+    public void addVisionEstimations(EstimatedRobotPose[] poses) {
+        for (EstimatedRobotPose pose : poses) {
+            swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
+        }
     }
 }

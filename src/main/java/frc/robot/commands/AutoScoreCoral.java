@@ -7,12 +7,11 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionManager;
 
 public class AutoScoreCoral extends Command {
     Drive drive;
     Elevator elevator;
-    Vision vision;
     boolean left;
 
     /***
@@ -21,25 +20,23 @@ public class AutoScoreCoral extends Command {
     public AutoScoreCoral(
             Drive drive,
             Elevator elevator,
-            Vision vision,
             boolean left) {
-        super.addRequirements(drive, elevator, vision);
+        super.addRequirements(drive, elevator);
         this.drive = drive;
         this.elevator = elevator;
-        this.vision = vision;
         this.left = left;
     }
 
-    @Override
-    public void initialize() {
-        int index = getCoralScoreIndex(drive.getPose());
-        int level = vision.getScorableLevel(index);
-        double height = FieldConstants.CORAL_LEVEL_HEIGHTS[level] + ElevatorConstants.CORAL_SCORE_OFFSET;
+    // @Override
+    // public void initialize() {
+    //     int index = getCoralScoreIndex(drive.getPose());
+    //     int level = VisionManager.getScorableLevel(index);
+    //     double height = FieldConstants.CORAL_LEVEL_HEIGHTS[level] + ElevatorConstants.CORAL_SCORE_OFFSET;
 
-        new AlignPose(drive, FieldConstants.CORAL_SCORE_POSES[index])
-            .alongWith(new ElevatorSetHeight(elevator, height))
-            .schedule();
-    }
+    //     new AlignPose(drive, FieldConstants.CORAL_SCORE_POSES[index])
+    //         .alongWith(new ElevatorSetHeight(elevator, height))
+    //         .schedule();
+    // }
 
     /**
      * Gets the index of the reef coral segment to score on either the left or right

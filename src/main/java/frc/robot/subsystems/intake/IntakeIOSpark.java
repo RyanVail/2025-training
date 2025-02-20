@@ -34,11 +34,11 @@ public class IntakeIOSpark implements IntakeIO {
 
     @Override
     public boolean hasCoral() {
-        return firstSensor.get();
+        return !firstSensor.get();
     }
 
     @Override
     public boolean isCoralLoaded() {
-        return endSensor.get();
+        return !endSensor.get();
     }
 }

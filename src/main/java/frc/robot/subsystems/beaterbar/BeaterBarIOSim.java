@@ -11,4 +11,8 @@ public class BeaterBarIOSim implements BeaterBarIO {
     public double getVelocity() {
         return 0;
     }
+
+    public double getVoltage() {
+        return 0;
+    }
 }

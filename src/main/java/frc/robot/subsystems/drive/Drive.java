@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.vision.VisionManager;
 
 public class Drive extends SubsystemBase {
     public class PoseSupplier implements Supplier<Pose2d> {
@@ -34,7 +35,7 @@ public class Drive extends SubsystemBase {
 
     private DriveIO io;
 
-    private static final String LPREFIX = "/Subsystems/Drive/";
+    public static final String LPREFIX = "/Subsystems/Drive/";
 
     public Drive(DriveIO io) {
         this.io = io;
@@ -68,6 +69,9 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput(LPREFIX + "Pose", io.getPose());
         Logger.recordOutput(LPREFIX + "SwerveStates", io.getSwerveStates());
+
+        io.periodic();
+        io.addVisionEstimations(VisionManager.getEstimatedPoses());
     }
 
     /**
@@ -109,11 +113,10 @@ public class Drive extends SubsystemBase {
 
     public void drive(double x, double y, double omega) {
         this.io.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
+                new ChassisSpeeds(
                         x * DriveConstants.MAX_SPEED,
                         y * DriveConstants.MAX_SPEED,
-                        omega * DriveConstants.MAX_SPEED,
-                        io.getRotation()));
+                        omega * DriveConstants.MAX_SPEED));
     }
 
     public void drive(ChassisSpeeds speeds) {

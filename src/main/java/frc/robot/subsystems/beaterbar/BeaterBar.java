@@ -8,7 +8,7 @@ public class BeaterBar extends SubsystemBase {
     BeaterBarIO io;
     double setSpeed;
 
-    private static final String LPREFIX = "/Subsystems/Elevator/";
+    private static final String LPREFIX = "/Subsystems/BeaterBar/";
 
     public BeaterBar(BeaterBarIO io) {
         this.io = io;
@@ -23,5 +23,6 @@ public class BeaterBar extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput(LPREFIX + "SetSpeed", setSpeed);
         Logger.recordOutput(LPREFIX + "Velocity", io.getVelocity());
+        Logger.recordOutput(LPREFIX + "Voltage", io.getVoltage());
     }
 }

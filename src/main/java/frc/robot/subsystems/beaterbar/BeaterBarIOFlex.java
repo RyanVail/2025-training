@@ -21,4 +21,9 @@ public class BeaterBarIOFlex implements BeaterBarIO {
     public double getVelocity() {
         return flex.getEncoder().getVelocity();
     }
+
+    @Override
+    public double getVoltage() {
+        return flex.getBusVoltage();
+    }
 }
