@@ -1,14 +1,10 @@
 package frc.robot.subsystems.vision;
 
-import java.util.Optional;
-
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.Constants.VisionConstants;
 
 public class VisionManager {
@@ -61,7 +57,7 @@ public class VisionManager {
     public static EstimatedRobotPose[] getEstimatedPoses() {
         return new EstimatedRobotPose[] {
                 frontEstimator.update(frontCamera.getLatestResult()).orElse(null),
-                backEstimator.update(frontCamera.getLatestResult()).orElse(null),
+                backEstimator.update(backCamera.getLatestResult()).orElse(null),
         };
     }
 }
