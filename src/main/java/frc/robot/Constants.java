@@ -73,7 +73,7 @@ public final class Constants {
 
                 public static final double ALIGN_DIST = Units.feetToMeters(0.1);
 
-                public static final double ELEVATOR_HEIGHT_DIMMER = 0.5;
+                public static final double ELEVATOR_HEIGHT_DIMMER = 0.1;
 
                 public static final double SLEW_RATE = 5;
         }
@@ -224,6 +224,9 @@ public final class Constants {
                 public static final double[] SCORING_ANGLES = { 36.8, 75, 120 };
 
                 public static final double INTAKE_ANGLE = 212;
+
+                public static final double REQUIRED_ELEVATOR_HEIGHT = 0.045;
+                public static final double MIN_ELEVATOR_REQUIRED_ANGLE = 45;
         }
 
         public class BeaterBarConstants {

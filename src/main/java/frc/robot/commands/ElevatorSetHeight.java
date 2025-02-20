@@ -16,7 +16,6 @@ public class ElevatorSetHeight extends Command {
         super.addRequirements(elevator);
         this.elevator = elevator;
         this.height = height;
-        this.setName("Elevator Set Height");
     }
 
     @Override
@@ -25,19 +24,7 @@ public class ElevatorSetHeight extends Command {
     }
 
     @Override
-    public void execute() {
-        Commands.print("ElevatorSetHeight.execute()").schedule();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        Commands.print("ElevatorSetHeight ended, " + (interrupted ? "interrupted" : "not interrupted")).schedule();
-    }
-
-    @Override
     public boolean isFinished() {
-        Commands.print("Dif" + String.valueOf(elevator.getHeight() - height)).schedule();
-        Commands.print("ElevatorSetHeigt.isFinished(): " + String.valueOf(Math.abs(elevator.getHeight() - height) <= ElevatorConstants.ALIGN_DIST_METERS)).schedule();
         return Math.abs(elevator.getHeight() - height) <= ElevatorConstants.ALIGN_DIST_METERS;
     }
 }

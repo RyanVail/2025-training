@@ -36,8 +36,8 @@ public class ScoreCoral extends SequentialCommandGroup {
 
         int level = findClosestLevel();
         super.addCommands(
-                new EndEffectorSetAngle(effector, EndEffectorConstants.SCORING_ANGLES[level]),
+                new EndEffectorSetAngle(effector, elevator, EndEffectorConstants.SCORING_ANGLES[level]),
                 new EjectCoral(intake),
-                new EndEffectorSetAngle(effector, EndEffectorConstants.INTAKE_ANGLE));
+                new EndEffectorSetAngle(effector, elevator, EndEffectorConstants.INTAKE_ANGLE));
     }
 }

@@ -118,7 +118,7 @@ public class RobotContainer {
         });
 
         Command c = Commands.sequence(new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
-                (new EndEffectorSetAngle(endEffector, EndEffectorConstants.INTAKE_ANGLE)),
+                (new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.INTAKE_ANGLE)),
                 (new FeedCoral(intake)));
         c.setName("c sequence");
 
@@ -126,12 +126,12 @@ public class RobotContainer {
 
         commandGenericHID.povUp().onTrue(
                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[3])
-                        .andThen(new EndEffectorSetAngle(endEffector,
+                        .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                 EndEffectorConstants.SCORING_ANGLES[0])));
 
         commandGenericHID.povDown().onTrue(
                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1])
-                        .andThen(new EndEffectorSetAngle(endEffector,
+                        .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                 EndEffectorConstants.SCORING_ANGLES[0])));
 
         Commands.print(String.valueOf(XboxController.Button.kY.value));
@@ -180,7 +180,7 @@ public class RobotContainer {
 
         // // TODO: This is only for debugging.
         commandGenericHID.button(XboxController.Button.kA.value)
-                .onTrue(new EndEffectorSetAngle(endEffector, EndEffectorConstants.SCORING_ANGLES[0]));
+                .onTrue(new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.SCORING_ANGLES[0]));
         // commandGenericHID.button(2)
         // .onTrue(new EndEffectorSetAngle(endEffector,
         // EndEffectorConstants.INTAKE_ANGLE));
