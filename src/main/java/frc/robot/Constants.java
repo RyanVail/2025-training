@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
@@ -48,7 +49,7 @@ public final class Constants {
         }
 
         public class DriveConstants {
-                public static final double MAX_SPEED = Units.feetToMeters(12);
+                public static final double MAX_SPEED = Units.feetToMeters(15);
                 public static final double DEADZONE = 0.08;
 
                 public static final PathConstraints pathConstraints = new PathConstraints(
@@ -105,7 +106,7 @@ public final class Constants {
 
                 public static final double CORAL_SCORE_OFFSET = 0.0;
 
-                public static final double CORAL_INTAKE_HEIGHT = 0.052;
+                public static final double CORAL_INTAKE_HEIGHT = 0.046;
 
                 public static final double ALIGN_DIST_METERS = Units.inchesToMeters(0.4);
 
@@ -115,7 +116,12 @@ public final class Constants {
 
         public class VisionConstants {
                 public static final String FRONT_CAMERA_NAME = "Front";
-                public static final Pose3d FRONT_CAMERA_POSE = new Pose3d();
+                public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(
+                                new Translation3d(
+                                                Units.inchesToMeters(10.728),
+                                                Units.inchesToMeters(16.05),
+                                                Units.inchesToMeters(9.361)),
+                                new Rotation3d(0, 0, Units.radiansToDegrees(10)));
                 public static final int FRONT_CAMERA_WIDTH = 640;
                 public static final int FRONT_CAMERA_HEIGHT = 640;
                 public static final Rotation2d FRONT_CAMERA_FOV = Rotation2d.fromDegrees(90.0);
@@ -142,14 +148,18 @@ public final class Constants {
                                 0.0,
                                 new Rotation3d(0, 0, Units.degreesToRadians(90)));
 
-                public static final AprilTagFieldLayout FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+                public static final AprilTagFieldLayout FIELD_LAYOUT = AprilTagFieldLayout
+                                .loadField(AprilTagFields.k2025ReefscapeWelded);
         }
 
         // TODO: Real values here.
         public class FieldConstants {
                 public static final Pose2d[] CORAL_SCORE_POSES = {
-                                new Pose2d(4.09, 5.2, new Rotation2d(Units.degreesToRadians(-65))),
-                                new Pose2d(3.71, 5.02, new Rotation2d(Units.degreesToRadians(-65))),
+                                new Pose2d(),
+                                new Pose2d(),
+
+                                // new Pose2d(4.09, 5.2, new Rotation2d(Units.degreesToRadians(-65))),
+                                // new Pose2d(3.71, 5.02, new Rotation2d(Units.degreesToRadians(-65))),
 
                                 new Pose2d(),
                                 new Pose2d(),
@@ -157,23 +167,28 @@ public final class Constants {
                                 new Pose2d(),
                                 new Pose2d(),
 
-                                new Pose2d(),
-                                new Pose2d(),
+                                new Pose2d(3.65, 3.01, new Rotation2d(Units.degreesToRadians(60))),
+                                new Pose2d(3.94, 2.79, new Rotation2d(Units.degreesToRadians(60))),
 
                                 new Pose2d(),
                                 new Pose2d(),
 
-                                new Pose2d(4.92, 5.13, new Rotation2d(Units.degreesToRadians(-120))),
-                                new Pose2d(5.19, 4.97, new Rotation2d(Units.degreesToRadians(-120))),
+                                new Pose2d(),
+                                new Pose2d(),
+
+                                // new Pose2d(4.92, 5.13, new Rotation2d(Units.degreesToRadians(-120))),
+                                // new Pose2d(5.19, 4.97, new Rotation2d(Units.degreesToRadians(-120))),
                 };
 
                 public static final Pose2d[] ALGAE_REEF_POSES = {
-                                new Pose2d(3.89, 5.12, new Rotation2d(Units.degreesToRadians(-65))),
+                                // new Pose2d(3.89, 5.12, new Rotation2d(Units.degreesToRadians(-65))),
                                 new Pose2d(),
                                 new Pose2d(),
                                 new Pose2d(),
+                                new Pose2d(3.79, 2.93, new Rotation2d(Units.degreesToRadians(60))),
                                 new Pose2d(),
-                                new Pose2d(5.06, 5.05, new Rotation2d(Units.degreesToRadians(-120))),
+                                new Pose2d(),
+                                // new Pose2d(5.06, 5.05, new Rotation2d(Units.degreesToRadians(-120))),
                 };
 
                 public static final double[] CORAL_LEVEL_HEIGHTS = {

@@ -26,12 +26,17 @@ public class AlignPose extends Command {
     public void execute()
     {
         Logger.recordOutput("AligningTo", pose);
-        drive.driveRobotRelative(driveController.calculate(
+        ChassisSpeeds speeds = (driveController.calculate(
             drive.getPose(),
             pose,
             0,
             pose.getRotation()
         ));
+
+        // speeds.vxMetersPerSecond = -speeds.vxMetersPerSecond;
+        // speeds.vyMetersPerSecond = -speeds.vyMetersPerSecond;
+
+        drive.driveRobotRelative(speeds);
     }
 
     @Override

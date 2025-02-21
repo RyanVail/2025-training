@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
@@ -71,7 +72,11 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "SwerveStates", io.getSwerveStates());
 
         io.periodic();
-        io.addVisionEstimations(VisionManager.getEstimatedPoses());
+        // io.addVisionEstimations(VisionManager.getEstimatedPoses());
+
+        EstimatedRobotPose pose = VisionManager.getEstimatedPoses()[0];
+        if (pose != null)
+            Logger.recordOutput("VisionPose", pose.estimatedPose);
     }
 
     /**

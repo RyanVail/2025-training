@@ -31,6 +31,7 @@ public class DriveIOSwerve implements DriveIO {
         swerveDrive.setCosineCompensator(false);
         swerveDrive.setHeadingCorrection(false);
 
+
         for (SwerveModule mod : swerveDrive.getModules()) {
             mod.setAntiJitter(false);
         }
@@ -80,8 +81,9 @@ public class DriveIOSwerve implements DriveIO {
 
     @Override
     public void addVisionEstimations(EstimatedRobotPose[] poses) {
-        for (EstimatedRobotPose pose : poses) {
-            swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
-        }
+        for (EstimatedRobotPose pose : poses)
+            if (pose != null)
+                swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
+                        pose.timestampSeconds);
     }
 }

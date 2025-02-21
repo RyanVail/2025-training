@@ -23,7 +23,7 @@ public class TeleopCommand extends Command {
         this.elevator = elevator;
         this.controller = controller;
 
-        SmartDashboard.putNumber("ControlPow", 1.8);
+        SmartDashboard.putNumber("ControlPow", 3);
 
         xLimiter = new SlewRateLimiter(DriveConstants.SLEW_RATE);
         yLimiter = new SlewRateLimiter(DriveConstants.SLEW_RATE);
@@ -39,7 +39,7 @@ public class TeleopCommand extends Command {
             return 0;
 
         // Make the drive speed exponential.
-        axis = (neg ? -1 : 1) * Math.pow(axis, SmartDashboard.getNumber("ControlPow", 1.8));
+        axis = (neg ? -1 : 1) * Math.pow(axis, SmartDashboard.getNumber("ControlPow", 3));
 
         // Slow the speed based on the elevator height.
         return axis * (1 - (this.elevator.getSetpoint() / ElevatorConstants.MAX_HEIGHT)
@@ -49,8 +49,8 @@ public class TeleopCommand extends Command {
     @Override
     public void execute() {
         drive.drive(
-                processAxis(xLimiter.calculate(controller.getRawAxis(1))),
-                processAxis(yLimiter.calculate(controller.getRawAxis(0))),
-                processAxis(yawLimiter.calculate(controller.getRawAxis(4))) * 5);
+                processAxis(xLimiter.calculate(-controller.getRawAxis(1))),
+                processAxis(yLimiter.calculate(-controller.getRawAxis(0))),
+                processAxis(yawLimiter.calculate(-controller.getRawAxis(4))) * 5);
     }
 }

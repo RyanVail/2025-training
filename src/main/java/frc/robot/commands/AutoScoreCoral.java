@@ -1,8 +1,17 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.util.FlippingUtil;
+import com.pathplanner.lib.util.GeometryUtil;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
@@ -25,16 +34,27 @@ public class AutoScoreCoral extends Command {
         this.left = left;
     }
 
-    // @Override
-    // public void initialize() {
-    //     int index = getCoralScoreIndex(drive.getPose());
-    //     int level = VisionManager.getScorableLevel(index);
-    //     double height = FieldConstants.CORAL_LEVEL_HEIGHTS[level] + ElevatorConstants.CORAL_SCORE_OFFSET;
+    @Override
+    public void initialize() {
+        int index = 0;
+        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
+            index = getCoralScoreIndex(FlippingUtil.flipFieldPose(drive.getPose()));
+        } else {
+            index = getCoralScoreIndex(drive.getPose());
+        }
 
-    //     new AlignPose(drive, FieldConstants.CORAL_SCORE_POSES[index])
-    //         .alongWith(new ElevatorSetHeight(elevator, height))
-    //         .schedule();
-    // }
+        Logger.recordOutput("Drive pose", drive.getPose());
+        Logger.recordOutput("Drive pose Flipped", FlippingUtil.flipFieldPose(drive.getPose()));
+
+        Pose2d pose = FieldConstants.CORAL_SCORE_POSES[index];
+        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
+            pose = FlippingUtil.flipFieldPose(pose);
+
+        Commands.print(String.valueOf(index)).schedule();
+        Commands.print(String.valueOf(FieldConstants.CORAL_SCORE_POSES[index])).schedule();
+        Logger.recordOutput("_Target Pose", pose);
+        new AlignPose(drive, pose).schedule();
+    }
 
     /**
      * Gets the index of the reef coral segment to score on either the left or right

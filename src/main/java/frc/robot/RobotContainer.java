@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.commands.AutoScoreCoral;
 import frc.robot.commands.EjectCoral;
 import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
@@ -29,6 +30,7 @@ import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSpark;
+import frc.robot.subsystems.vision.VisionManager;
 
 public class RobotContainer {
     CommandGenericHID commandGenericHID;
@@ -58,6 +60,8 @@ public class RobotContainer {
                     elevator.getSetpointMech());
             beaterBar = new BeaterBar(new BeaterBarIOFlex());
         }
+
+        VisionManager.initialize();
 
         configureBindings();
         configureAuto();
@@ -117,8 +121,8 @@ public class RobotContainer {
             if(c2.isPresent()) Commands.print(c1.getName() + " interrupted by " + c2.get().getName()).schedule();;
         });
 
-        Command c = Commands.sequence(new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
-                (new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.INTAKE_ANGLE)),
+        Command c = Commands.sequence(Commands.parallel(new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
+                (new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.INTAKE_ANGLE))),
                 (new FeedCoral(intake)));
         c.setName("c sequence");
 
@@ -170,10 +174,8 @@ public class RobotContainer {
         // .onTrue(Commands.runOnce(
         // () -> elevator.setSetpoint(FieldConstants.CORAL_LEVEL_HEIGHTS[3])));
 
-        // commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator,
-        // vision, true));
-        // commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator,
-        // vision, false));
+        commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator, true));
+        commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator, false));
 
         // commandGenericHID.button(2).onTrue(new AutoFeedCoral(drive, false));
         // commandGenericHID.button(3).onTrue(new AutoFeedCoral(drive, true));

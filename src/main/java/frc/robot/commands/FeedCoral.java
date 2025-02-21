@@ -36,7 +36,6 @@ public class FeedCoral extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        Commands.print("thehwoierwjweikjerwo").schedule();
         intake.setVoltage(0);
     }
 }
