@@ -3,6 +3,7 @@ package frc.robot.commands;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +23,8 @@ public class AlignPose extends Command {
         this.driveController = DriveConstants.driveController;
     }
 
+    SlewRateLimiter x = new SlewRateLimiter(10);
+    SlewRateLimiter y = new SlewRateLimiter(10);
     @Override
     public void execute()
     {
@@ -32,10 +35,11 @@ public class AlignPose extends Command {
             0,
             pose.getRotation()
         ));
+        // if(Math.abs(speeds.vxMetersPerSecond) <=
 
-        // speeds.vxMetersPerSecond = -speeds.vxMetersPerSecond;
-        // speeds.vyMetersPerSecond = -speeds.vyMetersPerSecond;
 
+        speeds.vxMetersPerSecond = x.calculate(speeds.vxMetersPerSecond);
+        speeds.vyMetersPerSecond = y.calculate(speeds.vyMetersPerSecond);
         drive.driveRobotRelative(speeds);
     }
 

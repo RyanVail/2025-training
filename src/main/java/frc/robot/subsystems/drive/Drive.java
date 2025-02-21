@@ -72,7 +72,7 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "SwerveStates", io.getSwerveStates());
 
         io.periodic();
-        // io.addVisionEstimations(VisionManager.getEstimatedPoses());
+        io.addVisionEstimations(VisionManager.getEstimatedPoses());
 
         EstimatedRobotPose pose = VisionManager.getEstimatedPoses()[0];
         if (pose != null)
