@@ -98,7 +98,7 @@ public final class Constants {
 
                 public static final Translation2d POS = new Translation2d(0.35, 0.0);
 
-                public static final double P = 65.0;
+                public static final double P = 66.75;
                 public static final double I = 0.0;
                 public static final double D = 0.0;
 
@@ -150,6 +150,9 @@ public final class Constants {
                                 .loadField(AprilTagFields.k2025ReefscapeWelded);
         }
 
+        // Tag 6
+        // X 3.74 Y 5.39
+
         // TODO: Real values here.
         public class FieldConstants {
                 public static final Pose2d[] CORAL_SCORE_POSES = {
@@ -193,7 +196,7 @@ public final class Constants {
                                 Units.inchesToMeters(1),
                                 Units.inchesToMeters(4.7),
                                 Units.inchesToMeters(9.5),
-                                Units.inchesToMeters(20), // 20.25
+                                Units.inchesToMeters(21.75),
                 };
 
                 public static final Pose2d[] FEEDER_POSES = {
@@ -234,11 +237,11 @@ public final class Constants {
                 public static final double ALIGN_ANGLE = 15.0;
 
                 public static final double PRESCORING_ANGLE = 145;
-                public static final double[] SCORING_ANGLES = { 36.8, 75, 120 };
+                public static final double[] SCORING_ANGLES = { 36.8, 75, 68 };
 
                 public static final double INTAKE_ANGLE = 212;
 
-                public static final double REQUIRED_ELEVATOR_HEIGHT = 0.045;
+                public static final double REQUIRED_ELEVATOR_HEIGHT = 0.037;
                 public static final double MIN_ELEVATOR_REQUIRED_ANGLE = 45;
         }
 

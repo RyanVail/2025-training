@@ -135,7 +135,7 @@ public class RobotContainer {
         commandGenericHID.povUp().onTrue(
                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[3])
                         .andThen(new EndEffectorSetAngle(endEffector, elevator,
-                                EndEffectorConstants.SCORING_ANGLES[0])));
+                                EndEffectorConstants.SCORING_ANGLES[2])));
 
         commandGenericHID.povDown().onTrue(
                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1])
