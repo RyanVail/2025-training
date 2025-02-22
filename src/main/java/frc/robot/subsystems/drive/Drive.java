@@ -7,6 +7,7 @@ import org.photonvision.EstimatedRobotPose;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -69,14 +70,15 @@ public class Drive extends SubsystemBase {
     @Override
     public void periodic() {
         Logger.recordOutput(LPREFIX + "Pose", io.getPose());
+        Logger.recordOutput(LPREFIX + "FlippedPose", FlippingUtil.flipFieldPose(io.getPose()));
         Logger.recordOutput(LPREFIX + "SwerveStates", io.getSwerveStates());
 
         io.periodic();
-        io.addVisionEstimations(VisionManager.getEstimatedPoses());
 
-        EstimatedRobotPose pose = VisionManager.getEstimatedPoses()[0];
-        if (pose != null)
-            Logger.recordOutput("VisionPose", pose.estimatedPose);
+        EstimatedRobotPose[] poses = VisionManager.getEstimatedPoses();
+        io.addVisionEstimations(poses);
+        if (poses[0] != null)
+            Logger.recordOutput("_VisionPose0", poses[0].estimatedPose);
     }
 
     /**
@@ -134,5 +136,9 @@ public class Drive extends SubsystemBase {
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
         this.io.drive(speeds);
+    }
+
+    public void driveFieldRelative(ChassisSpeeds speeds) {
+        
     }
 }

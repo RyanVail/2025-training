@@ -3,6 +3,7 @@ package frc.robot;
 import java.util.Optional;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -104,27 +105,30 @@ public class RobotContainer {
         // .andThen(new EndEffectorSetAngle(endEffector,
         // EndEffectorConstants.INTAKE_ANGLE))
         // .andThen(new FeedCoral(intake));
+        SmartDashboard.putBoolean("Command Verbose Logging", false);
 
         CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
-            if(!(c instanceof PrintCommand)) {
+            if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
                 Commands.print(c.getName() + " initialized").schedule();
             }
         });
 
         CommandScheduler.getInstance().onCommandFinish((Command c) -> {
-            if(!(c instanceof PrintCommand)) {
+            if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
                 Commands.print(c.getName() + " initialized").schedule();
             }
         });
 
         CommandScheduler.getInstance().onCommandInterrupt((Command c1, Optional<Command> c2) -> {
-            if(c2.isPresent()) Commands.print(c1.getName() + " interrupted by " + c2.get().getName()).schedule();;
+            if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging", false))
+                Commands.print(c1.getName() + " interrupted by " + c2.get().getName()).schedule();
+            ;
         });
 
-        Command c = Commands.sequence(Commands.parallel(new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
-                (new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.INTAKE_ANGLE))),
+        Command c = Commands.sequence(
+                Commands.parallel(new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
+                        (new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.INTAKE_ANGLE))),
                 (new FeedCoral(intake)));
-        c.setName("c sequence");
 
         commandGenericHID.button(XboxController.Button.kX.value).onTrue(c);
 
@@ -142,7 +146,8 @@ public class RobotContainer {
         commandGenericHID.button(XboxController.Button.kY.value).onTrue(new EjectCoral(intake));
 
         // commandGenericHID.povUp()
-        //         .onTrue(new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[2]));
+        // .onTrue(new ElevatorSetHeight(elevator,
+        // FieldConstants.CORAL_LEVEL_HEIGHTS[2]));
 
         // commandGenericHID..onTrue(new ElevatorSetHeight(elevator,
         // FieldConstants.CORAL_LEVEL_HEIGHTS[1]));

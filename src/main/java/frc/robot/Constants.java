@@ -61,13 +61,13 @@ public final class Constants {
                                 Units.degreesToRadians(720));
 
                 public static final HolonomicDriveController driveController = new HolonomicDriveController(
-                                new PIDController(10, 0.0, 0),
-                                new PIDController(10, 0.0, 0),
-                                new ProfiledPIDController(12.0, 0.0, 0.0,
+                                new PIDController(7, 0.0, 0),
+                                new PIDController(7, 0.0, 0),
+                                new ProfiledPIDController(7.5, 0.0, 0.0,
                                                 new TrapezoidProfile.Constraints(0.0, 0.0)));
 
                 static {
-                        driveController.setTolerance(new Pose2d(0.05, 0.05, new Rotation2d(0.05)));
+                        driveController.setTolerance(new Pose2d(0.015, 0.015, new Rotation2d(0.05)));
                 }
 
                 public static final PPHolonomicDriveController PPDriveController = new PPHolonomicDriveController(
@@ -120,6 +120,7 @@ public final class Constants {
                 public static final String FRONT_CAMERA_NAME = "Front";
                 public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(
                                 new Translation3d(
+                                        
                                                 Units.inchesToMeters(10.728),
                                                 Units.inchesToMeters(16.05),
                                                 Units.inchesToMeters(9.361)),
@@ -140,10 +141,10 @@ public final class Constants {
                 public static final double BACK_CAMERA_AVG_LATENCY_MS = 50.0;
                 public static final double BACK_CAMERA_LATENCY_STD_DEV_MS = 15.0;
                 public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(
-                                0.0,
-                                0.0,
-                                0.0,
-                                new Rotation3d(0, 0, Units.degreesToRadians(0)));
+                                Units.inchesToMeters(2.437),
+                                Units.inchesToMeters(0.0),
+                                Units.inchesToMeters(37.922),
+                                new Rotation3d(0, Units.degreesToRadians(180), 0));
 
                 public static final AprilTagFieldLayout FIELD_LAYOUT = AprilTagFieldLayout
                                 .loadField(AprilTagFields.k2025ReefscapeWelded);
@@ -164,8 +165,8 @@ public final class Constants {
                                 new Pose2d(),
                                 new Pose2d(),
 
-                                new Pose2d(3.65, 3.01, new Rotation2d(Units.degreesToRadians(60))),
-                                new Pose2d(3.94, 2.79, new Rotation2d(Units.degreesToRadians(60))),
+                                new Pose2d(4.02, 2.57, new Rotation2d(Units.degreesToRadians(60))),
+                                new Pose2d(3.67, 2.73, new Rotation2d(Units.degreesToRadians(60))),
 
                                 new Pose2d(),
                                 new Pose2d(),

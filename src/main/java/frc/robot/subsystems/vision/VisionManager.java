@@ -9,10 +9,10 @@ import frc.robot.Constants.VisionConstants;
 
 public class VisionManager {
     private static PhotonCamera frontCamera;
-    private static PhotonCamera backCamera;
+    // private static PhotonCamera backCamera;
 
     private static PhotonPoseEstimator frontEstimator;
-    private static PhotonPoseEstimator backEstimator;
+    // private static PhotonPoseEstimator backEstimator;
 
     // // Algae on the reef.
     // private static boolean[][] algae = new boolean[2][6];
@@ -22,7 +22,7 @@ public class VisionManager {
 
     public static void initialize() {
         frontCamera = new PhotonCamera(VisionConstants.FRONT_CAMERA_NAME);
-        backCamera = new PhotonCamera(VisionConstants.BACK_CAMERA_NAME);
+        // backCamera = new PhotonCamera(VisionConstants.BACK_CAMERA_NAME);
 
         try {
             frontEstimator = new PhotonPoseEstimator(
@@ -30,10 +30,10 @@ public class VisionManager {
                     PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                     VisionConstants.FRONT_CAMERA_TRANSFORM);
 
-            backEstimator = new PhotonPoseEstimator(
-                    VisionConstants.FIELD_LAYOUT,
-                    PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-                    VisionConstants.BACK_CAMERA_TRANSFORM);
+            // backEstimator = new PhotonPoseEstimator(
+            //         VisionConstants.FIELD_LAYOUT,
+            //         PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+            //         VisionConstants.BACK_CAMERA_TRANSFORM);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class VisionManager {
     public static EstimatedRobotPose[] getEstimatedPoses() {
         return new EstimatedRobotPose[] {
                 frontEstimator.update(frontCamera.getLatestResult()).orElse(null),
-                backEstimator.update(backCamera.getLatestResult()).orElse(null),
+                // backEstimator.update(backCamera.getLatestResult()).orElse(null),
         };
     }
 }
