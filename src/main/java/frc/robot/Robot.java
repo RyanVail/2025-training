@@ -34,7 +34,6 @@ public class Robot extends LoggedRobot {
                 String.valueOf(BuildConstants.BUILD_UNIX_TIME));
 
         Logger.start();
-        SmartDashboard.putData(CommandScheduler.getInstance());
 
         robotContainer = new RobotContainer();
     }

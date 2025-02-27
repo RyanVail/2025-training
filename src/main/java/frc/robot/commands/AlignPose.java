@@ -23,10 +23,6 @@ public class AlignPose extends Command {
         this.drive = drive;
         this.pose = pose;
         this.driveController = DriveConstants.driveController;
-
-        SmartDashboard.putData(xController);
-        SmartDashboard.putData(yController);
-        SmartDashboard.putData(angleController);
     }
 
     SlewRateLimiter x = new SlewRateLimiter(10);

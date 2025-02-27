@@ -77,8 +77,6 @@ public class Elevator extends SubsystemBase {
         voltage = Math.max(voltage, -RobotController.getBatteryVoltage());
         io.setVoltage(voltage);
 
-        SmartDashboard.putData(LPREFIX + "PID", pid);
-
         realLigament.setLength(height);
         SmartDashboard.putData(LPREFIX + "Mech2D", mechanism);
 

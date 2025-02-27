@@ -104,42 +104,38 @@ public class RobotContainer {
      * This method will be used to configure controls
      */
     private void configureBindings() {
-        // SmartDashboard.putData(CommandScheduler.getInstance());
-        // Command c = (new ElevatorSetHeight(elevator,
-        // ElevatorConstants.CORAL_INTAKE_HEIGHT))
-        // .andThen(new EndEffectorSetAngle(endEffector,
-        // EndEffectorConstants.INTAKE_ANGLE))
-        // .andThen(new FeedCoral(intake));
-        SmartDashboard.putBoolean("Command Verbose Logging", false);
         SmartDashboard.putData("Zero Encoders", Commands.runOnce(() -> {
             elevator.zeroEncoders();
             endEffector.zeroEncoders();
         }));
 
-        CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
-            if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                Commands.print(c.getName() + " initialized").schedule();
-            }
-        });
+        // CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
+        // if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command
+        // Verbose Logging", false)) {
+        // Commands.print(c.getName() + " initialized").schedule();
+        // }
+        // });
 
-        CommandScheduler.getInstance().onCommandFinish((Command c) -> {
-            if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                Commands.print(c.getName() + " initialized").schedule();
-            }
-        });
+        // CommandScheduler.getInstance().onCommandFinish((Command c) -> {
+        // if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command
+        // Verbose Logging", false)) {
+        // Commands.print(c.getName() + " initialized").schedule();
+        // }
+        // });
 
-        CommandScheduler.getInstance().onCommandInterrupt((Command c1, Optional<Command> c2) -> {
-            if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging", false))
-                Commands.print(c1.getName() + " interrupted by " + c2.get().getName()).schedule();
-            ;
-        });
+        // CommandScheduler.getInstance().onCommandInterrupt((Command c1,
+        // Optional<Command> c2) -> {
+        // if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
+        // false))
+        // Commands.print(c1.getName() + " interrupted by " +
+        // c2.get().getName()).schedule();
+        // ;
+        // });
 
-        Command c = Commands.sequence(
+        commandGenericHID.button(XboxController.Button.kX.value).onTrue(Commands.sequence(
                 Commands.parallel(new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
                         (new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.INTAKE_ANGLE))),
-                (new FeedCoral(intake)));
-
-        commandGenericHID.button(XboxController.Button.kX.value).onTrue(c);
+                (new FeedCoral(intake))));
 
         commandGenericHID.povUp().onTrue(
                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[3])
