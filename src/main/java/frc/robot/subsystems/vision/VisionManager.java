@@ -5,6 +5,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 
 public class VisionManager {
@@ -26,7 +27,7 @@ public class VisionManager {
 
         try {
             frontEstimator = new PhotonPoseEstimator(
-                    VisionConstants.FIELD_LAYOUT,
+                    FieldConstants.LAYOUT,
                     PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                     VisionConstants.FRONT_CAMERA_TRANSFORM);
 

@@ -70,8 +70,8 @@ public class AutoScoreCoral extends Command {
         // The closest algae position is found to determine which face of the reef's
         // hexagon the robot is aligned to so that a left and right button can be used
         // to align with the coral segment of the reef.
-        for (int i = 0; i < FieldConstants.ALGAE_REEF_POSES.length; i++) {
-            Pose2d p = FieldConstants.ALGAE_REEF_POSES[i];
+        for (int i = 0; i < FieldConstants.ALGAE_INTAKE_POSES.length; i++) {
+            Pose2d p = FieldConstants.ALGAE_INTAKE_POSES[i];
             double dist = p.getTranslation().getDistance(robot_pos);
             if (closest_dist >= dist) {
                 closest_dist = dist;

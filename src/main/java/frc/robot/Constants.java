@@ -1,5 +1,6 @@
 package frc.robot;
 
+import org.dyn4j.geometry.Rotation;
 import org.dyn4j.geometry.Transform;
 
 import com.pathplanner.lib.config.PIDConstants;
@@ -15,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -120,7 +122,6 @@ public final class Constants {
                 public static final String FRONT_CAMERA_NAME = "Front";
                 public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(
                                 new Translation3d(
-                                        
                                                 Units.inchesToMeters(10.728),
                                                 Units.inchesToMeters(16.05),
                                                 Units.inchesToMeters(9.361)),
@@ -145,9 +146,6 @@ public final class Constants {
                                 Units.inchesToMeters(0.0),
                                 Units.inchesToMeters(37.922),
                                 new Rotation3d(0, Units.degreesToRadians(180), 0));
-
-                public static final AprilTagFieldLayout FIELD_LAYOUT = AprilTagFieldLayout
-                                .loadField(AprilTagFields.k2025ReefscapeWelded);
         }
 
         // Tag 6
@@ -155,42 +153,57 @@ public final class Constants {
 
         // TODO: Real values here.
         public class FieldConstants {
-                public static final Pose2d[] CORAL_SCORE_POSES = {
-                                new Pose2d(),
-                                new Pose2d(),
+                public static final AprilTagFieldLayout LAYOUT = AprilTagFieldLayout
+                                .loadField(AprilTagFields.k2025ReefscapeWelded);
 
-                                // new Pose2d(4.09, 5.2, new Rotation2d(Units.degreesToRadians(-65))),
-                                // new Pose2d(3.71, 5.02, new Rotation2d(Units.degreesToRadians(-65))),
-
-                                new Pose2d(),
-                                new Pose2d(),
-
-                                new Pose2d(),
-                                new Pose2d(),
-
-                                new Pose2d(4.02, 2.57, new Rotation2d(Units.degreesToRadians(60))),
-                                new Pose2d(3.67, 2.73, new Rotation2d(Units.degreesToRadians(60))),
-
-                                new Pose2d(),
-                                new Pose2d(),
-
-                                new Pose2d(),
-                                new Pose2d(),
-
-                                // new Pose2d(4.92, 5.13, new Rotation2d(Units.degreesToRadians(-120))),
-                                // new Pose2d(5.19, 4.97, new Rotation2d(Units.degreesToRadians(-120))),
+                public static final Translation2d[] REEF_TAG_POSITIONS = {
+                                LAYOUT.getTagPose(20).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(21).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(22).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(17).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(18).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(19).orElse(new Pose3d()).toPose2d().getTranslation(),
                 };
 
-                public static final Pose2d[] ALGAE_REEF_POSES = {
-                                // new Pose2d(3.89, 5.12, new Rotation2d(Units.degreesToRadians(-65))),
-                                new Pose2d(),
-                                new Pose2d(),
-                                new Pose2d(),
-                                new Pose2d(3.79, 2.93, new Rotation2d(Units.degreesToRadians(60))),
-                                new Pose2d(),
-                                new Pose2d(),
-                                // new Pose2d(5.06, 5.05, new Rotation2d(Units.degreesToRadians(-120))),
-                };
+                private static Translation2d LEFT_CORAL_SCORE_OFFSET = new Translation2d(0.39121596119633884, 0.6114300784760468);
+                private static Translation2d RIGHT_CORAL_SCORE_OFFSET = new Translation2d(0.0, 0.0);
+                private static Rotation2d BASE_CORAL_SCORE_ROTATION = new Rotation2d(Units.degreesToRadians(-120));
+
+                public static final Pose2d[] CORAL_SCORE_POSES = new Pose2d[12];
+
+                static {
+                        Translation2d left_offset = LEFT_CORAL_SCORE_OFFSET;
+                        Translation2d right_offset = RIGHT_CORAL_SCORE_OFFSET;
+                        Rotation2d rot = BASE_CORAL_SCORE_ROTATION;
+                        Rotation2d angle = new Rotation2d(Units.degreesToRadians(-60));
+
+                        for (int i = 0; i < CORAL_SCORE_POSES.length >> 1; i++) {
+                                CORAL_SCORE_POSES[(i << 1) | 0] = new Pose2d(REEF_TAG_POSITIONS[i].plus(left_offset),
+                                                rot);
+                                CORAL_SCORE_POSES[(i << 1) | 1] = new Pose2d(REEF_TAG_POSITIONS[i].plus(right_offset),
+                                                rot);
+
+                                left_offset = left_offset.rotateBy(angle);
+                                right_offset = right_offset.rotateBy(angle);
+                                rot = rot.rotateBy(angle);
+                        }
+                }
+
+                public static final Pose2d[] ALGAE_INTAKE_POSES = new Pose2d[6];
+
+                static {
+                        for (int i = 0; i < ALGAE_INTAKE_POSES.length; i++) {
+                                Pose2d p0 = CORAL_SCORE_POSES[(i << 1) | 0];
+                                Pose2d p1 = CORAL_SCORE_POSES[(i << 1) | 1];
+
+                                // The algae is in the middle of the coral segments so taking the average of the
+                                // coral score positions gives the position in the middle and the position to
+                                // intake the algae.
+                                ALGAE_INTAKE_POSES[i] = new Pose2d(
+                                                p0.getTranslation().plus(p1.getTranslation()).div(2),
+                                                p0.getRotation());
+                        }
+                }
 
                 public static final double[] CORAL_LEVEL_HEIGHTS = {
                                 Units.inchesToMeters(1),

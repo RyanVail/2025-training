@@ -2,6 +2,11 @@ package frc.robot;
 
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -56,10 +61,14 @@ public class RobotContainer {
             drive = new Drive(new DriveIOSwerve());
             intake = new Intake(new IntakeIOSpark());
             elevator = new Elevator(new ElevatorIOSpark());
-            // TODO: Vision real.
             endEffector = new EndEffector(new EndEffectorIOSpark(), elevator.getRealMech(),
                     elevator.getSetpointMech());
             beaterBar = new BeaterBar(new BeaterBarIOFlex());
+        }
+
+        // TODO: TMP!
+        for (int i = 0; i < FieldConstants.ALGAE_INTAKE_POSES.length; i++) {
+            Logger.recordOutput("_Offset" + i, FieldConstants.ALGAE_INTAKE_POSES[i]);
         }
 
         VisionManager.initialize();
