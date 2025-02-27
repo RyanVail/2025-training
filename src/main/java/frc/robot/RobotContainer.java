@@ -4,9 +4,6 @@ import java.util.Optional;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -154,7 +151,6 @@ public class RobotContainer {
                         .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                 EndEffectorConstants.SCORING_ANGLES[0])));
 
-        Commands.print(String.valueOf(XboxController.Button.kY.value));
         commandGenericHID.button(XboxController.Button.kY.value).onTrue(new EjectCoral(intake));
 
         commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator, true));

@@ -7,7 +7,7 @@ import frc.robot.subsystems.intake.Intake;
 
 public class FeedCoral extends Command {
     Intake intake;
-    double timeSinceSense;
+    double senseTime;
 
     public FeedCoral(Intake intake) {
         super.addRequirements(intake);
@@ -17,20 +17,22 @@ public class FeedCoral extends Command {
 
     @Override
     public void execute() {
-        // TODO: This is terrible
-        if (intake.isCoralLoaded())
-            timeSinceSense += 0.02;
+        if (senseTime == 0 && intake.isCoralLoaded()) {
+            senseTime = System.currentTimeMillis();
+        }
     }
 
     @Override
     public void initialize() {
-        timeSinceSense = 0;
+        senseTime = 0;
         intake.setVoltage(IntakeConstants.CORAL_FEED_VOLTAGE);
     }
 
     @Override
     public boolean isFinished() {
-        return Robot.isSimulation() ? true : timeSinceSense >= IntakeConstants.SENSE_TIME;
+        return Robot.isSimulation()
+                ? true
+                : ((System.currentTimeMillis() - senseTime) * 0.001) >= IntakeConstants.SENSE_TIME;
     }
 
     @Override

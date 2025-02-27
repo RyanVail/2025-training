@@ -74,7 +74,6 @@ public class EndEffector extends SubsystemBase {
         setpoint = angle;
         pid.setSetpoint(angle);
         setpointLigament.setAngle(EndEffectorConstants.VISUALIZATION_BASE_ANGLE + angle);
-        Commands.print("Setting EndEffector setpoint to " + angle).schedule();
     }
 
     public double getAngle() {

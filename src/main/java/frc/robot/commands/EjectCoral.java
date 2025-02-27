@@ -8,7 +8,7 @@ import frc.robot.subsystems.intake.Intake;
 
 public class EjectCoral extends Command {
     Intake intake;
-    double timeSinceSense;
+    double senseTime;
 
     public EjectCoral(Intake intake) {
         super.addRequirements(intake);
@@ -17,20 +17,22 @@ public class EjectCoral extends Command {
 
     @Override
     public void initialize() {
-        Commands.print("Initing eject coral").schedule();
-        timeSinceSense = 0;
+        senseTime = 0;
         intake.setVoltage(IntakeConstants.CORAL_SCORE_VOLTAGE);
     }
 
     @Override
     public void execute() {
-        if (!intake.hasCoral())
-            timeSinceSense += 0.02;
+        if (senseTime == 0 && !intake.hasCoral()) {
+            senseTime = System.currentTimeMillis();
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return Robot.isSimulation() ? true : timeSinceSense >= IntakeConstants.SENSE_TIME;
+        return Robot.isSimulation()
+                ? true
+                : ((System.currentTimeMillis() - senseTime) * 0.001) >= IntakeConstants.SENSE_TIME;
     }
 
     @Override

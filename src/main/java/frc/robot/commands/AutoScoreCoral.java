@@ -48,8 +48,6 @@ public class AutoScoreCoral extends Command {
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
             pose = FlippingUtil.flipFieldPose(pose);
 
-        Commands.print(String.valueOf(index)).schedule();
-        Commands.print(String.valueOf(FieldConstants.CORAL_SCORE_POSES[index])).schedule();
         Logger.recordOutput("_Target Pose", pose);
         new AlignPose(drive, pose).schedule();
     }

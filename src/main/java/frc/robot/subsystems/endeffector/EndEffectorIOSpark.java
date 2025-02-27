@@ -13,9 +13,6 @@ public class EndEffectorIOSpark implements EndEffectorIO {
 
     public EndEffectorIOSpark() {
         spark = new SparkMax(EndEffectorConstants.PORT, MotorType.kBrushless);
-
-        // TODO: Make a better way to do this.
-        spark.getEncoder().setPosition(0);
     }
 
     public void periodic() {

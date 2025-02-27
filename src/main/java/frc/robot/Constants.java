@@ -144,10 +144,6 @@ public final class Constants {
                                 new Rotation3d(0, Units.degreesToRadians(180), 0));
         }
 
-        // Tag 6
-        // X 3.74 Y 5.39
-
-        // TODO: Real values here.
         public class FieldConstants {
                 public static final AprilTagFieldLayout LAYOUT = AprilTagFieldLayout
                                 .loadField(AprilTagFields.k2025ReefscapeWelded);
@@ -242,7 +238,6 @@ public final class Constants {
                 public static final double STARTING_ANGLE = Units.degreesToRadians(0);
                 public static final double VISUALIZATION_BASE_ANGLE = -90;
 
-                // TODO: This is very wrong and will remain wrong till the PID is fixed.
                 public static final double ALIGN_ANGLE = 15.0;
 
                 public static final double PRESCORING_ANGLE = 145;
