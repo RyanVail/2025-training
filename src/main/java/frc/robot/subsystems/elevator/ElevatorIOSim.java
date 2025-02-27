@@ -31,4 +31,7 @@ public class ElevatorIOSim implements ElevatorIO {
     public void setVoltage(double voltage) {
         sim.setInputVoltage(voltage);
     }
+
+    public void zeroEncoders() {
+    }
 }

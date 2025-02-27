@@ -11,19 +11,19 @@ public class EndEffectorIOSim implements EndEffectorIO {
     public EndEffectorIOSim() {
         // A single jointed arm is a good subsitute to simulate our end effector.
         sim = new SingleJointedArmSim(
-            DCMotor.getNEO(1),
-            EndEffectorConstants.GEAR_RATIO,
-            EndEffectorConstants.MOMENT_OF_INERTIA,
-            EndEffectorConstants.LENGTH,
-            EndEffectorConstants.MIN_ANGLE,
-            EndEffectorConstants.MAX_ANGLE,
-            true,
-            EndEffectorConstants.STARTING_ANGLE
-        );
+                DCMotor.getNEO(1),
+                EndEffectorConstants.GEAR_RATIO,
+                EndEffectorConstants.MOMENT_OF_INERTIA,
+                EndEffectorConstants.LENGTH,
+                EndEffectorConstants.MIN_ANGLE,
+                EndEffectorConstants.MAX_ANGLE,
+                true,
+                EndEffectorConstants.STARTING_ANGLE);
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+    }
 
     @Override
     public void simulationPeriodic() {
@@ -38,5 +38,8 @@ public class EndEffectorIOSim implements EndEffectorIO {
     @Override
     public double getAngle() {
         return Units.radiansToDegrees(sim.getAngleRads());
+    }
+
+    public void zeroEncoders() {
     }
 }

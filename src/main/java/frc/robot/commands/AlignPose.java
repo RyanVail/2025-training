@@ -40,12 +40,6 @@ public class AlignPose extends Command {
     public void execute()
     {
         Logger.recordOutput("AligningTo", pose);
-        ChassisSpeeds speeds = (driveController.calculate(
-            drive.getPose(),
-            pose,
-            0,
-            pose.getRotation()
-        ));
 
         xController.setSetpoint(pose.getX());
         yController.setSetpoint(pose.getY());

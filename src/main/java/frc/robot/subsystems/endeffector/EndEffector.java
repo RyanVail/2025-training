@@ -80,4 +80,8 @@ public class EndEffector extends SubsystemBase {
     public double getAngle() {
         return io.getAngle() * 10;
     }
+
+    public void zeroEncoders() {
+        io.zeroEncoders();
+    }
 }

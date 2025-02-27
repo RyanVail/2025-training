@@ -104,4 +104,8 @@ public class Elevator extends SubsystemBase {
     public double getHeight() {
         return io.getHeight();
     }
+
+    public void zeroEncoders() {
+        io.zeroEncoders();
+    }
 }

@@ -2,9 +2,7 @@ package frc.robot.commands;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.util.FlippingUtil;
-import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;

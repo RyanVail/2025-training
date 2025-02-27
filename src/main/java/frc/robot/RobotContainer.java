@@ -103,7 +103,6 @@ public class RobotContainer {
         // AutoManager.configureAutos();
     }
 
-    // TODO: Use controller button enum.
     /**
      * This method will be used to configure controls
      */
@@ -115,6 +114,10 @@ public class RobotContainer {
         // EndEffectorConstants.INTAKE_ANGLE))
         // .andThen(new FeedCoral(intake));
         SmartDashboard.putBoolean("Command Verbose Logging", false);
+        SmartDashboard.putData("Zero Encoders", Commands.runOnce(() -> {
+            elevator.zeroEncoders();
+            endEffector.zeroEncoders();
+        }));
 
         CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
             if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
@@ -154,72 +157,11 @@ public class RobotContainer {
         Commands.print(String.valueOf(XboxController.Button.kY.value));
         commandGenericHID.button(XboxController.Button.kY.value).onTrue(new EjectCoral(intake));
 
-        // commandGenericHID.povUp()
-        // .onTrue(new ElevatorSetHeight(elevator,
-        // FieldConstants.CORAL_LEVEL_HEIGHTS[2]));
-
-        // commandGenericHID..onTrue(new ElevatorSetHeight(elevator,
-        // FieldConstants.CORAL_LEVEL_HEIGHTS[1]));
-
-        // commandGenericHID.button(3).onTrue(Commands.runOnce(() ->
-        // intake.setVoltage(IntakeConstants.CORAL_FEED_VOLTAGE)));
-        // commandGenericHID.button(3).onFalse(Commands.runOnce(() ->
-        // intake.setVoltage(0)));
-
-        // commandGenericHID.button(4)
-        // .onTrue(Commands.runOnce(
-        // () -> intake.setVoltage(-IntakeConstants.CORAL_SCORE_VOLTAGE)));
-        // commandGenericHID.button(4).onFalse(Commands.runOnce(() ->
-        // intake.setVoltage(0)));
-
-        // commandGenericHID.button(1)
-        // .onTrue(Commands.runOnce(() ->
-        // elevator.setSetpoint(ElevatorConstants.MIN_HEIGHT)));
-        // commandGenericHID.povDown()
-        // .onTrue(Commands.runOnce(
-        // () -> elevator.setSetpoint(ElevatorConstants.CORAL_INTAKE_HEIGHT)));
-        // commandGenericHID.povUp()
-        // .onTrue(Commands.runOnce(
-        // () -> elevator.setSetpoint(FieldConstants.CORAL_LEVEL_HEIGHTS[3])));
-        // commandGenericHID.button(5)
-        // .onTrue(Commands.runOnce(
-        // () -> elevator.setSetpoint(FieldConstants.CORAL_LEVEL_HEIGHTS[2])));
-        // commandGenericHID.axisGreaterThan(2, 0.4)
-        // .onTrue(Commands.runOnce(
-        // () -> elevator.setSetpoint(FieldConstants.CORAL_LEVEL_HEIGHTS[3])));
-
         commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator, true));
         commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator, false));
 
-        // commandGenericHID.button(2).onTrue(new AutoFeedCoral(drive, false));
-        // commandGenericHID.button(3).onTrue(new AutoFeedCoral(drive, true));
-
-        // // TODO: This is only for debugging.
         commandGenericHID.button(XboxController.Button.kA.value)
                 .onTrue(new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.SCORING_ANGLES[0]));
-        // commandGenericHID.button(2)
-        // .onTrue(new EndEffectorSetAngle(endEffector,
-        // EndEffectorConstants.INTAKE_ANGLE));
-
-        // commandGenericHID.povRight()
-        // .onTrue(Commands.runOnce(() ->
-        // beaterBar.setSpeed(BeaterBarConstants.FEED_SPEED)));
-        // commandGenericHID.povRight().onFalse(Commands.runOnce(() ->
-        // beaterBar.setSpeed(0)));
-
-        // commandGenericHID.povLeft()
-        // .onTrue(Commands.runOnce(() ->
-        // beaterBar.setSpeed(-BeaterBarConstants.FEED_SPEED)));
-        // commandGenericHID.povLeft().onFalse(Commands.runOnce(() ->
-        // beaterBar.setSpeed(0)));
-
-        // commandGenericHID.button(6).toggleOnTrue(
-        // Commands.runOnce(() -> beaterBar.setSpeed(BeaterBarConstants.FEED_SPEED)));
-        // commandGenericHID.button(6).toggleOnFalse(Commands.runOnce(() ->
-        // beaterBar.setSpeed(0)));
-
-        // commandGenericHID.button(4).onTrue(new ScoreCoral(endEffector, elevator,
-        // intake));
 
         /*
          * Set the drive subsystem to use the command returned by getTeleopCommand

@@ -7,5 +7,7 @@ public interface EndEffectorIO {
 
     public void periodic();
 
+    public void zeroEncoders();
+
     public default void simulationPeriodic() {};
 }

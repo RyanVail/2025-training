@@ -9,4 +9,6 @@ public interface ElevatorIO {
      * @return Measured height of the elevator in meters.
      */
     public double getHeight();
+
+    public void zeroEncoders();
 }

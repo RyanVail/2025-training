@@ -20,9 +20,13 @@ public class ElevatorIOSpark implements ElevatorIO {
         rightSpark.setVoltage(-voltage);
     }
 
-    // TODO: The inital value has to be calibrated.
     @Override
     public double getHeight() {
-        return leftSpark.getEncoder().getPosition();// * ElevatorConstants.METER_PER_ENCODER_UNIT;
+        return leftSpark.getEncoder().getPosition();
+    }
+
+    public void zeroEncoders() {
+        leftSpark.getEncoder().setPosition(0.0);
+        rightSpark.getEncoder().setPosition(0.0);
     }
 }
