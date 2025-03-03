@@ -1,8 +1,5 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,52 +11,51 @@ import frc.robot.subsystems.drive.Drive;
 public class AlignPose extends Command {
     Drive drive;
     Pose2d pose;
-    HolonomicDriveController driveController;
 
     public AlignPose(Drive drive, Pose2d pose) {
         addRequirements(drive);
 
         this.drive = drive;
         this.pose = pose;
-        this.driveController = DriveConstants.driveController;
+
+        xController.setTolerance(DriveConstants.MIN_ALIGN_DIST);
+        yController.setTolerance(DriveConstants.MIN_ALIGN_DIST);
+        angleController.setTolerance(DriveConstants.MIN_ALIGN_ANGLE);
     }
 
     SlewRateLimiter x = new SlewRateLimiter(10);
     SlewRateLimiter y = new SlewRateLimiter(10);
-    
+
     PIDController xController = new PIDController(9.0, 0.0, 0.0);
     PIDController yController = new PIDController(9.0, 0.0, 0.0);
     PIDController angleController = new PIDController(4.0, 0, 0);
 
     @Override
-    public void execute()
-    {
-        Logger.recordOutput("AligningTo", pose);
+    public void execute() {
+        if (pose.getTranslation().getDistance(drive.getPose().getTranslation()) >= DriveConstants.AUTO_ALIGN_MAX_DIST)
+            super.cancel();
 
         xController.setSetpoint(pose.getX());
         yController.setSetpoint(pose.getY());
         angleController.setSetpoint(pose.getRotation().getRadians());
         angleController.enableContinuousInput(-Math.PI, Math.PI);
 
-        ChassisSpeeds speeds2 = new ChassisSpeeds();
-        speeds2.vxMetersPerSecond = xController.calculate(drive.getPose().getX());
-        speeds2.vyMetersPerSecond = yController.calculate(drive.getPose().getY());
-        speeds2.omegaRadiansPerSecond = angleController.calculate(drive.getPose().getRotation().getRadians());
-
-        // speeds.vxMetersPerSecond = x.calculate(speeds.vxMetersPerSecond);
-        // speeds.vyMetersPerSecond = y.calculate(speeds.vyMetersPerSecond);
-        drive.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds2, drive.getPose().getRotation()));
+        ChassisSpeeds speeds = new ChassisSpeeds();
+        speeds.vxMetersPerSecond = xController.calculate(drive.getPose().getX());
+        speeds.vyMetersPerSecond = yController.calculate(drive.getPose().getY());
+        speeds.omegaRadiansPerSecond = angleController.calculate(drive.getPose().getRotation().getRadians());
+        drive.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, drive.getPose().getRotation()));
     }
 
     @Override
-    public boolean isFinished()
-    {
-        return driveController.atReference();
+    public boolean isFinished() {
+        return xController.atSetpoint()
+                && yController.atSetpoint()
+                && angleController.atSetpoint();
     }
 
     @Override
-    public void end(boolean interrupted)
-    {
+    public void end(boolean interrupted) {
         drive.driveRobotRelative(new ChassisSpeeds());
     }
 }

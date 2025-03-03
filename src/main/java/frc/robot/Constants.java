@@ -6,9 +6,6 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -46,6 +42,13 @@ public final class Constants {
                 public static final double CORAL_FEED_VOLTAGE = 4.5;
 
                 public static final double SENSE_TIME = 0.115;
+
+                public static final double ALGAE_STALL_VOLTAGE = 0.5;
+                public static final double ALGAE_INTAKE_VOLTAGE = 2.0;
+
+                // TODO: Set a real values for these.
+                public static final double ALGAE_INTAKE_STALL_VEL = 5.0;
+                public static final double ALGAE_INTAKE_UNSTALL_VEL = 20.0;
         }
 
         public class DriveConstants {
@@ -58,25 +61,19 @@ public final class Constants {
                                 Units.degreesToRadians(540),
                                 Units.degreesToRadians(720));
 
-                public static final HolonomicDriveController driveController = new HolonomicDriveController(
-                                new PIDController(7, 0.0, 0),
-                                new PIDController(7, 0.0, 0),
-                                new ProfiledPIDController(7.5, 0.0, 0.0,
-                                                new TrapezoidProfile.Constraints(0.0, 0.0)));
-
-                static {
-                        driveController.setTolerance(new Pose2d(0.015, 0.015, new Rotation2d(0.05)));
-                }
-
                 public static final PPHolonomicDriveController PPDriveController = new PPHolonomicDriveController(
                                 new PIDConstants(2.0, 0.0, 0.0),
                                 new PIDConstants(2.0, 0.0, 0.0));
 
-                public static final double ALIGN_DIST = Units.feetToMeters(0.1);
+                public static final double MIN_ALIGN_DIST = Units.feetToMeters(0.02);
+                public static final double MIN_ALIGN_ANGLE = Units.degreesToRadians(0.5);
 
                 public static final double ELEVATOR_HEIGHT_DIMMER = 0.1;
 
-                public static final double SLEW_RATE = 5;
+                public static final double SLEW_RATE = 1;
+                public static final double ROT_SLEW_RATE = 4;
+
+                public static final double AUTO_ALIGN_MAX_DIST = Units.feetToMeters(5);
         }
 
         public class ElevatorConstants {
@@ -96,17 +93,17 @@ public final class Constants {
 
                 public static final Translation2d POS = new Translation2d(0.35, 0.0);
 
-                public static final double P = 66.75;
+                public static final double P = 68.75;
                 public static final double I = 0.0;
                 public static final double D = 0.0;
 
-                public static final double S = 0.4825;
+                public static final double S = 0.5125;
                 public static final double G = 0.0;
                 public static final double V = 0.0;
 
                 public static final double CORAL_SCORE_OFFSET = 0.0;
 
-                public static final double CORAL_INTAKE_HEIGHT = 0.046;
+                public static final double CORAL_INTAKE_HEIGHT = 0.09125;
 
                 public static final double ALIGN_DIST_METERS = Units.inchesToMeters(0.4);
 
@@ -149,16 +146,16 @@ public final class Constants {
                                 .loadField(AprilTagFields.k2025ReefscapeWelded);
 
                 public static final Translation2d[] REEF_TAG_POSITIONS = {
-                                LAYOUT.getTagPose(20).orElse(new Pose3d()).toPose2d().getTranslation(),
-                                LAYOUT.getTagPose(21).orElse(new Pose3d()).toPose2d().getTranslation(),
-                                LAYOUT.getTagPose(22).orElse(new Pose3d()).toPose2d().getTranslation(),
-                                LAYOUT.getTagPose(17).orElse(new Pose3d()).toPose2d().getTranslation(),
-                                LAYOUT.getTagPose(18).orElse(new Pose3d()).toPose2d().getTranslation(),
-                                LAYOUT.getTagPose(19).orElse(new Pose3d()).toPose2d().getTranslation(),
+                        LAYOUT.getTagPose(20).orElse(new Pose3d()).toPose2d().getTranslation(),
+                        LAYOUT.getTagPose(21).orElse(new Pose3d()).toPose2d().getTranslation(),
+                        LAYOUT.getTagPose(22).orElse(new Pose3d()).toPose2d().getTranslation(),
+                        LAYOUT.getTagPose(17).orElse(new Pose3d()).toPose2d().getTranslation(),
+                        LAYOUT.getTagPose(18).orElse(new Pose3d()).toPose2d().getTranslation(),
+                        LAYOUT.getTagPose(19).orElse(new Pose3d()).toPose2d().getTranslation(),
                 };
 
-                private static Translation2d LEFT_CORAL_SCORE_OFFSET = new Translation2d(0.39121596119633884, 0.6114300784760468);
-                private static Translation2d RIGHT_CORAL_SCORE_OFFSET = new Translation2d(0.0, 0.0);
+                private static Translation2d LEFT_CORAL_SCORE_OFFSET = new Translation2d(0.056, 0.691);
+                private static Translation2d RIGHT_CORAL_SCORE_OFFSET = new Translation2d(0.315, 0.553);
                 private static Rotation2d BASE_CORAL_SCORE_ROTATION = new Rotation2d(Units.degreesToRadians(-120));
 
                 public static final Pose2d[] CORAL_SCORE_POSES = new Pose2d[12];
@@ -199,16 +196,13 @@ public final class Constants {
 
                 public static final double[] CORAL_LEVEL_HEIGHTS = {
                                 Units.inchesToMeters(1),
-                                Units.inchesToMeters(4.7),
-                                Units.inchesToMeters(9.5),
+                                Units.inchesToMeters(4.25),
+                                Units.inchesToMeters(11.0),
                                 Units.inchesToMeters(21.75),
                 };
 
                 public static final Pose2d[] FEEDER_POSES = {
-                                new Pose2d(1.65, 0.75, new Rotation2d(Units.degreesToRadians(54))),
-                                new Pose2d(0.63, 1.46, new Rotation2d(Units.degreesToRadians(54))),
-                                new Pose2d(0.63, 6.66, new Rotation2d(Units.degreesToRadians(-54))),
-                                new Pose2d(1.65, 7.33, new Rotation2d(Units.degreesToRadians(-54))),
+                        new Pose2d(1.151, 1.234, new Rotation2d(1)),
                 };
 
                 public static final Translation2d[] FEEDER_POSITIONS = {
@@ -241,17 +235,17 @@ public final class Constants {
                 public static final double ALIGN_ANGLE = 15.0;
 
                 public static final double PRESCORING_ANGLE = 145;
-                public static final double[] SCORING_ANGLES = { 36.8, 75, 68 };
+                public static final double[] SCORING_ANGLES = { 47, 75, 78 };
 
                 public static final double INTAKE_ANGLE = 212;
 
                 public static final double REQUIRED_ELEVATOR_HEIGHT = 0.037;
-                public static final double MIN_ELEVATOR_REQUIRED_ANGLE = 45;
+                public static final double MIN_ELEVATOR_REQUIRED_ANGLE = 50;
         }
 
         public class BeaterBarConstants {
                 public static final int PORT = 14;
 
-                public static final double FEED_SPEED = 0.1;
+                public static final double FEED_SPEED = 0.12;
         }
 }

@@ -27,7 +27,7 @@ public class TeleopCommand extends Command {
 
         xLimiter = new SlewRateLimiter(DriveConstants.SLEW_RATE);
         yLimiter = new SlewRateLimiter(DriveConstants.SLEW_RATE);
-        yawLimiter = new SlewRateLimiter(DriveConstants.SLEW_RATE);
+        yawLimiter = new SlewRateLimiter(DriveConstants.ROT_SLEW_RATE);
     }
 
     private double processAxis(double axis) {
@@ -49,8 +49,8 @@ public class TeleopCommand extends Command {
     @Override
     public void execute() {
         drive.drive(
-                processAxis(xLimiter.calculate(-controller.getRawAxis(1))),
-                processAxis(yLimiter.calculate(-controller.getRawAxis(0))),
-                processAxis(yawLimiter.calculate(-controller.getRawAxis(4))) * 5);
+            xLimiter.calculate(processAxis(-controller.getRawAxis(1))),
+            yLimiter.calculate(processAxis(-controller.getRawAxis(0))),
+            yawLimiter.calculate(processAxis(-controller.getRawAxis(4))));
     }
 }

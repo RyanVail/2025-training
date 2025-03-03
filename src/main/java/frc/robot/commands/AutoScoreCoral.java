@@ -5,7 +5,9 @@ import org.littletonrobotics.junction.Logger;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,7 +27,7 @@ public class AutoScoreCoral extends Command {
             Drive drive,
             Elevator elevator,
             boolean left) {
-        super.addRequirements(drive, elevator);
+        super.addRequirements(elevator);
         this.drive = drive;
         this.elevator = elevator;
         this.left = left;
@@ -40,8 +42,16 @@ public class AutoScoreCoral extends Command {
             index = getCoralScoreIndex(drive.getPose());
         }
 
+        Rotation2d angle = new Rotation2d(Units.degreesToRadians(-120))
+                .rotateBy(new Rotation2d(Units.degreesToRadians(-60) * index));
+
         Logger.recordOutput("Drive pose", drive.getPose());
         Logger.recordOutput("Drive pose Flipped", FlippingUtil.flipFieldPose(drive.getPose()));
+
+        Logger.recordOutput(
+                "Align Offset",
+                FieldConstants.REEF_TAG_POSITIONS[index / 2].minus(
+                        FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle));
 
         Pose2d pose = FieldConstants.CORAL_SCORE_POSES[index];
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)

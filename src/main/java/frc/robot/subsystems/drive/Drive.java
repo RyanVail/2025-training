@@ -77,8 +77,6 @@ public class Drive extends SubsystemBase {
 
         EstimatedRobotPose[] poses = VisionManager.getEstimatedPoses();
         io.addVisionEstimations(poses);
-        if (poses[0] != null)
-            Logger.recordOutput("_VisionPose0", poses[0].estimatedPose);
     }
 
     /**

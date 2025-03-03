@@ -29,6 +29,9 @@ public class EjectCoral extends Command {
 
     @Override
     public boolean isFinished() {
+        if (senseTime == 0)
+            return false;
+
         return Robot.isSimulation()
                 ? true
                 : ((System.currentTimeMillis() - senseTime) * 0.001) >= IntakeConstants.SENSE_TIME;

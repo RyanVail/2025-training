@@ -1,10 +1,13 @@
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
+import java.util.Optional;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
@@ -14,6 +17,7 @@ import frc.robot.commands.EjectCoral;
 import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.FeedCoral;
+import frc.robot.commands.IntakeAlgae;
 import frc.robot.subsystems.beaterbar.BeaterBar;
 import frc.robot.subsystems.beaterbar.BeaterBarIOFlex;
 import frc.robot.subsystems.beaterbar.BeaterBarIOSim;
@@ -58,10 +62,7 @@ public class RobotContainer {
             beaterBar = new BeaterBar(new BeaterBarIOFlex());
         }
 
-        // TODO: TMP!
-        for (int i = 0; i < FieldConstants.ALGAE_INTAKE_POSES.length; i++) {
-            Logger.recordOutput("_Offset" + i, FieldConstants.ALGAE_INTAKE_POSES[i]);
-        }
+        endEffector.zeroEncoders();
 
         VisionManager.initialize();
 
@@ -104,38 +105,44 @@ public class RobotContainer {
             endEffector.zeroEncoders();
         }));
 
-        // CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
-        // if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command
-        // Verbose Logging", false)) {
-        // Commands.print(c.getName() + " initialized").schedule();
-        // }
-        // });
+        CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
+            if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+                Commands.print(c.getName() + " initialized").schedule();
+            }
+        });
 
-        // CommandScheduler.getInstance().onCommandFinish((Command c) -> {
-        // if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command
-        // Verbose Logging", false)) {
-        // Commands.print(c.getName() + " initialized").schedule();
-        // }
-        // });
+        CommandScheduler.getInstance().onCommandFinish((Command c) -> {
+            if (!(c instanceof PrintCommand) && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+                Commands.print(c.getName() + " initialized").schedule();
+            }
+        });
 
-        // CommandScheduler.getInstance().onCommandInterrupt((Command c1,
-        // Optional<Command> c2) -> {
-        // if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
-        // false))
-        // Commands.print(c1.getName() + " interrupted by " +
-        // c2.get().getName()).schedule();
-        // ;
-        // });
+        CommandScheduler.getInstance().onCommandInterrupt((Command c1, Optional<Command> c2) -> {
+            if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
+                    false))
+                Commands.print(c1.getName() + " interrupted by " + c2.get().getName()).schedule();
+            ;
+        });
 
         commandGenericHID.button(XboxController.Button.kX.value).onTrue(Commands.sequence(
                 Commands.parallel(new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
                         (new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.INTAKE_ANGLE))),
                 (new FeedCoral(intake))));
 
+        commandGenericHID.button(5).onTrue(
+                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[2])
+                        .andThen(new EndEffectorSetAngle(endEffector, elevator,
+                                EndEffectorConstants.SCORING_ANGLES[0])));
+
         commandGenericHID.povUp().onTrue(
                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[3])
                         .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                 EndEffectorConstants.SCORING_ANGLES[2])));
+
+        // commandGenericHID.povDown().onTrue(
+        // new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[2])
+        // .andThen(new EndEffectorSetAngle(endEffector, elevator,
+        // EndEffectorConstants.SCORING_ANGLES[0])));
 
         commandGenericHID.povDown().onTrue(
                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1])
@@ -144,11 +151,29 @@ public class RobotContainer {
 
         commandGenericHID.button(XboxController.Button.kY.value).onTrue(new EjectCoral(intake));
 
-        commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator, true));
-        commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator, false));
+        commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator,
+                true));
+        commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator,
+                false));
+
+        // commandGenericHID.povLeft().onTrue(Commands.runOnce(() ->
+        // beaterBar.setSpeed(BeaterBarConstants.FEED_SPEED)));
+        // commandGenericHID.povLeft().onFalse(Commands.runOnce(() ->
+        // beaterBar.setSpeed(0)));
+        // commandGenericHID.povRight().onTrue(Commands.runOnce(() ->
+        // beaterBar.setSpeed(-BeaterBarConstants.FEED_SPEED)));
+        // commandGenericHID.povRight().onFalse(Commands.runOnce(() ->
+        // beaterBar.setSpeed(0)));
 
         commandGenericHID.button(XboxController.Button.kA.value)
                 .onTrue(new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.SCORING_ANGLES[0]));
+
+        // commandGenericHID.button(XboxController.Button.kB.value)
+        // .onTrue(new AlignPose(drive,
+        // FlippingUtil.flipFieldPose(FieldConstants.FEEDER_POSES[0])));
+
+        commandGenericHID.button(XboxController.Button.kB.value)
+                .onTrue(new IntakeAlgae(intake));
 
         /*
          * Set the drive subsystem to use the command returned by getTeleopCommand
