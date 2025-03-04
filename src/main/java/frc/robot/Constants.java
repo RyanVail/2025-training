@@ -93,11 +93,11 @@ public final class Constants {
 
                 public static final Translation2d POS = new Translation2d(0.35, 0.0);
 
-                public static final double P = 68.75;
+                public static final double P = 190;
                 public static final double I = 0.0;
                 public static final double D = 0.0;
 
-                public static final double S = 0.5125;
+                public static final double S = 0.325;
                 public static final double G = 0.0;
                 public static final double V = 0.0;
 

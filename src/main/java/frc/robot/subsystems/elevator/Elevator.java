@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -23,7 +24,7 @@ public class Elevator extends SubsystemBase {
     MechanismLigament2d setpointLigament;
     double setpoint;
 
-    private static final String LPREFIX = "/Subsystems/Elevator/";
+    public static final String LPREFIX = "/Subsystems/Elevator/";
 
     public Elevator(ElevatorIO io) {
         this.io = io;
@@ -58,6 +59,8 @@ public class Elevator extends SubsystemBase {
 
         setpointLigament.setLineWeight(2);
         setpointLigament.setColor(new Color8Bit(0, 255, 0));
+
+        SmartDashboard.putData("ElevatorPID", pid);
     }
 
     public MechanismLigament2d getRealMech() {

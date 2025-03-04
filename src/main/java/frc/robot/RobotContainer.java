@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
@@ -151,19 +152,15 @@ public class RobotContainer {
 
         commandGenericHID.button(XboxController.Button.kY.value).onTrue(new EjectCoral(intake));
 
-        commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator,
-                true));
-        commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator,
-                false));
+        // commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator,
+        // true));
+        // commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator,
+        // false));
 
-        // commandGenericHID.povLeft().onTrue(Commands.runOnce(() ->
-        // beaterBar.setSpeed(BeaterBarConstants.FEED_SPEED)));
-        // commandGenericHID.povLeft().onFalse(Commands.runOnce(() ->
-        // beaterBar.setSpeed(0)));
-        // commandGenericHID.povRight().onTrue(Commands.runOnce(() ->
-        // beaterBar.setSpeed(-BeaterBarConstants.FEED_SPEED)));
-        // commandGenericHID.povRight().onFalse(Commands.runOnce(() ->
-        // beaterBar.setSpeed(0)));
+        commandGenericHID.povLeft().onTrue(Commands.runOnce(() -> beaterBar.setSpeed(BeaterBarConstants.FEED_SPEED)));
+        commandGenericHID.povLeft().onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
+        commandGenericHID.povRight().onTrue(Commands.runOnce(() -> beaterBar.setSpeed(-BeaterBarConstants.FEED_SPEED*3)));
+        commandGenericHID.povRight().onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
 
         commandGenericHID.button(XboxController.Button.kA.value)
                 .onTrue(new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.SCORING_ANGLES[0]));
