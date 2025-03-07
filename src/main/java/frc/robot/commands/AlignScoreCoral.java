@@ -1,37 +1,19 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.commands.AlignPose.AlignCamera;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.elevator.Elevator;
 
-public class AutoScoreCoral extends Command {
-    Drive drive;
-    Elevator elevator;
+public class AlignScoreCoral extends AlignPose {
     boolean left;
 
-    /***
-     * Auto scores coral. The robot must be aligned with the algae reef segment.
-     */
-    public AutoScoreCoral(
-            Drive drive,
-            Elevator elevator,
-            boolean left) {
-        super.addRequirements(drive, elevator);
-        this.drive = drive;
-        this.elevator = elevator;
+    public AlignScoreCoral(Drive drive, boolean left) {
+        super(drive, new Pose2d(), AlignCamera.Front);
         this.left = left;
     }
 
@@ -43,23 +25,23 @@ public class AutoScoreCoral extends Command {
 
         int index = getCoralScoreIndex(pose);
 
-        Rotation2d angle = new Rotation2d(Units.degreesToRadians(-120))
-                .rotateBy(new Rotation2d(Units.degreesToRadians(-60) * index));
+        // Rotation2d angle = new Rotation2d(Units.degreesToRadians(-120))
+        //         .rotateBy(new Rotation2d(Units.degreesToRadians(-60) * index));
 
-        Logger.recordOutput("Drive pose", drive.getPose());
-        Logger.recordOutput("Drive pose Flipped", FlippingUtil.flipFieldPose(drive.getPose()));
+        // Logger.recordOutput("Drive pose", drive.getPose());
+        // Logger.recordOutput("Drive pose Flipped", FlippingUtil.flipFieldPose(drive.getPose()));
 
-        Logger.recordOutput(
-                "Align Offset",
-                FieldConstants.REEF_TAG_POSITIONS[index / 2].minus(
-                        FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle));
+        // Logger.recordOutput(
+        //         "Align Offset",
+        //         FieldConstants.REEF_TAG_POSITIONS[index / 2].minus(
+        //                 FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle));
 
         Pose2d score_pose = FieldConstants.CORAL_SCORE_POSES[index];
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
             score_pose = FlippingUtil.flipFieldPose(score_pose);
 
-        // TODO: This is terrible.
-        new AlignPose(drive, score_pose, AlignCamera.Front).schedule();
+        super.target_pose = score_pose;
+        super.initialize();
     }
 
     /**

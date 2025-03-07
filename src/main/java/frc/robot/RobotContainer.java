@@ -16,7 +16,7 @@ import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AlignPose;
 import frc.robot.commands.AutoIntakeAlgae;
-import frc.robot.commands.AutoScoreCoral;
+import frc.robot.commands.AlignScoreCoral;
 import frc.robot.commands.EjectCoral;
 import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
@@ -162,10 +162,8 @@ public class RobotContainer {
 
                 commandGenericHID.button(XboxController.Button.kY.value).onTrue(new EjectCoral(intake));
 
-                commandGenericHID.povLeft().onTrue(new AutoScoreCoral(drive, elevator,
-                                true));
-                commandGenericHID.povRight().onTrue(new AutoScoreCoral(drive, elevator,
-                                false));
+                commandGenericHID.povLeft().onTrue(new AlignScoreCoral(drive, true));
+                commandGenericHID.povRight().onTrue(new AlignScoreCoral(drive, false));
 
                 // commandGenericHID.button(XboxController.Button.kBack.value)
                 // .onTrue(Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll()));

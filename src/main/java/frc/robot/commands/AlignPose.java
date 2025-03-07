@@ -9,7 +9,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionManager;
@@ -38,9 +37,24 @@ public class AlignPose extends Command {
     }
 
     public void initialize() {
-        // TODO: This should check if it's on the position and cancel if so.
+        Pose2d robot_pose = drive.getPose();
+
+        double dist = robot_pose.getTranslation().getDistance(target_pose.getTranslation());
+
+        // If generateTrajectory is called with two identical translations it will throw.
+        if (dist <= DriveConstants.AUTO_ALIGN_CANCEL_DIST) {
+            super.cancel();
+            return;
+        }
+
+        // Ensuring the target position is within an acceptable distance.
+        if (dist >= DriveConstants.AUTO_ALIGN_MAX_DIST) {
+            super.cancel();
+            return;
+        }
+
         trajectory = TrajectoryGenerator.generateTrajectory(
-                List.of(drive.getPose(), target_pose),
+                List.of(robot_pose, target_pose),
                 DriveConstants.TRAJECTORY_CONFIG);
     }
 

@@ -36,9 +36,7 @@ public class AutoIntakeAlgae extends AlignPose {
                 FieldConstants.REEF_TAG_POSITIONS[2].minus(
                         FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle));
 
-        // TODO: This is terrible.
         super.target_pose = align_pose;
-
         super.initialize();
     }
 
