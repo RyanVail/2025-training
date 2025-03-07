@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -12,6 +13,10 @@ public class TeleopCommand extends Command {
     Drive drive;
     Elevator elevator;
     CommandGenericHID controller;
+    double last_x;
+    double last_y;
+    double last_yaw;
+    int last_slew;
 
     public TeleopCommand(Drive drive, Elevator elevator, CommandGenericHID controller) {
         super.addRequirements(drive);
@@ -43,32 +48,31 @@ public class TeleopCommand extends Command {
         double y = processAxis(-controller.getRawAxis(0));
         double yaw = processAxis(-controller.getRawAxis(4));
 
-        for (int i = 0; i < DriveConstants.X_SLEW_LIMITERS.length; i++) {
-            DriveConstants.X_SLEW_LIMITERS[i].calculate(x);
-        }
-
-        for (int i = 0; i < DriveConstants.Y_SLEW_LIMITERS.length; i++) {
-            DriveConstants.Y_SLEW_LIMITERS[i].calculate(y);
-        }
-
-        for (int i = 0; i < DriveConstants.ROT_SLEW_LIMITERS.length; i++) {
-            DriveConstants.ROT_SLEW_LIMITERS[i].calculate(yaw);
-        }
-
         for (int i = DriveConstants.HEIGHT_LEVELS.length - 1; i >= 0; i--) {
             if (DriveConstants.HEIGHT_LEVELS[i] <= elevator.getHeight()) {
-                x = DriveConstants.X_SLEW_LIMITERS[i].lastValue();
-                y = DriveConstants.Y_SLEW_LIMITERS[i].lastValue();
-                yaw = DriveConstants.ROT_SLEW_LIMITERS[i].lastValue();
+                if (last_slew != i) {
+                    DriveConstants.X_SLEW_LIMITERS[i].reset(last_x);
+                    DriveConstants.Y_SLEW_LIMITERS[i].reset(last_y);
+                    DriveConstants.ROT_SLEW_LIMITERS[i].reset(last_yaw);
+            
+
+                x = DriveConstants.X_SLEW_LIMITERS[i].calculate(x);
+                y = DriveConstants.Y_SLEW_LIMITERS[i].calculate(y);
+                yaw = DriveConstants.ROT_SLEW_LIMITERS[i].calculate(yaw);
 
                 x = MathUtil.clamp(x, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
                 y = MathUtil.clamp(y, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
                 yaw = MathUtil.clamp(yaw, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
 
+                last_slew = i;
                 break;
             }
         }
 
         drive.drive(x, y, yaw);
+
+        last_x = x;
+        last_y = y;
+        last_yaw = yaw;
     }
 }

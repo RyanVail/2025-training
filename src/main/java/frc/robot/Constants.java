@@ -100,22 +100,22 @@ public final class Constants {
                 public static final SlewRateLimiter[] X_SLEW_LIMITERS = {
                         new SlewRateLimiter(1.0),
                         new SlewRateLimiter(0.85),
-                        new SlewRateLimiter(0.5),
-                        new SlewRateLimiter(0.2),
+                        new SlewRateLimiter(0.65),
+                        new SlewRateLimiter(0.3),
                 };
 
                 public static final SlewRateLimiter[] Y_SLEW_LIMITERS = {
                         new SlewRateLimiter(1.0),
                         new SlewRateLimiter(0.85),
-                        new SlewRateLimiter(0.5),
-                        new SlewRateLimiter(0.2),
+                        new SlewRateLimiter(0.65),
+                        new SlewRateLimiter(0.3),
                 };
 
                 public static final SlewRateLimiter[] ROT_SLEW_LIMITERS = {
-                        new SlewRateLimiter(1.5),
+                        new SlewRateLimiter(2.5),
+                        new SlewRateLimiter(2.125),
                         new SlewRateLimiter(1.25),
-                        new SlewRateLimiter(0.85),
-                        new SlewRateLimiter(0.5),
+                        new SlewRateLimiter(1.0),
                 };
 
                 public static final double[] HEIGHT_LEVELS = {
