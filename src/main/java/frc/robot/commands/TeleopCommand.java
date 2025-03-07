@@ -1,21 +1,17 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 
 public class TeleopCommand extends Command {
-    private Drive drive;
-    private Elevator elevator;
-    private CommandGenericHID controller;
-    private SlewRateLimiter xLimiter;
-    private SlewRateLimiter yLimiter;
-    private SlewRateLimiter yawLimiter;
+    Drive drive;
+    Elevator elevator;
+    CommandGenericHID controller;
 
     public TeleopCommand(Drive drive, Elevator elevator, CommandGenericHID controller) {
         super.addRequirements(drive);
@@ -24,10 +20,6 @@ public class TeleopCommand extends Command {
         this.controller = controller;
 
         SmartDashboard.putNumber("ControlPow", 3);
-
-        xLimiter = new SlewRateLimiter(DriveConstants.SLEW_RATE);
-        yLimiter = new SlewRateLimiter(DriveConstants.SLEW_RATE);
-        yawLimiter = new SlewRateLimiter(DriveConstants.ROT_SLEW_RATE);
     }
 
     private double processAxis(double axis) {
@@ -42,15 +34,41 @@ public class TeleopCommand extends Command {
         axis = (neg ? -1 : 1) * Math.pow(axis, SmartDashboard.getNumber("ControlPow", 3));
 
         // Slow the speed based on the elevator height.
-        return axis * (1 - (this.elevator.getSetpoint() / ElevatorConstants.MAX_HEIGHT)
-                * DriveConstants.ELEVATOR_HEIGHT_DIMMER);
+        return axis;
     }
 
     @Override
     public void execute() {
-        drive.drive(
-            xLimiter.calculate(processAxis(-controller.getRawAxis(1))),
-            yLimiter.calculate(processAxis(-controller.getRawAxis(0))),
-            yawLimiter.calculate(processAxis(-controller.getRawAxis(4))));
+        double x = processAxis(-controller.getRawAxis(1));
+        double y = processAxis(-controller.getRawAxis(0));
+        double yaw = processAxis(-controller.getRawAxis(4));
+
+        for (int i = 0; i < DriveConstants.X_SLEW_LIMITERS.length; i++) {
+            DriveConstants.X_SLEW_LIMITERS[i].calculate(x);
+        }
+
+        for (int i = 0; i < DriveConstants.Y_SLEW_LIMITERS.length; i++) {
+            DriveConstants.Y_SLEW_LIMITERS[i].calculate(y);
+        }
+
+        for (int i = 0; i < DriveConstants.ROT_SLEW_LIMITERS.length; i++) {
+            DriveConstants.ROT_SLEW_LIMITERS[i].calculate(yaw);
+        }
+
+        for (int i = DriveConstants.HEIGHT_LEVELS.length - 1; i >= 0; i--) {
+            if (DriveConstants.HEIGHT_LEVELS[i] <= elevator.getHeight()) {
+                x = DriveConstants.X_SLEW_LIMITERS[i].lastValue();
+                y = DriveConstants.Y_SLEW_LIMITERS[i].lastValue();
+                yaw = DriveConstants.ROT_SLEW_LIMITERS[i].lastValue();
+
+                x = MathUtil.clamp(x, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
+                y = MathUtil.clamp(y, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
+                yaw = MathUtil.clamp(yaw, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
+
+                break;
+            }
+        }
+
+        drive.drive(x, y, yaw);
     }
 }

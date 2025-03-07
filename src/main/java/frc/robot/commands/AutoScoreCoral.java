@@ -11,7 +11,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.commands.AlignPose.AlignCamera;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 
@@ -27,7 +29,7 @@ public class AutoScoreCoral extends Command {
             Drive drive,
             Elevator elevator,
             boolean left) {
-        super.addRequirements(elevator);
+        super.addRequirements(drive, elevator);
         this.drive = drive;
         this.elevator = elevator;
         this.left = left;
@@ -35,12 +37,11 @@ public class AutoScoreCoral extends Command {
 
     @Override
     public void initialize() {
-        int index = 0;
-        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
-            index = getCoralScoreIndex(FlippingUtil.flipFieldPose(drive.getPose()));
-        } else {
-            index = getCoralScoreIndex(drive.getPose());
-        }
+        Pose2d pose = (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
+                ? FlippingUtil.flipFieldPose(drive.getPose())
+                : drive.getPose();
+
+        int index = getCoralScoreIndex(pose);
 
         Rotation2d angle = new Rotation2d(Units.degreesToRadians(-120))
                 .rotateBy(new Rotation2d(Units.degreesToRadians(-60) * index));
@@ -53,12 +54,12 @@ public class AutoScoreCoral extends Command {
                 FieldConstants.REEF_TAG_POSITIONS[index / 2].minus(
                         FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle));
 
-        Pose2d pose = FieldConstants.CORAL_SCORE_POSES[index];
+        Pose2d score_pose = FieldConstants.CORAL_SCORE_POSES[index];
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
-            pose = FlippingUtil.flipFieldPose(pose);
+            score_pose = FlippingUtil.flipFieldPose(score_pose);
 
-        Logger.recordOutput("_Target Pose", pose);
-        new AlignPose(drive, pose).schedule();
+        // TODO: This is terrible.
+        new AlignPose(drive, score_pose, AlignCamera.Front).schedule();
     }
 
     /**

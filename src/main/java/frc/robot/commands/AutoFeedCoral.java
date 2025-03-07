@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.commands.AlignPose.AlignCamera;
 import frc.robot.subsystems.drive.Drive;
 
 public class AutoFeedCoral extends Command {
@@ -19,7 +20,7 @@ public class AutoFeedCoral extends Command {
     @Override
     public void initialize() {
         int index = getFeederIndex(drive.getPose());
-        new AlignPose(drive, FieldConstants.FEEDER_POSES[index]).schedule();
+        new AlignPose(drive, FieldConstants.FEEDER_POSES[index], AlignCamera.Back).schedule();
     }
 
     private int getFeederIndex(Pose2d pose) {

@@ -15,6 +15,9 @@ public class VisionManager {
     private static PhotonPoseEstimator frontEstimator;
     private static PhotonPoseEstimator backEstimator;
 
+    private static boolean disableFront;
+    private static boolean disableBack;
+
     // // Algae on the reef.
     // private static boolean[][] algae = new boolean[2][6];
 
@@ -55,10 +58,25 @@ public class VisionManager {
     // return 0;
     // }
 
+    public static void onlyBack() {
+        disableFront = true;
+        disableBack = false;
+    }
+
+    public static void onlyFront() {
+        disableFront = false;
+        disableBack = true;
+    }
+
+    public static void allCameras() {
+        disableFront = false;
+        disableBack = false;
+    }
+
     public static EstimatedRobotPose[] getEstimatedPoses() {
         return new EstimatedRobotPose[] {
-                frontEstimator.update(frontCamera.getLatestResult()).orElse(null),
-                backEstimator.update(backCamera.getLatestResult()).orElse(null),
+                disableFront ? null : frontEstimator.update(frontCamera.getLatestResult()).orElse(null),
+                disableBack ? null : backEstimator.update(backCamera.getLatestResult()).orElse(null),
         };
     }
 }

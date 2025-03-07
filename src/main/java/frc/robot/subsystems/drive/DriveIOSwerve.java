@@ -82,7 +82,7 @@ public class DriveIOSwerve implements DriveIO {
     @Override
     public void addVisionEstimations(EstimatedRobotPose[] poses) {
         for (EstimatedRobotPose pose : poses)
-            if (pose != null)
+            if (pose != null && pose.estimatedPose != null)
                 swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                         pose.timestampSeconds);
     }

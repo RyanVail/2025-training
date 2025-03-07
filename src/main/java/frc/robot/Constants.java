@@ -6,6 +6,10 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,6 +17,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -41,14 +47,18 @@ public final class Constants {
                 public static final double CORAL_SCORE_VOLTAGE = -4.5;
                 public static final double CORAL_FEED_VOLTAGE = 4.5;
 
+                public static final double ALGAE_SCORE_VOLTAGE = -6.0;
+
                 public static final double SENSE_TIME = 0.115;
+                public static final double ALGAE_EJECT_TIME = 0.5;
 
-                public static final double ALGAE_STALL_VOLTAGE = 0.5;
-                public static final double ALGAE_INTAKE_VOLTAGE = 2.0;
+                public static final double ALGAE_STALL_VOLTAGE = 0.2;
+                public static final double ALGAE_INTAKE_VOLTAGE = 4.0;
 
-                // TODO: Set a real values for these.
-                public static final double ALGAE_INTAKE_STALL_VEL = 5.0;
-                public static final double ALGAE_INTAKE_UNSTALL_VEL = 20.0;
+                // TODO: See if unstall is even required.
+                public static final double ALGAE_INTAKE_START_VEL = 1700.0;
+                public static final double ALGAE_INTAKE_STALL_VEL = 1600.0;
+                public static final double ALGAE_INTAKE_UNSTALL_VEL = 800.0;
         }
 
         public class DriveConstants {
@@ -65,15 +75,62 @@ public final class Constants {
                                 new PIDConstants(2.0, 0.0, 0.0),
                                 new PIDConstants(2.0, 0.0, 0.0));
 
+                public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
+                                new PIDController(6.0, 0.0, 0.0),
+                                new PIDController(6.0, 0.0, 0.0),
+                                new ProfiledPIDController(2.0, 0.0, 0.0,
+                                                new TrapezoidProfile.Constraints(2.0, 2.0)));
+
+                public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(
+                                1.0,
+                                1.0);
+
+                static {
+                        DRIVE_CONTROLLER.setTolerance(new Pose2d(Units.inchesToMeters(0.15), Units.inchesToMeters(0.15), new Rotation2d(Units.degreesToRadians(0.5))));
+                }
+
                 public static final double MIN_ALIGN_DIST = Units.feetToMeters(0.02);
                 public static final double MIN_ALIGN_ANGLE = Units.degreesToRadians(0.5);
-
-                public static final double ELEVATOR_HEIGHT_DIMMER = 0.1;
 
                 public static final double SLEW_RATE = 1;
                 public static final double ROT_SLEW_RATE = 4;
 
-                public static final double AUTO_ALIGN_MAX_DIST = Units.feetToMeters(5);
+                public static final double AUTO_ALIGN_MAX_DIST = Units.feetToMeters(7.5);
+
+                public static final SlewRateLimiter[] X_SLEW_LIMITERS = {
+                        new SlewRateLimiter(1.0),
+                        new SlewRateLimiter(0.85),
+                        new SlewRateLimiter(0.5),
+                        new SlewRateLimiter(0.2),
+                };
+
+                public static final SlewRateLimiter[] Y_SLEW_LIMITERS = {
+                        new SlewRateLimiter(1.0),
+                        new SlewRateLimiter(0.85),
+                        new SlewRateLimiter(0.5),
+                        new SlewRateLimiter(0.2),
+                };
+
+                public static final SlewRateLimiter[] ROT_SLEW_LIMITERS = {
+                        new SlewRateLimiter(1.5),
+                        new SlewRateLimiter(1.25),
+                        new SlewRateLimiter(0.85),
+                        new SlewRateLimiter(0.5),
+                };
+
+                public static final double[] HEIGHT_LEVELS = {
+                        Units.inchesToMeters(-1.0),
+                        Units.inchesToMeters(3.0),
+                        Units.inchesToMeters(8.0),
+                        Units.inchesToMeters(15.0),
+                };
+
+                public static final double[] MAX_SPEEDS = {
+                        1.0,
+                        0.85,
+                        0.5,
+                        0.2,
+                };
         }
 
         public class ElevatorConstants {
@@ -103,7 +160,7 @@ public final class Constants {
 
                 public static final double CORAL_SCORE_OFFSET = 0.0;
 
-                public static final double CORAL_INTAKE_HEIGHT = 0.09125;
+                public static final double CORAL_INTAKE_HEIGHT = 0.0562;
 
                 public static final double ALIGN_DIST_METERS = Units.inchesToMeters(0.4);
 
@@ -138,7 +195,12 @@ public final class Constants {
                                 Units.inchesToMeters(2.437),
                                 Units.inchesToMeters(0.0),
                                 Units.inchesToMeters(37.922),
-                                new Rotation3d(0, Units.degreesToRadians(180), 0));
+                                // TODO: Finish this calibration.
+                                new Rotation3d (
+                                        0,
+                                        Units.degreesToRadians(180 - 35),
+                                        0
+                                ));
         }
 
         public class FieldConstants {
@@ -146,17 +208,19 @@ public final class Constants {
                                 .loadField(AprilTagFields.k2025ReefscapeWelded);
 
                 public static final Translation2d[] REEF_TAG_POSITIONS = {
-                        LAYOUT.getTagPose(20).orElse(new Pose3d()).toPose2d().getTranslation(),
-                        LAYOUT.getTagPose(21).orElse(new Pose3d()).toPose2d().getTranslation(),
-                        LAYOUT.getTagPose(22).orElse(new Pose3d()).toPose2d().getTranslation(),
-                        LAYOUT.getTagPose(17).orElse(new Pose3d()).toPose2d().getTranslation(),
-                        LAYOUT.getTagPose(18).orElse(new Pose3d()).toPose2d().getTranslation(),
-                        LAYOUT.getTagPose(19).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(20).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(21).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(22).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(17).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(18).orElse(new Pose3d()).toPose2d().getTranslation(),
+                                LAYOUT.getTagPose(19).orElse(new Pose3d()).toPose2d().getTranslation(),
                 };
 
                 private static Translation2d LEFT_CORAL_SCORE_OFFSET = new Translation2d(0.056, 0.691);
                 private static Translation2d RIGHT_CORAL_SCORE_OFFSET = new Translation2d(0.315, 0.553);
                 private static Rotation2d BASE_CORAL_SCORE_ROTATION = new Rotation2d(Units.degreesToRadians(-120));
+
+                private static Translation2d ALGAE_INTAKE_OFFSET = new Translation2d(-0.118, -0.585).rotateBy(new Rotation2d(Units.degreesToRadians(180)));
 
                 public static final Pose2d[] CORAL_SCORE_POSES = new Pose2d[12];
 
@@ -181,28 +245,35 @@ public final class Constants {
                 public static final Pose2d[] ALGAE_INTAKE_POSES = new Pose2d[6];
 
                 static {
-                        for (int i = 0; i < ALGAE_INTAKE_POSES.length; i++) {
-                                Pose2d p0 = CORAL_SCORE_POSES[(i << 1) | 0];
-                                Pose2d p1 = CORAL_SCORE_POSES[(i << 1) | 1];
+                        Translation2d offset = ALGAE_INTAKE_OFFSET;
+                        Rotation2d angle = new Rotation2d(Units.degreesToRadians(-60));
+                        Rotation2d rot = BASE_CORAL_SCORE_ROTATION;
 
-                                // The algae is in the middle of the coral segments so taking the average of the
-                                // coral score positions gives the position in the middle and the position to
-                                // intake the algae.
-                                ALGAE_INTAKE_POSES[i] = new Pose2d(
-                                                p0.getTranslation().plus(p1.getTranslation()).div(2),
-                                                p0.getRotation());
+                        for (int i = 0; i < ALGAE_INTAKE_POSES.length; i++) {
+                                ALGAE_INTAKE_POSES[i] = new Pose2d(REEF_TAG_POSITIONS[i].plus(offset), rot);
+
+                                offset = offset.rotateBy(angle);
+                                rot = rot.rotateBy(angle);
                         }
                 }
 
+                // TODO: These should be in the elevator constants.
                 public static final double[] CORAL_LEVEL_HEIGHTS = {
                                 Units.inchesToMeters(1),
                                 Units.inchesToMeters(4.25),
-                                Units.inchesToMeters(11.0),
+                                Units.inchesToMeters(10.0),
                                 Units.inchesToMeters(21.75),
                 };
 
+                public static final double PROCESSOR_HEIGHT = Units.inchesToMeters(2.1);
+
+                public static final double[] ALGEA_LEVEL_HEIGHTS = {
+                        Units.inchesToMeters(9),
+                        Units.inchesToMeters(15),
+                };
+
                 public static final Pose2d[] FEEDER_POSES = {
-                        new Pose2d(1.151, 1.234, new Rotation2d(1)),
+                                new Pose2d(1.151, 1.234, new Rotation2d(1)),
                 };
 
                 public static final Translation2d[] FEEDER_POSITIONS = {
@@ -238,9 +309,12 @@ public final class Constants {
                 public static final double[] SCORING_ANGLES = { 47, 75, 78 };
 
                 public static final double INTAKE_ANGLE = 212;
+                public static final double ALGAE_INTAKE_ANGLE = 190;
 
                 public static final double REQUIRED_ELEVATOR_HEIGHT = 0.037;
                 public static final double MIN_ELEVATOR_REQUIRED_ANGLE = 50;
+
+                public static final double PROCESSOR_ANGLE = 250;
         }
 
         public class BeaterBarConstants {

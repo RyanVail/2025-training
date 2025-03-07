@@ -1,61 +1,80 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
+import java.util.List;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.VisionManager;
 
 public class AlignPose extends Command {
+    protected Pose2d target_pose;
     Drive drive;
-    Pose2d pose;
+    Trajectory trajectory;
+    AlignCamera camera;
 
-    public AlignPose(Drive drive, Pose2d pose) {
+    public enum AlignCamera {
+        All,
+        Back,
+        Front,
+    };
+
+    public AlignPose(Drive drive, Pose2d target_pose, AlignCamera camera) {
         addRequirements(drive);
 
         this.drive = drive;
-        this.pose = pose;
+        this.target_pose = target_pose;
 
-        xController.setTolerance(DriveConstants.MIN_ALIGN_DIST);
-        yController.setTolerance(DriveConstants.MIN_ALIGN_DIST);
-        angleController.setTolerance(DriveConstants.MIN_ALIGN_ANGLE);
+        // SmartDashboard.putData("AutoAlignXPID", DriveConstants.DRIVE_CONTROLLER.getXController());
+        // SmartDashboard.putData("AutoAlignYPID", DriveConstants.DRIVE_CONTROLLER.getYController());
+        // SmartDashboard.putData("AutoAlignAlignPID", DriveConstants.DRIVE_CONTROLLER.getThetaController());
     }
 
-    SlewRateLimiter x = new SlewRateLimiter(10);
-    SlewRateLimiter y = new SlewRateLimiter(10);
-
-    PIDController xController = new PIDController(9.0, 0.0, 0.0);
-    PIDController yController = new PIDController(9.0, 0.0, 0.0);
-    PIDController angleController = new PIDController(4.0, 0, 0);
+    public void initialize() {
+        // TODO: This should check if it's on the position and cancel if so.
+        trajectory = TrajectoryGenerator.generateTrajectory(
+                List.of(drive.getPose(), target_pose),
+                DriveConstants.TRAJECTORY_CONFIG);
+    }
 
     @Override
     public void execute() {
-        if (pose.getTranslation().getDistance(drive.getPose().getTranslation()) >= DriveConstants.AUTO_ALIGN_MAX_DIST)
+        Pose2d drive_pose = drive.getPose();
+        if (target_pose.getTranslation().getDistance(drive_pose.getTranslation()) >= DriveConstants.AUTO_ALIGN_MAX_DIST) {
+            Logger.recordOutput("_CancelingAlignTo", target_pose);
             super.cancel();
+            return;
+        }
 
-        xController.setSetpoint(pose.getX());
-        yController.setSetpoint(pose.getY());
-        angleController.setSetpoint(pose.getRotation().getRadians());
-        angleController.enableContinuousInput(-Math.PI, Math.PI);
+        if (camera == AlignCamera.Back) {
+            VisionManager.onlyBack();
+        } else if (camera == AlignCamera.Front) {
+            VisionManager.onlyFront();
+        } else {
+            VisionManager.allCameras();
+        }
 
-        ChassisSpeeds speeds = new ChassisSpeeds();
-        speeds.vxMetersPerSecond = xController.calculate(drive.getPose().getX());
-        speeds.vyMetersPerSecond = yController.calculate(drive.getPose().getY());
-        speeds.omegaRadiansPerSecond = angleController.calculate(drive.getPose().getRotation().getRadians());
-        drive.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, drive.getPose().getRotation()));
+        drive.driveRobotRelative(DriveConstants.DRIVE_CONTROLLER.calculate(
+                drive.getPose(),
+                trajectory.sample(System.currentTimeMillis() * 0.001),
+                target_pose.getRotation()));
     }
 
     @Override
     public boolean isFinished() {
-        return xController.atSetpoint()
-                && yController.atSetpoint()
-                && angleController.atSetpoint();
+        return DriveConstants.DRIVE_CONTROLLER.atReference();
     }
 
     @Override
     public void end(boolean interrupted) {
         drive.driveRobotRelative(new ChassisSpeeds());
+        VisionManager.allCameras();
     }
 }
