@@ -54,25 +54,25 @@ public class TeleopCommand extends Command {
                     DriveConstants.X_SLEW_LIMITERS[i].reset(last_x);
                     DriveConstants.Y_SLEW_LIMITERS[i].reset(last_y);
                     DriveConstants.ROT_SLEW_LIMITERS[i].reset(last_yaw);
-            
 
-                x = DriveConstants.X_SLEW_LIMITERS[i].calculate(x);
-                y = DriveConstants.Y_SLEW_LIMITERS[i].calculate(y);
-                yaw = DriveConstants.ROT_SLEW_LIMITERS[i].calculate(yaw);
+                    x = DriveConstants.X_SLEW_LIMITERS[i].calculate(x);
+                    y = DriveConstants.Y_SLEW_LIMITERS[i].calculate(y);
+                    yaw = DriveConstants.ROT_SLEW_LIMITERS[i].calculate(yaw);
 
-                x = MathUtil.clamp(x, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
-                y = MathUtil.clamp(y, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
-                yaw = MathUtil.clamp(yaw, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
+                    x = MathUtil.clamp(x, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
+                    y = MathUtil.clamp(y, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
+                    yaw = MathUtil.clamp(yaw, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
 
-                last_slew = i;
-                break;
+                    last_slew = i;
+                    break;
+                }
             }
+
+            drive.drive(x, y, yaw);
+
+            last_x = x;
+            last_y = y;
+            last_yaw = yaw;
         }
-
-        drive.drive(x, y, yaw);
-
-        last_x = x;
-        last_y = y;
-        last_yaw = yaw;
     }
 }
