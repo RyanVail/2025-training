@@ -15,8 +15,8 @@ public class VisionManager {
     private static PhotonPoseEstimator frontEstimator;
     private static PhotonPoseEstimator backEstimator;
 
-    private static boolean disableFront;
-    private static boolean disableBack;
+    private static boolean disableFront = false;
+    private static boolean disableBack = false;
 
     // // Algae on the reef.
     // private static boolean[][] algae = new boolean[2][6];
@@ -71,6 +71,11 @@ public class VisionManager {
     public static void allCameras() {
         disableFront = false;
         disableBack = false;
+    }
+
+    public static void noCameras() {
+        disableFront = true;
+        disableBack = true;
     }
 
     public static EstimatedRobotPose[] getEstimatedPoses() {

@@ -20,6 +20,7 @@ public class AlignPose extends Command {
     AlignCamera camera;
 
     public enum AlignCamera {
+        None,
         All,
         Back,
         Front,
@@ -71,8 +72,10 @@ public class AlignPose extends Command {
             VisionManager.onlyBack();
         } else if (camera == AlignCamera.Front) {
             VisionManager.onlyFront();
-        } else {
+        } else if (camera == AlignCamera.All) {
             VisionManager.allCameras();
+        } else {
+            VisionManager.noCameras();
         }
 
         drive.driveRobotRelative(DriveConstants.DRIVE_CONTROLLER.calculate(

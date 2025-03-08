@@ -99,16 +99,16 @@ public final class Constants {
 
                 public static final SlewRateLimiter[] X_SLEW_LIMITERS = {
                         new SlewRateLimiter(1.0),
-                        new SlewRateLimiter(0.85),
-                        new SlewRateLimiter(0.65),
-                        new SlewRateLimiter(0.3),
+                        new SlewRateLimiter(0.5),
+                        new SlewRateLimiter(0.35),
+                        new SlewRateLimiter(0.25),
                 };
 
                 public static final SlewRateLimiter[] Y_SLEW_LIMITERS = {
                         new SlewRateLimiter(1.0),
-                        new SlewRateLimiter(0.85),
-                        new SlewRateLimiter(0.65),
-                        new SlewRateLimiter(0.3),
+                        new SlewRateLimiter(0.5),
+                        new SlewRateLimiter(0.35),
+                        new SlewRateLimiter(0.25),
                 };
 
                 public static final SlewRateLimiter[] ROT_SLEW_LIMITERS = {
@@ -186,7 +186,6 @@ public final class Constants {
                 public static final double FRONT_CAMERA_LATENCY_STD_DEV_MS = 15.0;
 
                 public static final String BACK_CAMERA_NAME = "Back";
-                public static final Pose3d BACK_CAMERA_POSE = new Pose3d();
                 public static final int BACK_CAMERA_WIDTH = 640;
                 public static final int BACK_CAMERA_HEIGHT = 640;
                 public static final Rotation2d BACK_CAMERA_FOV = Rotation2d.fromDegrees(90.0);
@@ -200,7 +199,7 @@ public final class Constants {
                                 // TODO: Finish this calibration.
                                 new Rotation3d (
                                         0,
-                                        Units.degreesToRadians(180 - 35),
+                                        Units.degreesToRadians(180 - 20),
                                         0
                                 ));
         }
