@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -76,14 +77,14 @@ public final class Constants {
                                 new PIDConstants(2.0, 0.0, 0.0));
 
                 public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
-                                new PIDController(6.0, 0.0, 0.0),
-                                new PIDController(6.0, 0.0, 0.0),
-                                new ProfiledPIDController(2.0, 0.0, 0.0,
-                                                new TrapezoidProfile.Constraints(2.0, 2.0)));
+                                new PIDController(5, 0.0, 0.0),
+                                new PIDController(5, 0.0, 0.0),
+                                new ProfiledPIDController(2.5, 0.0, 0.0,
+                                                new TrapezoidProfile.Constraints(2.0, 0.5)));
 
                 public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(
-                                1.0,
-                                1.0);
+                                2.0,
+                                0.5);
 
                 static {
                         DRIVE_CONTROLLER.setTolerance(new Pose2d(Units.inchesToMeters(0.15), Units.inchesToMeters(0.15), new Rotation2d(Units.degreesToRadians(0.5))));
@@ -98,17 +99,17 @@ public final class Constants {
                 public static final double AUTO_ALIGN_MAX_DIST = Units.feetToMeters(7.5);
 
                 public static final SlewRateLimiter[] X_SLEW_LIMITERS = {
-                        new SlewRateLimiter(1.0),
-                        new SlewRateLimiter(0.5),
                         new SlewRateLimiter(0.35),
-                        new SlewRateLimiter(0.25),
+                        new SlewRateLimiter(0.35),
+                        new SlewRateLimiter(0.55),
+                        new SlewRateLimiter(0.45),
                 };
 
                 public static final SlewRateLimiter[] Y_SLEW_LIMITERS = {
-                        new SlewRateLimiter(1.0),
-                        new SlewRateLimiter(0.5),
                         new SlewRateLimiter(0.35),
-                        new SlewRateLimiter(0.25),
+                        new SlewRateLimiter(0.35),
+                        new SlewRateLimiter(0.55),
+                        new SlewRateLimiter(0.45),
                 };
 
                 public static final SlewRateLimiter[] ROT_SLEW_LIMITERS = {
@@ -127,9 +128,9 @@ public final class Constants {
 
                 public static final double[] MAX_SPEEDS = {
                         1.0,
-                        0.85,
-                        0.5,
-                        0.2,
+                        0.45,
+                        0.12,
+                        0.08,
                 };
 
                 public static final double AUTO_ALIGN_CANCEL_DIST = Units.inchesToMeters(0.025);
@@ -159,6 +160,8 @@ public final class Constants {
                 public static final double S = 0.325;
                 public static final double G = 0.0;
                 public static final double V = 0.0;
+
+                public static final TrapezoidProfile PROFILE = new TrapezoidProfile(new Constraints(Units.feetToMeters(5.0), Units.feetToMeters(3.25)));
 
                 public static final double CORAL_SCORE_OFFSET = 0.0;
 
@@ -193,9 +196,9 @@ public final class Constants {
                 public static final double BACK_CAMERA_AVG_LATENCY_MS = 50.0;
                 public static final double BACK_CAMERA_LATENCY_STD_DEV_MS = 15.0;
                 public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(
-                                Units.inchesToMeters(2.437),
+                                Units.inchesToMeters(2.584),
                                 Units.inchesToMeters(0.0),
-                                Units.inchesToMeters(37.922),
+                                Units.inchesToMeters(37.167),
                                 // TODO: Finish this calibration.
                                 new Rotation3d (
                                         0,

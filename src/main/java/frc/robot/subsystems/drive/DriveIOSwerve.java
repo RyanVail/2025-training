@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import org.photonvision.EstimatedRobotPose;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -67,6 +69,10 @@ public class DriveIOSwerve implements DriveIO {
     @Override
     public void drive(ChassisSpeeds speeds) {
         swerveDrive.drive(speeds);
+    }
+
+    public void driveFieldRelative(ChassisSpeeds speeds){
+        swerveDrive.driveFieldOriented(speeds);
     }
 
     @Override

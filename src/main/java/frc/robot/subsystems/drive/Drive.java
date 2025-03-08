@@ -136,7 +136,15 @@ public class Drive extends SubsystemBase {
         this.io.drive(speeds);
     }
 
+    public void driveFieldRelative(double x, double y, double omega) {
+        this.io.driveFieldRelative(
+                new ChassisSpeeds(
+                        x * DriveConstants.MAX_SPEED,
+                        y * DriveConstants.MAX_SPEED,
+                        omega * DriveConstants.MAX_SPEED));
+    }
+
     public void driveFieldRelative(ChassisSpeeds speeds) {
-        
+        this.io.driveFieldRelative(speeds);
     }
 }

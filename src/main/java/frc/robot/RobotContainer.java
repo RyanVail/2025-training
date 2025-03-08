@@ -166,15 +166,17 @@ public class RobotContainer {
                 commandGenericHID.povLeft().onTrue(new AlignScoreCoral(drive, true));
                 commandGenericHID.povRight().onTrue(new AlignScoreCoral(drive, false));
 
-                // commandGenericHID.button(XboxController.Button.kBack.value)
-                // .onTrue(Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll()));
+                commandGenericHID.button(XboxController.Button.kBack.value)
+                                .onTrue(Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll()));
 
-                // commandGenericHID.povLeft().onTrue(Commands.runOnce(() ->
+                // commandGenericHID.povLeft()
+                // .onTrue(Commands.runOnce(() ->
                 // beaterBar.setSpeed(BeaterBarConstants.FEED_SPEED)));
                 // commandGenericHID.povLeft().onFalse(Commands.runOnce(() ->
                 // beaterBar.setSpeed(0)));
-                // commandGenericHID.povRight().onTrue(Commands.runOnce(() ->
-                // beaterBar.setSpeed(-BeaterBarConstants.FEED_SPEED*3)));
+                // commandGenericHID.povRight()
+                // .onTrue(Commands.runOnce(() ->
+                // beaterBar.setSpeed(-BeaterBarConstants.FEED_SPEED * 3)));
                 // commandGenericHID.povRight().onFalse(Commands.runOnce(() ->
                 // beaterBar.setSpeed(0)));
 

@@ -67,7 +67,8 @@ public class TeleopCommand extends Command {
                 }
             }
 
-            drive.drive(x, y, yaw);
+            // TODO: Add something to do this.
+            drive.drive(x, y, yaw * 0.5);
 
             last_x = x;
             last_y = y;

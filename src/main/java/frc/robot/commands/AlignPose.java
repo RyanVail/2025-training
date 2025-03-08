@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -32,9 +33,9 @@ public class AlignPose extends Command {
         this.drive = drive;
         this.target_pose = target_pose;
 
-        // SmartDashboard.putData("AutoAlignXPID", DriveConstants.DRIVE_CONTROLLER.getXController());
-        // SmartDashboard.putData("AutoAlignYPID", DriveConstants.DRIVE_CONTROLLER.getYController());
-        // SmartDashboard.putData("AutoAlignAlignPID", DriveConstants.DRIVE_CONTROLLER.getThetaController());
+        SmartDashboard.putData("AutoAlignXPID", DriveConstants.DRIVE_CONTROLLER.getXController());
+        SmartDashboard.putData("AutoAlignYPID", DriveConstants.DRIVE_CONTROLLER.getYController());
+        SmartDashboard.putData("AutoAlignAlignPID", DriveConstants.DRIVE_CONTROLLER.getThetaController());
     }
 
     public void initialize() {
@@ -92,6 +93,6 @@ public class AlignPose extends Command {
     @Override
     public void end(boolean interrupted) {
         drive.driveRobotRelative(new ChassisSpeeds());
-        VisionManager.allCameras();
+        VisionManager.onlyFront(); // TODO: There should be a normal one.
     }
 }

@@ -10,6 +10,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 public interface DriveIO {
     public void drive(ChassisSpeeds speeds);
 
+    public void driveFieldRelative(ChassisSpeeds speeds);
+
     public SwerveModuleState[] getSwerveStates();
 
     public Rotation2d getRotation();

@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -17,6 +18,8 @@ public class Elevator extends SubsystemBase {
     ElevatorIO io;
     PIDController pid;
     ElevatorFeedforward feedForward;
+    State lastStateSetpoint;
+    State stateSetpoint;
 
     Mechanism2d mechanism;
     MechanismLigament2d realLigament;
@@ -26,6 +29,9 @@ public class Elevator extends SubsystemBase {
     public static final String LPREFIX = "/Subsystems/Elevator/";
 
     public Elevator(ElevatorIO io) {
+        lastStateSetpoint = new State();
+        stateSetpoint = new State();
+
         this.io = io;
         this.pid = new PIDController(
                 ElevatorConstants.P,
@@ -72,9 +78,11 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
+        lastStateSetpoint = ElevatorConstants.PROFILE.calculate(0.02, lastStateSetpoint, stateSetpoint);
+
         double height = io.getHeight();
-        double voltage = pid.calculate(height);
-        voltage += feedForward.calculate(height);
+        double voltage = pid.calculate(height, lastStateSetpoint.position);
+        voltage += feedForward.calculate(height); // TODO: Should this be passed the height?
         voltage = Math.min(voltage, RobotController.getBatteryVoltage());
         voltage = Math.max(voltage, -RobotController.getBatteryVoltage());
         io.setVoltage(voltage);
@@ -93,7 +101,7 @@ public class Elevator extends SubsystemBase {
 
     public void setSetpoint(double setpoint) {
         this.setpoint = setpoint;
-        pid.setSetpoint(setpoint);
+        stateSetpoint = new State(setpoint, 0.0);
         setpointLigament.setLength(setpoint);
     }
 
