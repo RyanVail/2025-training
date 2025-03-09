@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -74,5 +75,10 @@ public class TeleopCommand extends Command {
             last_y = y;
             last_yaw = yaw;
         }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drive.drive(new ChassisSpeeds());
     }
 }

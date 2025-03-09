@@ -3,9 +3,8 @@ package frc.robot.subsystems.drive;
 import java.io.File;
 import java.io.IOException;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
-
-import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,8 +12,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.parser.SwerveParser;
@@ -59,8 +56,6 @@ public class DriveIOSwerve implements DriveIO {
         return swerveDrive.getFieldVelocity();
     }
 
-    PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
-
     @Override
     public void periodic() {
         swerveDrive.updateOdometry();
@@ -91,5 +86,9 @@ public class DriveIOSwerve implements DriveIO {
             if (pose != null && pose.estimatedPose != null)
                 swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                         pose.timestampSeconds);
+
+        if (poses[0] != null) {
+            Logger.recordOutput("_EstimatedPose", poses[0].estimatedPose);
+        }
     }
 }

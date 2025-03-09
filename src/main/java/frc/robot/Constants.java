@@ -6,9 +6,6 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -17,7 +14,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
@@ -75,20 +71,6 @@ public final class Constants {
                 public static final PPHolonomicDriveController PPDriveController = new PPHolonomicDriveController(
                                 new PIDConstants(2.0, 0.0, 0.0),
                                 new PIDConstants(2.0, 0.0, 0.0));
-
-                public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
-                                new PIDController(5, 0.0, 0.0),
-                                new PIDController(5, 0.0, 0.0),
-                                new ProfiledPIDController(2.5, 0.0, 0.0,
-                                                new TrapezoidProfile.Constraints(2.0, 0.5)));
-
-                public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(
-                                2.0,
-                                0.5);
-
-                static {
-                        DRIVE_CONTROLLER.setTolerance(new Pose2d(Units.inchesToMeters(0.15), Units.inchesToMeters(0.15), new Rotation2d(Units.degreesToRadians(0.5))));
-                }
 
                 public static final double MIN_ALIGN_DIST = Units.feetToMeters(0.02);
                 public static final double MIN_ALIGN_ANGLE = Units.degreesToRadians(0.5);
