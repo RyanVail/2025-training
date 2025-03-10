@@ -24,6 +24,7 @@ public class Intake extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "IsCoralLoaded", isCoralLoaded());
         Logger.recordOutput(LPREFIX + "Velocity", getVelocity());
         Logger.recordOutput(LPREFIX + "Voltage", getVoltage());
+        Logger.recordOutput(LPREFIX + "Position", getPosition());
 
         io.simulationPeriodic();
     }
@@ -46,5 +47,9 @@ public class Intake extends SubsystemBase {
 
     public boolean isCoralLoaded() {
         return io.isCoralLoaded();
+    }
+
+    public double getPosition() {
+        return io.getPosition();
     }
 }

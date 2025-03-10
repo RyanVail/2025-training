@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
@@ -23,6 +22,7 @@ import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.FeedCoral;
 import frc.robot.commands.IntakeAlgae;
+import frc.robot.commands.WaitController;
 import frc.robot.commands.AlignPose.AlignCamera;
 import frc.robot.subsystems.beaterbar.BeaterBar;
 import frc.robot.subsystems.beaterbar.BeaterBarIOFlex;
@@ -42,6 +42,7 @@ import frc.robot.subsystems.vision.VisionManager;
 
 public class RobotContainer {
         CommandGenericHID commandGenericHID;
+        CommandGenericHID driverHID;
 
         Drive drive;
         Intake intake;
@@ -51,6 +52,7 @@ public class RobotContainer {
 
         public RobotContainer() {
                 commandGenericHID = new CommandGenericHID(Constants.CONTROLLER_PORT);
+                driverHID = new CommandGenericHID(1); // TODO: Make a constants somewhere.
 
                 if (Robot.isSimulation()) {
                         drive = new Drive(new DriveIOSwerve());
@@ -74,6 +76,7 @@ public class RobotContainer {
 
                 configureBindings();
                 configureAuto();
+                drive.resetGyroOffset();
         }
 
         private void configureAuto() {
@@ -111,6 +114,10 @@ public class RobotContainer {
                         endEffector.zeroEncoders();
                 }));
 
+                SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> {
+                        drive.resetGyroOffset();
+                }));
+
                 SmartDashboard.putBoolean("Command Verbose Logging", false);
 
                 CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
@@ -134,12 +141,14 @@ public class RobotContainer {
                         ;
                 });
 
-                commandGenericHID.button(XboxController.Button.kX.value).onTrue(Commands.sequence(
+                Command intake_command = Commands.sequence(
                                 Commands.parallel(
                                                 new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
                                                 (new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.INTAKE_ANGLE))),
-                                (new FeedCoral(intake))));
+                                new FeedCoral(intake));
+
+                commandGenericHID.button(XboxController.Button.kX.value).onTrue(intake_command);
 
                 commandGenericHID.button(5).onTrue(
                                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[2])
@@ -185,9 +194,13 @@ public class RobotContainer {
                                                 EndEffectorConstants.SCORING_ANGLES[0]));
 
                 commandGenericHID.button(XboxController.Button.kB.value)
-                                .onTrue(new AlignPose(drive,
-                                                FlippingUtil.flipFieldPose(FieldConstants.FEEDER_POSES[0]),
-                                                AlignCamera.Back));
+                                .onTrue(
+                                                Commands.race(
+                                                                new WaitController(driverHID, XboxController.Button.kA),
+                                                                new AlignPose(drive,
+                                                                                FlippingUtil.flipFieldPose(
+                                                                                                FieldConstants.FEEDER_POSES[0]),
+                                                                                AlignCamera.Back)));
 
                 commandGenericHID.button(XboxController.Button.kStart.value)
                                 .onTrue(new ElevatorSetHeight(elevator, FieldConstants.PROCESSOR_HEIGHT)
@@ -195,7 +208,8 @@ public class RobotContainer {
                                                                 EndEffectorConstants.PROCESSOR_ANGLE)));
 
                 // TODO: Maybe these shouldn't run if they're out of the range.
-                commandGenericHID.axisMagnitudeGreaterThan(XboxController.Axis.kRightTrigger.value, 0.6)
+                commandGenericHID.axisMagnitudeGreaterThan(XboxController.Axis.kRightTrigger.value,
+                                0.6)
                                 .onTrue(
                                                 Commands.parallel(
                                                                 new ElevatorSetHeight(elevator,
@@ -225,6 +239,6 @@ public class RobotContainer {
                  * Set the drive subsystem to use the command returned by getTeleopCommand
                  * if no other command is scheduled for the subsystem
                  */
-                drive.setDefaultCommand(drive.getTeleopCommand(elevator, commandGenericHID));
+                drive.setDefaultCommand(drive.getTeleopCommand(elevator, driverHID));
         }
 }

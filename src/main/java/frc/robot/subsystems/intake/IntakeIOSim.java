@@ -55,6 +55,10 @@ public class IntakeIOSim implements IntakeIO {
         return true;
     }
 
+    public double getPosition() {
+        return 0.0; // TODO: Implement.
+    }
+
     @Override
     public void simulationPeriodic() {
         flywheelSim.update(0.02);

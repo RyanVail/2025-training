@@ -41,4 +41,9 @@ public class IntakeIOSpark implements IntakeIO {
     public boolean isCoralLoaded() {
         return !endSensor.get();
     }
+
+    @Override
+    public double getPosition() {
+        return spark.getEncoder().getPosition();
+    }
 }

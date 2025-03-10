@@ -14,6 +14,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
+import swervelib.imu.SwerveIMU;
 import swervelib.parser.SwerveParser;
 
 public class DriveIOSwerve implements DriveIO {
@@ -90,5 +91,11 @@ public class DriveIOSwerve implements DriveIO {
         if (poses[0] != null) {
             Logger.recordOutput("_EstimatedPose", poses[0].estimatedPose);
         }
+    }
+
+    @Override
+    public Rotation2d getGyroRotation()
+    {
+        return swerveDrive.getGyroRotation3d().toRotation2d();
     }
 }

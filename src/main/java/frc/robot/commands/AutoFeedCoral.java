@@ -1,10 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.commands.AlignPose.AlignCamera;
 import frc.robot.subsystems.drive.Drive;
 
 public class AutoFeedCoral extends Command {
@@ -19,23 +15,23 @@ public class AutoFeedCoral extends Command {
 
     @Override
     public void initialize() {
-        int index = getFeederIndex(drive.getPose());
-        new AlignPose(drive, FieldConstants.FEEDER_POSES[index], AlignCamera.Back).schedule();
+        // int index = getFeederIndex(drive.getPose());
+        // new AlignPose(drive, FieldConstants.FEEDER_POSES[index], AlignCamera.Back).schedule();
     }
 
-    private int getFeederIndex(Pose2d pose) {
-        Translation2d robot_pos = pose.getTranslation();
-        double closest_dist = Double.MAX_VALUE;
-        int closest_pose = 0;
+    // private int getFeederIndex(Pose2d pose) {
+    //     Translation2d robot_pos = pose.getTranslation();
+    //     double closest_dist = Double.MAX_VALUE;
+    //     int closest_pose = 0;
 
-        for (int i = 0; i < FieldConstants.FEEDER_POSITIONS.length; i++) {
-            double dist = FieldConstants.FEEDER_POSITIONS[i].getDistance(robot_pos);
-            if (closest_dist >= dist) {
-                closest_dist = dist;
-                closest_pose = i;
-            }
-        }
+    //     for (int i = 0; i < FieldConstants.FEEDER_POSITIONS.length; i++) {
+    //         double dist = FieldConstants.FEEDER_POSITIONS[i].getDistance(robot_pos);
+    //         if (closest_dist >= dist) {
+    //             closest_dist = dist;
+    //             closest_pose = i;
+    //         }
+    //     }
 
-        return (closest_pose << 1) | (left ? 0 : 1);
-    }
+    //     return (closest_pose << 1) | (left ? 0 : 1);
+    // }
 }

@@ -41,12 +41,13 @@ public final class Constants {
                 public static final double ALGAE_SCORE_VEL = 100.0;
                 public static final double ALGAE_SCORE_TIME = 1.0;
 
-                public static final double CORAL_SCORE_VOLTAGE = -4.5;
-                public static final double CORAL_FEED_VOLTAGE = 4.5;
+                public static final double CORAL_SCORE_VOLTAGE = -15;
+                public static final double CORAL_FEED_VOLTAGE = 15;
+                public static final double CORAL_INTAKE_REV = 1.4;
+                public static final double SENSE_TIME = 0.2; // TODO: Rename better
 
                 public static final double ALGAE_SCORE_VOLTAGE = -6.0;
 
-                public static final double SENSE_TIME = 0.115;
                 public static final double ALGAE_EJECT_TIME = 0.5;
 
                 public static final double ALGAE_STALL_VOLTAGE = 0.2;
@@ -124,7 +125,7 @@ public final class Constants {
                 public static final double GEAR_PERIMETER = (1 + (11 / 16)) * Math.PI;
                 public static final double METER_PER_ENCODER_UNIT = GEAR_PERIMETER / (GEAR_RATIO);
 
-                public static final double MASS = Units.lbsToKilograms(50.0);
+                public static final double MASS = Units.lbsToKilograms(40.0);
                 public static final double RADIUS = Units.inchesToMeters(2.5);
 
                 // TODO: Set to real values.
@@ -147,7 +148,7 @@ public final class Constants {
 
                 public static final double CORAL_SCORE_OFFSET = 0.0;
 
-                public static final double CORAL_INTAKE_HEIGHT = 0.0562;
+                public static final double CORAL_INTAKE_HEIGHT = 0.055;
 
                 public static final double ALIGN_DIST_METERS = Units.inchesToMeters(0.4);
 
@@ -259,12 +260,7 @@ public final class Constants {
                 };
 
                 public static final Pose2d[] FEEDER_POSES = {
-                                new Pose2d(1.151, 1.234, new Rotation2d(1)),
-                };
-
-                public static final Translation2d[] FEEDER_POSITIONS = {
-                                new Translation2d(1.14, 1.1),
-                                new Translation2d(1.14, 7),
+                        new Pose2d(1.2, 1.234, new Rotation2d(1)),
                 };
         }
 

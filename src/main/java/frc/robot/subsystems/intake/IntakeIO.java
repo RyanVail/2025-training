@@ -11,5 +11,7 @@ public interface IntakeIO {
 
     public boolean isCoralLoaded();
 
+    public double getPosition();
+
     public default void simulationPeriodic() {}
 }

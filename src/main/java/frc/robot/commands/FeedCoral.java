@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Robot;
@@ -7,7 +9,7 @@ import frc.robot.subsystems.intake.Intake;
 
 public class FeedCoral extends Command {
     Intake intake;
-    double senseTime;
+    double sensePos;
 
     public FeedCoral(Intake intake) {
         super.addRequirements(intake);
@@ -17,25 +19,27 @@ public class FeedCoral extends Command {
 
     @Override
     public void execute() {
-        if (senseTime == 0 && intake.isCoralLoaded()) {
-            senseTime = System.currentTimeMillis();
-        }
+        if (sensePos == Double.MAX_VALUE && intake.hasCoral())
+            sensePos = intake.getPosition();
     }
 
     @Override
     public void initialize() {
-        senseTime = 0;
+        sensePos = Double.MAX_VALUE;
         intake.setVoltage(IntakeConstants.CORAL_FEED_VOLTAGE);
     }
 
     @Override
     public boolean isFinished() {
-        if (senseTime == 0)
+        if (sensePos == Double.MAX_VALUE)
             return false;
+
+        Logger.recordOutput("_IntakePos", intake.getPosition() - sensePos);
+        Logger.recordOutput("_SensePos", sensePos);
 
         return Robot.isSimulation()
                 ? true
-                : ((System.currentTimeMillis() - senseTime) * 0.001) >= IntakeConstants.SENSE_TIME;
+                : intake.getPosition() - sensePos >= IntakeConstants.CORAL_INTAKE_REV;
     }
 
     @Override

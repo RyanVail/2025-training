@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -44,9 +46,9 @@ public class TeleopCommand extends Command {
 
     @Override
     public void execute() {
-        double x = processAxis(-controller.getRawAxis(1));
-        double y = processAxis(-controller.getRawAxis(0));
-        double yaw = processAxis(-controller.getRawAxis(4));
+        double x = -processAxis(-controller.getRawAxis(1)); // 5
+        double y = -processAxis(-controller.getRawAxis(0)); // 4
+        double yaw = processAxis(-controller.getRawAxis(4)); // 0
 
         for (int i = DriveConstants.HEIGHT_LEVELS.length - 1; i >= 0; i--) {
             if (DriveConstants.HEIGHT_LEVELS[i] <= elevator.getHeight()) {
@@ -69,7 +71,13 @@ public class TeleopCommand extends Command {
             }
 
             // TODO: Add something to do this.
-            drive.drive(x, y, yaw * 0.5);
+            drive.drive(
+                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                            new ChassisSpeeds(
+                                    -x * DriveConstants.MAX_SPEED,
+                                    -y * DriveConstants.MAX_SPEED,
+                                    yaw * DriveConstants.MAX_SPEED),
+                            drive.getGyroRotation()));
 
             last_x = x;
             last_y = y;
@@ -77,8 +85,9 @@ public class TeleopCommand extends Command {
         }
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        drive.drive(new ChassisSpeeds());
-    }
+    // TODO: Is this required?
+    // @Override
+    // public void end(boolean interrupted) {
+    // drive.drive(new ChassisSpeeds());
+    // }
 }

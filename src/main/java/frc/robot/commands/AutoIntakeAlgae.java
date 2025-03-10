@@ -1,13 +1,9 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
@@ -28,13 +24,13 @@ public class AutoIntakeAlgae extends AlignPose {
                 ? FlippingUtil.flipFieldPose(getClosestPose(pose))
                 : getClosestPose(pose);
 
-        Rotation2d angle = new Rotation2d(Units.degreesToRadians(-120))
-                .rotateBy(new Rotation2d(Units.degreesToRadians(-60) * 2));
+        // Rotation2d angle = new Rotation2d(Units.degreesToRadians(-120))
+        //         .rotateBy(new Rotation2d(Units.degreesToRadians(-60) * 2));
 
-        Logger.recordOutput(
-                "Align Offset",
-                FieldConstants.REEF_TAG_POSITIONS[2].minus(
-                        FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle));
+        // Logger.recordOutput(
+        //         "Align Offset",
+        //         FieldConstants.REEF_TAG_POSITIONS[2].minus(
+        //                 FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle));
 
         super.target_pose = align_pose;
         super.initialize();
@@ -52,7 +48,7 @@ public class AutoIntakeAlgae extends AlignPose {
                 closest_pose = p;
             }
         }
-
+ 
         return closest_pose;
     }
 }
