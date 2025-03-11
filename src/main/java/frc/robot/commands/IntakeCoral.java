@@ -5,14 +5,13 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.intake.Intake;
 
-public class FeedCoral extends Command {
+public class IntakeCoral extends Command {
     Intake intake;
     double sensePos;
 
-    public FeedCoral(Intake intake) {
+    public IntakeCoral(Intake intake) {
         super.addRequirements(intake);
         this.intake = intake;
-        this.setName("FeedCoral");
     }
 
     @Override
@@ -24,7 +23,7 @@ public class FeedCoral extends Command {
     @Override
     public void initialize() {
         sensePos = Double.MAX_VALUE;
-        intake.setVoltage(IntakeConstants.CORAL_FEED_VOLTAGE);
+        intake.setVoltage(IntakeConstants.CORAL_INTAKE_VOLTAGE);
     }
 
     @Override

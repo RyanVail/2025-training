@@ -22,7 +22,7 @@ import frc.robot.commands.AlignScoreCoral;
 import frc.robot.commands.EjectCoral;
 import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
-import frc.robot.commands.FeedCoral;
+import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.WaitController;
 import frc.robot.commands.AlignPose.AlignCamera;
@@ -152,7 +152,7 @@ public class RobotContainer {
                                                 new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
                                                 (new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.INTAKE_ANGLE))),
-                                new FeedCoral(intake));
+                                new IntakeCoral(intake));
 
                 commandGenericHID.button(XboxController.Button.kX.value).onTrue(intake_command);
 
@@ -221,7 +221,7 @@ public class RobotContainer {
                                 .onTrue(
                                                 Commands.parallel(
                                                                 new ElevatorSetHeight(elevator,
-                                                                                FieldConstants.ALGEA_LEVEL_HEIGHTS[1]),
+                                                                                FieldConstants.ALGAE_LEVEL_HEIGHTS[1]),
                                                                 new EndEffectorSetAngle(endEffector, elevator,
                                                                                 EndEffectorConstants.ALGAE_INTAKE_ANGLE))
                                                                 .andThen(
@@ -234,7 +234,7 @@ public class RobotContainer {
                                 .onTrue(
                                                 Commands.parallel(
                                                                 new ElevatorSetHeight(elevator,
-                                                                                FieldConstants.ALGEA_LEVEL_HEIGHTS[0]),
+                                                                                FieldConstants.ALGAE_LEVEL_HEIGHTS[0]),
                                                                 new EndEffectorSetAngle(endEffector, elevator,
                                                                                 EndEffectorConstants.ALGAE_INTAKE_ANGLE))
                                                                 .andThen(

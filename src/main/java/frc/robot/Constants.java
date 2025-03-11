@@ -34,8 +34,8 @@ public final class Constants {
                 public static final double V = 0.0;
                 public static final double A = 0.0;
 
-                public static final double GEAR_RATIO = 1.0; // Direct drive
-                public static final double MOMENT_OF_INERTIA = 0.002; // From CAD, in units of kilogram * meters squared
+                public static final double GEAR_RATIO = 12.0;
+                public static final double MOMENT_OF_INERTIA = 0.002;
 
                 public static final int PORT = 13;
 
@@ -46,14 +46,13 @@ public final class Constants {
                 public static final double ALGAE_SCORE_TIME = 1.0;
 
                 public static final double CORAL_SCORE_VOLTAGE = -15;
-                public static final double CORAL_FEED_VOLTAGE = 15;
+                public static final double CORAL_INTAKE_VOLTAGE = 15;
                 public static final double CORAL_INTAKE_REV = 1.2;
-                public static final double SENSE_TIME = 0.2; // TODO: Rename better
+                public static final double CORAL_EJECT_TIME = 0.2;
 
                 public static final double ALGAE_SCORE_VOLTAGE = -6.0;
 
                 public static final double ALGAE_EJECT_TIME = 0.5;
-
                 public static final double ALGAE_STALL_VOLTAGE = 0.2;
                 public static final double ALGAE_INTAKE_VOLTAGE = 4.0;
 
@@ -273,7 +272,7 @@ public final class Constants {
 
                 public static final double PROCESSOR_HEIGHT = Units.inchesToMeters(2.1);
 
-                public static final double[] ALGEA_LEVEL_HEIGHTS = {
+                public static final double[] ALGAE_LEVEL_HEIGHTS = {
                         Units.inchesToMeters(9),
                         Units.inchesToMeters(15),
                 };
@@ -321,6 +320,6 @@ public final class Constants {
         public class BeaterBarConstants {
                 public static final int PORT = 14;
 
-                public static final double FEED_SPEED = 0.12;
+                public static final double INTAKE_SPEED = 0.12;
         }
 }

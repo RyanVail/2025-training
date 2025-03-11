@@ -34,7 +34,7 @@ public class EjectCoral extends Command {
 
         return Robot.isSimulation()
                 ? true
-                : ((System.currentTimeMillis() - senseTime) * 0.001) >= IntakeConstants.SENSE_TIME;
+                : ((System.currentTimeMillis() - senseTime) * 0.001) >= IntakeConstants.CORAL_EJECT_TIME;
     }
 
     @Override
