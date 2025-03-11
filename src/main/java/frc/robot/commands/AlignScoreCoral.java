@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.List;
+
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,7 +15,7 @@ public class AlignScoreCoral extends AlignPose {
     boolean left;
 
     public AlignScoreCoral(Drive drive, boolean left) {
-        super(drive, new Pose2d(), AlignCamera.Front);
+        super(drive, null, AlignCamera.Front);
         this.left = left;
     }
 
@@ -36,11 +38,11 @@ public class AlignScoreCoral extends AlignPose {
         //         FieldConstants.REEF_TAG_POSITIONS[index / 2].minus(
         //                 FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle));
 
-        Pose2d score_pose = FieldConstants.CORAL_SCORE_POSES[index];
+        Pose2d align_pose = FieldConstants.CORAL_SCORE_POSES[index];
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
-            score_pose = FlippingUtil.flipFieldPose(score_pose);
+            align_pose = FlippingUtil.flipFieldPose(align_pose);
 
-        super.target_pose = score_pose;
+        setWaypoints(List.of(align_pose));
         super.initialize();
     }
 

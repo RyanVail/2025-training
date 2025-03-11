@@ -2,19 +2,20 @@ package frc.robot.commands;
 
 import java.util.List;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionManager;
 
 public class AlignPose extends Command {
-    protected Pose2d target_pose;
+    List<Pose2d> waypoints;
+
     Drive drive;
     Trajectory trajectory;
     AlignCamera camera;
@@ -26,20 +27,37 @@ public class AlignPose extends Command {
         Front,
     };
 
-    public AlignPose(Drive drive, Pose2d target_pose, AlignCamera camera) {
+    public AlignPose(Drive drive, List<Pose2d> waypoints, AlignCamera camera) {
         addRequirements(drive);
-
         this.drive = drive;
-        this.target_pose = target_pose;
         this.camera = camera;
+
+        if (waypoints != null)
+            setWaypoints(waypoints);
+    }
+
+    public void setWaypoints(List<Pose2d> waypoints) {
+        waypoints.add(0, drive.getPose());
+        this.waypoints = waypoints;
     }
 
     public void initialize() {
-        Pose2d robot_pose = drive.getPose();
+        Pose2d start = waypoints.get(0);
+        Pose2d end = waypoints.get(waypoints.size() - 1);
 
-        double dist = robot_pose.getTranslation().getDistance(target_pose.getTranslation());
+        // TODO: This is just for testing and should be disabled during comp.
+        if (!start.equals(drive.getPose())) {
+            Commands.print(
+                    "Starting position (" + drive.getPose()
+                            + ") isn't current drive position (" + start
+                            + ").")
+                    .schedule();
+        }
 
-        // If generateTrajectory is called with two identical translations it will throw.
+        double dist = start.getTranslation().getDistance(end.getTranslation());
+
+        // If generateTrajectory is called with two identical translations it will
+        // throw.
         if (dist <= DriveConstants.AUTO_ALIGN_CANCEL_DIST) {
             super.cancel();
             return;
@@ -51,22 +69,11 @@ public class AlignPose extends Command {
             return;
         }
 
-        // TODO: Make it possible to add more poses.
-        trajectory = TrajectoryGenerator.generateTrajectory(
-                List.of(robot_pose, target_pose),
-                DriveConstants.TRAJECTORY_CONFIG);
+        trajectory = TrajectoryGenerator.generateTrajectory(waypoints, DriveConstants.TRAJECTORY_CONFIG);
     }
 
     @Override
     public void execute() {
-        Pose2d drive_pose = drive.getPose();
-        if (target_pose.getTranslation()
-                .getDistance(drive_pose.getTranslation()) >= DriveConstants.AUTO_ALIGN_MAX_DIST) {
-            Logger.recordOutput("_CancelingAlignTo", target_pose);
-            super.cancel();
-            return;
-        }
-
         if (camera == AlignCamera.Back) {
             VisionManager.onlyBack();
         } else if (camera == AlignCamera.Front) {
@@ -77,10 +84,9 @@ public class AlignPose extends Command {
             VisionManager.noCameras();
         }
 
-        drive.driveRobotRelative(DriveConstants.DRIVE_CONTROLLER.calculate(
-            drive.getPose(),
-            trajectory.sample(System.currentTimeMillis() * 0.001),
-            target_pose.getRotation()));
+        State state = trajectory.sample(System.currentTimeMillis() * 0.001);
+        drive.driveRobotRelative(
+                DriveConstants.DRIVE_CONTROLLER.calculate(drive.getPose(), state, state.poseMeters.getRotation()));
     }
 
     @Override
@@ -91,6 +97,6 @@ public class AlignPose extends Command {
     @Override
     public void end(boolean interrupted) {
         drive.driveRobotRelative(new ChassisSpeeds());
-        VisionManager.onlyFront(); // TODO: There should be a normal one.
+        VisionManager.defaultCameras();
     }
 }

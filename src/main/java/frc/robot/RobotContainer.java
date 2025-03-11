@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.pathplanner.lib.util.FlippingUtil;
@@ -15,7 +16,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AlignPose;
-import frc.robot.commands.AutoIntakeAlgae;
+import frc.robot.commands.AlignIntakeAlgae;
 import frc.robot.commands.EjectAlgae;
 import frc.robot.commands.AlignScoreCoral;
 import frc.robot.commands.EjectCoral;
@@ -205,8 +206,8 @@ public class RobotContainer {
                                                 Commands.race(
                                                                 new WaitController(driverHID, XboxController.Button.kA),
                                                                 new AlignPose(drive,
-                                                                                FlippingUtil.flipFieldPose(
-                                                                                                FieldConstants.FEEDER_POSES[0]),
+                                                                                List.of(FlippingUtil.flipFieldPose(
+                                                                                                FieldConstants.FEEDER_POSES[0])),
                                                                                 AlignCamera.Back)));
 
                 commandGenericHID.button(XboxController.Button.kStart.value)
@@ -226,7 +227,7 @@ public class RobotContainer {
                                                                 .andThen(
                                                                                 Commands.deadline(
                                                                                                 new IntakeAlgae(intake),
-                                                                                                new AutoIntakeAlgae(
+                                                                                                new AlignIntakeAlgae(
                                                                                                                 drive))));
 
                 commandGenericHID.button(XboxController.Button.kRightBumper.value)
@@ -239,7 +240,7 @@ public class RobotContainer {
                                                                 .andThen(
                                                                                 Commands.deadline(
                                                                                                 new IntakeAlgae(intake),
-                                                                                                new AutoIntakeAlgae(
+                                                                                                new AlignIntakeAlgae(
                                                                                                                 drive))));
 
                 /*

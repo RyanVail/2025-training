@@ -78,6 +78,10 @@ public class VisionManager {
         disableBack = true;
     }
 
+    public static void defaultCameras() {
+        onlyFront();
+    }
+
     public static EstimatedRobotPose[] getEstimatedPoses() {
         return new EstimatedRobotPose[] {
                 disableFront ? null : frontEstimator.update(frontCamera.getLatestResult()).orElse(null),
