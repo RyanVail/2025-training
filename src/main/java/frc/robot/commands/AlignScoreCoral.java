@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.pathplanner.lib.util.FlippingUtil;
@@ -42,7 +43,7 @@ public class AlignScoreCoral extends AlignPose {
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
             align_pose = FlippingUtil.flipFieldPose(align_pose);
 
-        setWaypoints(List.of(align_pose));
+        setWaypoints(new ArrayList<Pose2d>(List.of(align_pose)));
         super.initialize();
     }
 

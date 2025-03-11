@@ -24,7 +24,7 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     }
 
     public double getAngle() {
-        return spark.getEncoder().getPosition();
+        return spark.getEncoder().getPosition() * 10;
     }
 
     public void zeroEncoders() {

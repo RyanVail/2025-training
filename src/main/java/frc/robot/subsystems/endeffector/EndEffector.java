@@ -3,15 +3,20 @@ package frc.robot.subsystems.endeffector;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 
 public class EndEffector extends SubsystemBase {
     EndEffectorIO io;
     PIDController pid;
+    State lastStateSetpoint;
+    State stateSetpoint;
     double setpoint;
     MechanismLigament2d realLigament;
     MechanismLigament2d setpointLigament;
@@ -20,6 +25,9 @@ public class EndEffector extends SubsystemBase {
 
     public EndEffector(EndEffectorIO io, MechanismLigament2d realElevatorMech,
             MechanismLigament2d setpointElevatorMech) {
+        lastStateSetpoint = new State();
+        stateSetpoint = new State();
+
         this.io = io;
         this.pid = new PIDController(
                 EndEffectorConstants.P,
@@ -43,11 +51,15 @@ public class EndEffector extends SubsystemBase {
 
         setpointLigament.setLineWeight(2);
         setpointLigament.setColor(new Color8Bit(0, 255, 0));
+
+        SmartDashboard.putData("EndEffectorPID", pid);
     }
 
     @Override
     public void periodic() {
-        double volts = this.pid.calculate(getAngle());
+        lastStateSetpoint = EndEffectorConstants.PROFILE.calculate(0.02, lastStateSetpoint, stateSetpoint);
+
+        double volts = this.pid.calculate(getAngle(), lastStateSetpoint.position);
         volts = Math.min(volts, RobotController.getBatteryVoltage());
         volts = Math.max(volts, -RobotController.getBatteryVoltage());
         io.setVoltage(volts);
@@ -68,12 +80,12 @@ public class EndEffector extends SubsystemBase {
 
     public void setSetpoint(double angle) {
         setpoint = angle;
-        pid.setSetpoint(angle);
+        stateSetpoint = new State(angle, 0.0);
         setpointLigament.setAngle(EndEffectorConstants.VISUALIZATION_BASE_ANGLE + angle);
     }
 
     public double getAngle() {
-        return io.getAngle() * 10;
+        return io.getAngle();
     }
 
     public void zeroEncoders() {

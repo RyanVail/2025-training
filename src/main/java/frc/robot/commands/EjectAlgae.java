@@ -19,6 +19,9 @@ public class EjectAlgae extends Command {
     public void initialize() {
         senseTime = 0;
 
+        if (intake.hasCoral() || intake.isCoralLoaded())
+            super.cancel();
+
         intake.setVoltage(IntakeConstants.ALGAE_SCORE_VOLTAGE);
         senseTime = System.currentTimeMillis();
     }

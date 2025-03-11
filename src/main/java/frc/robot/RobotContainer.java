@@ -1,10 +1,12 @@
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.pathplanner.lib.util.FlippingUtil;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -152,9 +154,12 @@ public class RobotContainer {
                                                 new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT),
                                                 (new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.INTAKE_ANGLE))),
-                                new IntakeCoral(intake));
+                                new IntakeCoral(intake),
+                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1]),
+                                new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.IDLE_ANGLE));
 
                 commandGenericHID.button(XboxController.Button.kX.value).onTrue(intake_command);
+                commandGenericHID.button(XboxController.Button.kRightStick.value).onTrue(new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.IDLE_ANGLE));
 
                 commandGenericHID.povDown().onTrue(
                                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1])
@@ -166,7 +171,7 @@ public class RobotContainer {
                                                 .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.SCORING_ANGLES[0])));
 
-                commandGenericHID.button(XboxController.Button.kRightBumper.value).onTrue(
+                commandGenericHID.button(XboxController.Button.kLeftBumper.value).onTrue(
                                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[3])
                                                 .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.SCORING_ANGLES[2])));
@@ -206,8 +211,7 @@ public class RobotContainer {
                                                 Commands.race(
                                                                 new WaitController(driverHID, XboxController.Button.kA),
                                                                 new AlignPose(drive,
-                                                                                List.of(FlippingUtil.flipFieldPose(
-                                                                                                FieldConstants.FEEDER_POSES[0])),
+                                                                new ArrayList<Pose2d>(List.of(FlippingUtil.flipFieldPose(FieldConstants.FEEDER_POSES[0]))),
                                                                                 AlignCamera.Back)));
 
                 commandGenericHID.button(XboxController.Button.kStart.value)
