@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -56,33 +54,33 @@ public class TeleopCommand extends Command {
                     DriveConstants.X_SLEW_LIMITERS[i].reset(last_x);
                     DriveConstants.Y_SLEW_LIMITERS[i].reset(last_y);
                     DriveConstants.ROT_SLEW_LIMITERS[i].reset(last_yaw);
-
-                    x = DriveConstants.X_SLEW_LIMITERS[i].calculate(x);
-                    y = DriveConstants.Y_SLEW_LIMITERS[i].calculate(y);
-                    yaw = DriveConstants.ROT_SLEW_LIMITERS[i].calculate(yaw);
-
-                    x = MathUtil.clamp(x, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
-                    y = MathUtil.clamp(y, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
-                    yaw = MathUtil.clamp(yaw, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
-
-                    last_slew = i;
-                    break;
                 }
+
+                x = MathUtil.clamp(x, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
+                y = MathUtil.clamp(y, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
+                yaw = MathUtil.clamp(yaw, -DriveConstants.MAX_SPEEDS[i], DriveConstants.MAX_SPEEDS[i]);
+
+                x = DriveConstants.X_SLEW_LIMITERS[i].calculate(x);
+                y = DriveConstants.Y_SLEW_LIMITERS[i].calculate(y);
+                yaw = DriveConstants.ROT_SLEW_LIMITERS[i].calculate(yaw);
+
+                last_slew = i;
+                break;
             }
-
-            // TODO: Add something to do this.
-            drive.drive(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                            new ChassisSpeeds(
-                                    -x * DriveConstants.MAX_SPEED,
-                                    -y * DriveConstants.MAX_SPEED,
-                                    yaw * DriveConstants.MAX_SPEED),
-                            drive.getGyroRotation()));
-
-            last_x = x;
-            last_y = y;
-            last_yaw = yaw;
         }
+
+        // TODO: Add something to do this.
+        drive.drive(
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                        new ChassisSpeeds(
+                                -x * DriveConstants.MAX_SPEED,
+                                -y * DriveConstants.MAX_SPEED,
+                                yaw * DriveConstants.MAX_SPEED),
+                        drive.getGyroRotation()));
+
+        last_x = x;
+        last_y = y;
+        last_yaw = yaw;
     }
 
     // TODO: Is this required?

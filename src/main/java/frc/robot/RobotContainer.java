@@ -16,6 +16,7 @@ import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AlignPose;
 import frc.robot.commands.AutoIntakeAlgae;
+import frc.robot.commands.EjectAlgae;
 import frc.robot.commands.AlignScoreCoral;
 import frc.robot.commands.EjectCoral;
 import frc.robot.commands.ElevatorSetHeight;
@@ -118,6 +119,10 @@ public class RobotContainer {
                         drive.resetGyroOffset();
                 }));
 
+                driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {
+                        drive.resetGyroOffset();
+                }));
+
                 SmartDashboard.putBoolean("Command Verbose Logging", false);
 
                 CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
@@ -150,12 +155,17 @@ public class RobotContainer {
 
                 commandGenericHID.button(XboxController.Button.kX.value).onTrue(intake_command);
 
-                commandGenericHID.button(5).onTrue(
-                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[2])
+                commandGenericHID.povDown().onTrue(
+                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1])
                                                 .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.SCORING_ANGLES[0])));
 
                 commandGenericHID.povUp().onTrue(
+                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[2])
+                                                .andThen(new EndEffectorSetAngle(endEffector, elevator,
+                                                                EndEffectorConstants.SCORING_ANGLES[0])));
+
+                commandGenericHID.button(XboxController.Button.kRightBumper.value).onTrue(
                                 new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[3])
                                                 .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.SCORING_ANGLES[2])));
@@ -165,12 +175,9 @@ public class RobotContainer {
                 // .andThen(new EndEffectorSetAngle(endEffector, elevator,
                 // EndEffectorConstants.SCORING_ANGLES[0])));
 
-                commandGenericHID.povDown().onTrue(
-                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1])
-                                                .andThen(new EndEffectorSetAngle(endEffector, elevator,
-                                                                EndEffectorConstants.SCORING_ANGLES[0])));
-
                 commandGenericHID.button(XboxController.Button.kY.value).onTrue(new EjectCoral(intake));
+
+                driverHID.button(XboxController.Button.kY.value).onTrue(new EjectAlgae(intake));
 
                 commandGenericHID.povLeft().onTrue(new AlignScoreCoral(drive, true));
                 commandGenericHID.povRight().onTrue(new AlignScoreCoral(drive, false));

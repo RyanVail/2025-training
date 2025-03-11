@@ -6,6 +6,9 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -14,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
@@ -43,7 +47,7 @@ public final class Constants {
 
                 public static final double CORAL_SCORE_VOLTAGE = -15;
                 public static final double CORAL_FEED_VOLTAGE = 15;
-                public static final double CORAL_INTAKE_REV = 1.4;
+                public static final double CORAL_INTAKE_REV = 1.2;
                 public static final double SENSE_TIME = 0.2; // TODO: Rename better
 
                 public static final double ALGAE_SCORE_VOLTAGE = -6.0;
@@ -73,6 +77,21 @@ public final class Constants {
                                 new PIDConstants(2.0, 0.0, 0.0),
                                 new PIDConstants(2.0, 0.0, 0.0));
 
+
+                                public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
+                                new PIDController(5, 0.0, 0.0),
+                                new PIDController(5, 0.0, 0.0),
+                                new ProfiledPIDController(2.5, 0.0, 0.0,
+                                                new TrapezoidProfile.Constraints(2.0, 0.5)));
+
+                public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(
+                                2.0,
+                                0.5);
+
+                static {
+                        DRIVE_CONTROLLER.setTolerance(new Pose2d(Units.inchesToMeters(0.3), Units.inchesToMeters(0.3), new Rotation2d(Units.degreesToRadians(0.5))));
+                }
+
                 public static final double MIN_ALIGN_DIST = Units.feetToMeters(0.02);
                 public static final double MIN_ALIGN_ANGLE = Units.degreesToRadians(0.5);
 
@@ -82,17 +101,17 @@ public final class Constants {
                 public static final double AUTO_ALIGN_MAX_DIST = Units.feetToMeters(7.5);
 
                 public static final SlewRateLimiter[] X_SLEW_LIMITERS = {
-                        new SlewRateLimiter(0.35),
-                        new SlewRateLimiter(0.35),
-                        new SlewRateLimiter(0.55),
-                        new SlewRateLimiter(0.45),
+                        new SlewRateLimiter(0.8),
+                        new SlewRateLimiter(0.75),
+                        new SlewRateLimiter(0.72),
+                        new SlewRateLimiter(0.50),
                 };
 
                 public static final SlewRateLimiter[] Y_SLEW_LIMITERS = {
-                        new SlewRateLimiter(0.35),
-                        new SlewRateLimiter(0.35),
-                        new SlewRateLimiter(0.55),
-                        new SlewRateLimiter(0.45),
+                        new SlewRateLimiter(0.8),
+                        new SlewRateLimiter(0.75),
+                        new SlewRateLimiter(0.72),
+                        new SlewRateLimiter(0.50),
                 };
 
                 public static final SlewRateLimiter[] ROT_SLEW_LIMITERS = {
@@ -111,8 +130,8 @@ public final class Constants {
 
                 public static final double[] MAX_SPEEDS = {
                         1.0,
-                        0.45,
-                        0.12,
+                        0.65,
+                        0.23,
                         0.08,
                 };
 
@@ -290,7 +309,7 @@ public final class Constants {
                 public static final double PRESCORING_ANGLE = 145;
                 public static final double[] SCORING_ANGLES = { 47, 75, 78 };
 
-                public static final double INTAKE_ANGLE = 212;
+                public static final double INTAKE_ANGLE = 208;
                 public static final double ALGAE_INTAKE_ANGLE = 190;
 
                 public static final double REQUIRED_ELEVATOR_HEIGHT = 0.037;

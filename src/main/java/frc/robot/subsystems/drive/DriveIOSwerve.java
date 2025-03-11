@@ -14,7 +14,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
-import swervelib.imu.SwerveIMU;
 import swervelib.parser.SwerveParser;
 
 public class DriveIOSwerve implements DriveIO {

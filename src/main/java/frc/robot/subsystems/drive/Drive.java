@@ -21,7 +21,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.vision.VisionManager;
-import swervelib.imu.SwerveIMU;
 
 public class Drive extends SubsystemBase {
     public class PoseSupplier implements Supplier<Pose2d> {
