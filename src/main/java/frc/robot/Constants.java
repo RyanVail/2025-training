@@ -47,7 +47,7 @@ public final class Constants {
 
                 public static final double CORAL_SCORE_VOLTAGE = -15;
                 public static final double CORAL_INTAKE_VOLTAGE = 15;
-                public static final double CORAL_INTAKE_REV = 1.2;
+                public static final double CORAL_INTAKE_REV = 1.0;
                 public static final double CORAL_EJECT_TIME = 0.2;
 
                 public static final double ALGAE_SCORE_VOLTAGE = -6.0;
@@ -253,7 +253,7 @@ public final class Constants {
 
                 // TODO: Find a real value for this.
                 private static Translation2d ALGAE_PREINTAKE_OFFSET = new Translation2d(-0.26, -0.92)
-                        .rotateBy(new Rotation2d(Units.degreesToRadians(180)));
+                                .rotateBy(new Rotation2d(Units.degreesToRadians(180)));
 
                 public static final Pose2d[] ALGAE_PREINTAKE_POSES = new Pose2d[6];
                 public static final Pose2d[] ALGAE_INTAKE_POSES = new Pose2d[6];
@@ -296,12 +296,18 @@ public final class Constants {
         }
 
         public class EndEffectorConstants {
-                public static final double P = 0.2;
+                public static final double P = 2.8;
                 public static final double I = 0.0;
                 public static final double D = 0.0;
 
+                public static final double S = 0.7;
+                public static final double G = 0.08;
+                public static final double V = 0.0;
+
                 public static final TrapezoidProfile PROFILE = new TrapezoidProfile(
-                                new Constraints(650, 350));
+                                new Constraints(
+                                                Units.degreesToRadians(750),
+                                                Units.degreesToRadians(450)));
 
                 public static final double LENGTH = Units.inchesToMeters(12);
 
@@ -316,12 +322,12 @@ public final class Constants {
                 public static final double MIN_ANGLE = Units.degreesToRadians(-40);
                 public static final double MAX_ANGLE = Units.degreesToRadians(240);
 
-                public static final double IDLE_ANGLE = 15;
+                public static final double IDLE_ANGLE = 20;
 
                 public static final double STARTING_ANGLE = Units.degreesToRadians(0);
                 public static final double VISUALIZATION_BASE_ANGLE = -90;
 
-                public static final double ALIGN_ANGLE = 15.0;
+                public static final double ALIGN_ANGLE = 25.0;
 
                 public static final double PRESCORING_ANGLE = 145;
                 public static final double[] SCORING_ANGLES = { 50.7, 75, 82.6 };
@@ -338,6 +344,7 @@ public final class Constants {
         public class BeaterBarConstants {
                 public static final int PORT = 14;
 
-                public static final double INTAKE_SPEED = 0.12;
+                public static final double INTAKE_SPEED = 0.2;
+                public static final double EJECT_SPEED = 0.5;
         }
 }

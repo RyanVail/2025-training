@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
@@ -128,26 +129,28 @@ public class RobotContainer {
                 }));
 
                 SmartDashboard.putBoolean("Command Verbose Logging", false);
-                
+
                 // CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
-                //         if (!(c instanceof PrintCommand)
-                //                         && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                //                 Commands.print(c.getName() + " initialized").schedule();
-                //         }
+                // if (!(c instanceof PrintCommand)
+                // && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+                // Commands.print(c.getName() + " initialized").schedule();
+                // }
                 // });
 
                 // CommandScheduler.getInstance().onCommandFinish((Command c) -> {
-                //         if (!(c instanceof PrintCommand)
-                //                         && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                //                 Commands.print(c.getName() + " initialized").schedule();
-                //         }
+                // if (!(c instanceof PrintCommand)
+                // && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+                // Commands.print(c.getName() + " initialized").schedule();
+                // }
                 // });
 
-                // CommandScheduler.getInstance().onCommandInterrupt((Command c1, Optional<Command> c2) -> {
-                //         if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
-                //                         false))
-                //                 Commands.print(c1.getName() + " interrupted by " + c2.get().getName()).schedule();
-                //         ;
+                // CommandScheduler.getInstance().onCommandInterrupt((Command c1,
+                // Optional<Command> c2) -> {
+                // if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
+                // false))
+                // Commands.print(c1.getName() + " interrupted by " +
+                // c2.get().getName()).schedule();
+                // ;
                 // });
 
                 Command intake_command = Commands.sequence(
@@ -184,13 +187,12 @@ public class RobotContainer {
                 // EndEffectorConstants.SCORING_ANGLES[0])));
 
                 Command c = Commands.sequence(
-                        new EjectCoral(intake),
-                        // new CoralScoreReset(drive),
-                        Commands.parallel(
-                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1]),
-                                new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.IDLE_ANGLE)
-                        )
-                );
+                                new EjectCoral(intake),
+                                // new CoralScoreReset(drive),
+                                Commands.parallel(
+                                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1]),
+                                                new EndEffectorSetAngle(endEffector, elevator,
+                                                                EndEffectorConstants.IDLE_ANGLE)));
 
                 c.setName("EjectAndResetCommand");
 
@@ -199,25 +201,21 @@ public class RobotContainer {
 
                 driverHID.button(XboxController.Button.kY.value).onTrue(new EjectAlgae(intake));
 
-                commandGenericHID.povLeft().onTrue(new AlignScoreCoral(drive, true));
-                commandGenericHID.povRight().onTrue(new AlignScoreCoral(drive, false));
+                // commandGenericHID.povLeft().onTrue(new AlignScoreCoral(drive, true));
+                // commandGenericHID.povRight().onTrue(new AlignScoreCoral(drive, false));
 
                 commandGenericHID.button(XboxController.Button.kBack.value)
                                 .onTrue(Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll()));
 
-                // commandGenericHID.povLeft()
-                // .onTrue(Commands.runOnce(() ->
-                // beaterBar.setSpeed(BeaterBarConstants.FEED_SPEED)));
-                // commandGenericHID.povLeft().onFalse(Commands.runOnce(() ->
-                // beaterBar.setSpeed(0)));
-                // commandGenericHID.povRight()
-                // .onTrue(Commands.runOnce(() ->
-                // beaterBar.setSpeed(-BeaterBarConstants.FEED_SPEED * 3)));
-                // commandGenericHID.povRight().onFalse(Commands.runOnce(() ->
-                // beaterBar.setSpeed(0)));
+                commandGenericHID.povLeft()
+                                .onTrue(Commands.runOnce(() -> beaterBar.setSpeed(BeaterBarConstants.INTAKE_SPEED)));
+                commandGenericHID.povLeft().onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
+                commandGenericHID.povRight()
+                                .onTrue(Commands.runOnce(() -> beaterBar.setSpeed(-BeaterBarConstants.EJECT_SPEED)));
+                commandGenericHID.povRight().onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
 
                 Command c1 = new EndEffectorSetAngle(endEffector, elevator,
-                        EndEffectorConstants.SCORING_ANGLES[0]);
+                                EndEffectorConstants.SCORING_ANGLES[0]);
 
                 c1.setName("EndEffectorScoreIdle");
 

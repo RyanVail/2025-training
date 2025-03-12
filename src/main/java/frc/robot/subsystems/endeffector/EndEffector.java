@@ -2,8 +2,10 @@ package frc.robot.subsystems.endeffector;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,6 +19,7 @@ public class EndEffector extends SubsystemBase {
     State lastStateSetpoint;
     State stateSetpoint;
     double setpoint;
+    ArmFeedforward feedforward;
     MechanismLigament2d realLigament;
     MechanismLigament2d setpointLigament;
 
@@ -32,6 +35,11 @@ public class EndEffector extends SubsystemBase {
                 EndEffectorConstants.P,
                 EndEffectorConstants.I,
                 EndEffectorConstants.D);
+
+        this.feedforward = new ArmFeedforward(
+                EndEffectorConstants.S,
+                EndEffectorConstants.G,
+                EndEffectorConstants.V);
 
         realLigament = realElevatorMech.append(
                 new MechanismLigament2d(
@@ -58,7 +66,9 @@ public class EndEffector extends SubsystemBase {
     public void periodic() {
         lastStateSetpoint = EndEffectorConstants.PROFILE.calculate(0.02, lastStateSetpoint, stateSetpoint);
 
-        double volts = this.pid.calculate(getAngle(), lastStateSetpoint.position);
+        double angle = Units.degreesToRadians(getAngle());
+        double volts = this.pid.calculate(angle, lastStateSetpoint.position);
+        volts += feedforward.calculate(angle, lastStateSetpoint.velocity);
         volts = Math.min(volts, RobotController.getBatteryVoltage());
         volts = Math.max(volts, -RobotController.getBatteryVoltage());
         io.setVoltage(volts);
@@ -67,7 +77,10 @@ public class EndEffector extends SubsystemBase {
 
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
         Logger.recordOutput(LPREFIX + "Volts", volts);
-        Logger.recordOutput(LPREFIX + "Angle", getAngle());
+        Logger.recordOutput(LPREFIX + "Angle", angle);
+
+        Logger.recordOutput(LPREFIX + "TVel", lastStateSetpoint.velocity);
+        Logger.recordOutput(LPREFIX + "TPos", lastStateSetpoint.position);
 
         this.io.periodic();
     }
@@ -78,8 +91,8 @@ public class EndEffector extends SubsystemBase {
     }
 
     public void setSetpoint(double angle) {
-        setpoint = angle;
-        stateSetpoint = new State(angle, 0.0);
+        setpoint = Units.degreesToRadians(angle);
+        stateSetpoint = new State(setpoint, 0.0);
         setpointLigament.setAngle(EndEffectorConstants.VISUALIZATION_BASE_ANGLE + angle);
     }
 
