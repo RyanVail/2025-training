@@ -156,4 +156,8 @@ public class Drive extends SubsystemBase {
     public Rotation2d getGyroRotation() {
         return this.io.getGyroRotation().minus(gyroOffset);
     }
+
+    public ChassisSpeeds getRobotVelocity() {
+        return io.getRobotVelocity();
+    }
 }

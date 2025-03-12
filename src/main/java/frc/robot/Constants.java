@@ -66,6 +66,9 @@ public final class Constants {
                 public static final double MAX_SPEED = Units.feetToMeters(15);
                 public static final double DEADZONE = 0.08;
 
+                public static final double CORAL_SCORE_RESET_VEL = Units.feetToMeters(0.2);
+                public static final double CORAL_SCORE_RESET_DIST = Units.inchesToMeters(3);
+
                 public static final PathConstraints pathConstraints = new PathConstraints(
                                 2.0,
                                 2.0,
@@ -249,7 +252,8 @@ public final class Constants {
                                 .rotateBy(new Rotation2d(Units.degreesToRadians(180)));
 
                 // TODO: Find a real value for this.
-                private static Translation2d ALGAE_PREINTAKE_OFFSET = new Translation2d(-0.78, 0.80);
+                private static Translation2d ALGAE_PREINTAKE_OFFSET = new Translation2d(-0.26, -0.92)
+                        .rotateBy(new Rotation2d(Units.degreesToRadians(180)));
 
                 public static final Pose2d[] ALGAE_PREINTAKE_POSES = new Pose2d[6];
                 public static final Pose2d[] ALGAE_INTAKE_POSES = new Pose2d[6];
@@ -262,7 +266,8 @@ public final class Constants {
 
                         for (int i = 0; i < ALGAE_INTAKE_POSES.length; i++) {
                                 ALGAE_INTAKE_POSES[i] = new Pose2d(REEF_TAG_POSITIONS[i].plus(intake_offset), rot);
-                                ALGAE_PREINTAKE_POSES[i] = new Pose2d(REEF_TAG_POSITIONS[i].plus(preintake_offset), rot);
+                                ALGAE_PREINTAKE_POSES[i] = new Pose2d(REEF_TAG_POSITIONS[i].plus(preintake_offset),
+                                                rot);
 
                                 intake_offset = intake_offset.rotateBy(angle);
                                 preintake_offset = preintake_offset.rotateBy(angle);
@@ -291,12 +296,12 @@ public final class Constants {
         }
 
         public class EndEffectorConstants {
-                public static final double P = 0.3;
+                public static final double P = 0.35;
                 public static final double I = 0.0;
                 public static final double D = 0.0;
 
                 public static final TrapezoidProfile PROFILE = new TrapezoidProfile(
-                                new Constraints(1500, 800));
+                                new Constraints(650, 350));
 
                 public static final double LENGTH = Units.inchesToMeters(12);
 

@@ -29,4 +29,6 @@ public interface DriveIO {
     public void periodic();
 
     public Rotation2d getGyroRotation();
+
+    public ChassisSpeeds getRobotVelocity();
 }

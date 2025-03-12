@@ -2,11 +2,14 @@ package frc.robot.commands;
 
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.Trajectory.State;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.DriveConstants;
@@ -19,6 +22,7 @@ public class AlignPose extends Command {
     Drive drive;
     Trajectory trajectory;
     AlignCamera camera;
+    double endVelocity;
 
     public enum AlignCamera {
         None,
@@ -31,6 +35,7 @@ public class AlignPose extends Command {
         addRequirements(drive);
         this.drive = drive;
         this.camera = camera;
+        this.endVelocity = 0.0;
 
         if (waypoints != null)
             setWaypoints(waypoints);
@@ -41,15 +46,19 @@ public class AlignPose extends Command {
         this.waypoints = waypoints;
     }
 
+    public void setEndVelocity(double vel) {
+        this.endVelocity = vel;
+    }
+
     public void initialize() {
         Pose2d start = waypoints.get(0);
         Pose2d end = waypoints.get(waypoints.size() - 1);
 
         // TODO: This is just for testing and should be disabled during comp.
-        if (!start.equals(drive.getPose())) {
+        if (drive.getPose().getTranslation().getDistance(start.getTranslation()) >= Units.inchesToMeters(1)) {
             Commands.print(
-                    "Starting position (" + drive.getPose()
-                            + ") isn't current drive position (" + start
+                    "Starting position (" + start
+                            + ") isn't current drive position (" + drive.getPose()
                             + ").")
                     .schedule();
         }
@@ -69,7 +78,18 @@ public class AlignPose extends Command {
             return;
         }
 
-        trajectory = TrajectoryGenerator.generateTrajectory(waypoints, DriveConstants.TRAJECTORY_CONFIG);
+        trajectory = TrajectoryGenerator.generateTrajectory (
+            waypoints,
+            DriveConstants.TRAJECTORY_CONFIG.setStartVelocity(0) // TODO: Set this to a real value.
+                .setEndVelocity(endVelocity)
+        );
+
+        Logger.recordOutput("AligningTo", end);
+
+        if (trajectory == null) {
+            Commands.print("Trajectory is null").schedule();
+            cancel();
+        }
     }
 
     @Override
@@ -82,6 +102,11 @@ public class AlignPose extends Command {
             VisionManager.allCameras();
         } else {
             VisionManager.noCameras();
+        }
+
+        if (trajectory == null) {
+            Commands.print("Trajectory is null").schedule();
+            return;
         }
 
         State state = trajectory.sample(System.currentTimeMillis() * 0.001);

@@ -3,8 +3,6 @@ package frc.robot.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,6 +18,7 @@ import frc.robot.subsystems.drive.Drive;
 public class AlignIntakeAlgae extends AlignPose {
     public AlignIntakeAlgae(Drive drive) {
         super(drive, null, AlignCamera.Front);
+        super.setName("AlignIntakeAlgae");
     }
 
     @Override
@@ -40,8 +39,7 @@ public class AlignIntakeAlgae extends AlignPose {
             intake_pose = FlippingUtil.flipFieldPose(intake_pose);
         }
 
-        Rotation2d angle = new Rotation2d(Units.degreesToRadians(-120))
-                .rotateBy(new Rotation2d(Units.degreesToRadians(-60) * index));
+        Rotation2d angle = new Rotation2d(Units.degreesToRadians(60) * index);
 
         Commands.print("robot pose: " + drive.getPose()).schedule();
         Commands.print("reef tag pos: " + FieldConstants.REEF_TAG_POSITIONS[index]).schedule();

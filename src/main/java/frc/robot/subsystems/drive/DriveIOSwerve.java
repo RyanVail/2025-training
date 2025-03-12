@@ -97,4 +97,9 @@ public class DriveIOSwerve implements DriveIO {
     {
         return swerveDrive.getGyroRotation3d().toRotation2d();
     }
+
+    public ChassisSpeeds getRobotVelocity()
+    {
+        return swerveDrive.getRobotVelocity();
+    }
 }

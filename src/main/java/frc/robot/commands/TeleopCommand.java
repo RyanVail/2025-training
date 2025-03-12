@@ -27,6 +27,13 @@ public class TeleopCommand extends Command {
         SmartDashboard.putNumber("ControlPow", 3);
     }
 
+    public void initialize() {
+        last_x = 0.0;
+        last_y = 0.0;
+        last_yaw = 0;
+        last_slew = 0;
+    }
+
     private double processAxis(double axis) {
         boolean neg = axis <= 0;
         axis = Math.abs(axis);
