@@ -1,14 +1,9 @@
 package frc.robot.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -35,21 +30,10 @@ public class AlignIntakeAlgae extends AlignPose {
 
         // TODO: Prescore too.
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
-            preintake_pose = FlippingUtil.flipFieldPose(preintake_pose);
-            intake_pose = FlippingUtil.flipFieldPose(intake_pose);
+            target = FlippingUtil.flipFieldPose(target);
         }
 
-        Rotation2d angle = new Rotation2d(Units.degreesToRadians(60) * index);
-
-        Commands.print("robot pose: " + drive.getPose()).schedule();
-        Commands.print("reef tag pos: " + FieldConstants.REEF_TAG_POSITIONS[index]).schedule();
-
-        Commands.print(
-                "Align Offset: " +
-                FieldConstants.REEF_TAG_POSITIONS[index].minus(
-                        FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle)).schedule();
-
-        setWaypoints(new ArrayList<Pose2d>(List.of(preintake_pose, intake_pose)));
+        setTarget(target);
         super.initialize();
     }
 

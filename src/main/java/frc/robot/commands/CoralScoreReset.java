@@ -1,8 +1,5 @@
 package frc.robot.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -39,8 +36,7 @@ public class CoralScoreReset extends AlignPose {
 
         end = preintake_pose;
 
-        setEndVelocity(DriveConstants.CORAL_SCORE_RESET_VEL);
-        setWaypoints(new ArrayList<Pose2d>(List.of(preintake_pose)));
+        setTarget(preintake_pose);
         super.initialize();
     }
 

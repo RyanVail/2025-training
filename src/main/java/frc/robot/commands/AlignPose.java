@@ -1,14 +1,9 @@
 package frc.robot.commands;
 
-import java.util.List;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,10 +12,8 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionManager;
 
 public class AlignPose extends Command {
-    List<Pose2d> waypoints;
-
     Drive drive;
-    Trajectory trajectory;
+    Pose2d target;
     AlignCamera camera;
     double endVelocity;
 
@@ -31,28 +24,20 @@ public class AlignPose extends Command {
         Front,
     };
 
-    public AlignPose(Drive drive, List<Pose2d> waypoints, AlignCamera camera) {
+    public AlignPose(Drive drive, Pose2d target, AlignCamera camera) {
         addRequirements(drive);
+        this.target = target;
         this.drive = drive;
         this.camera = camera;
         this.endVelocity = 0.0;
-
-        if (waypoints != null)
-            setWaypoints(waypoints);
     }
 
-    public void setWaypoints(List<Pose2d> waypoints) {
-        waypoints.add(0, drive.getPose());
-        this.waypoints = waypoints;
-    }
-
-    public void setEndVelocity(double vel) {
-        this.endVelocity = vel;
+    public void setTarget(Pose2d target) {
+        this.target = target;
     }
 
     public void initialize() {
-        Pose2d start = waypoints.get(0);
-        Pose2d end = waypoints.get(waypoints.size() - 1);
+        Pose2d start = drive.getPose();
 
         // TODO: This is just for testing and should be disabled during comp.
         if (drive.getPose().getTranslation().getDistance(start.getTranslation()) >= Units.inchesToMeters(1)) {
@@ -63,33 +48,24 @@ public class AlignPose extends Command {
                     .schedule();
         }
 
-        double dist = start.getTranslation().getDistance(end.getTranslation());
+        double dist = start.getTranslation().getDistance(target.getTranslation());
 
         // If generateTrajectory is called with two identical translations it will
         // throw.
         if (dist <= DriveConstants.AUTO_ALIGN_CANCEL_DIST) {
+            Commands.print("Auto align dist too close").schedule();
             super.cancel();
             return;
         }
 
         // Ensuring the target position is within an acceptable distance.
         if (dist >= DriveConstants.AUTO_ALIGN_MAX_DIST) {
+            Commands.print("Auto align dist too far").schedule();
             super.cancel();
             return;
         }
 
-        trajectory = TrajectoryGenerator.generateTrajectory (
-            waypoints,
-            DriveConstants.TRAJECTORY_CONFIG.setStartVelocity(0) // TODO: Set this to a real value.
-                .setEndVelocity(endVelocity)
-        );
-
-        Logger.recordOutput("AligningTo", end);
-
-        if (trajectory == null) {
-            Commands.print("Trajectory is null").schedule();
-            cancel();
-        }
+        Logger.recordOutput("AligningTo", target);
     }
 
     @Override
@@ -104,14 +80,8 @@ public class AlignPose extends Command {
             VisionManager.noCameras();
         }
 
-        if (trajectory == null) {
-            Commands.print("Trajectory is null").schedule();
-            return;
-        }
-
-        State state = trajectory.sample(System.currentTimeMillis() * 0.001);
-        drive.driveRobotRelative(
-                DriveConstants.DRIVE_CONTROLLER.calculate(drive.getPose(), state, state.poseMeters.getRotation()));
+        // TOOD: Put the rotation somewhere.
+        drive.driveRobotRelative(DriveConstants.DRIVE_CONTROLLER.calculate(drive.getPose(), target, 0.0, target.getRotation()));
     }
 
     @Override

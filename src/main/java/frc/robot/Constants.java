@@ -17,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
@@ -84,10 +83,6 @@ public final class Constants {
                                 new PIDController(5, 0.0, 0.0),
                                 new ProfiledPIDController(2.5, 0.0, 0.0,
                                                 new TrapezoidProfile.Constraints(2.0, 0.5)));
-
-                public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(
-                                2.0,
-                                0.5);
 
                 static {
                         DRIVE_CONTROLLER.setTolerance(new Pose2d(Units.inchesToMeters(0.3), Units.inchesToMeters(0.3),
@@ -290,9 +285,28 @@ public final class Constants {
                                 Units.inchesToMeters(15),
                 };
 
-                public static final Pose2d[] FEEDER_POSES = {
-                                new Pose2d(1.2, 1.234, new Rotation2d(1)),
+                public static final Pose2d[] FEEDER_TAG_POSES = {
+                                LAYOUT.getTagPose(12).orElse(new Pose3d()).toPose2d(),
+                                LAYOUT.getTagPose(13).orElse(new Pose3d()).toPose2d(),
                 };
+
+                public static final Translation2d FEEDER_INTAKE_OFFSET = new Translation2d(0.349, 0.579);
+
+                public static final Pose2d[] FEEDER_POSES = new Pose2d[2];
+
+                static {
+                        Translation2d feeder_offset = FEEDER_INTAKE_OFFSET;
+                        Rotation2d rot = new Rotation2d(Units.degreesToRadians(54));
+                        Rotation2d angle = new Rotation2d(Units.degreesToRadians(-108));
+
+                        for (int i = 0; i < FEEDER_POSES.length; i++) {
+                                FEEDER_POSES[i] = new Pose2d(FEEDER_TAG_POSES[i].getTranslation().plus(feeder_offset),
+                                                rot);
+
+                                feeder_offset = feeder_offset.rotateBy(angle);
+                                rot = rot.rotateBy(angle);
+                        }
+                }
         }
 
         public class EndEffectorConstants {

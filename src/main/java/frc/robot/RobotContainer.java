@@ -1,29 +1,22 @@
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.pathplanner.lib.util.FlippingUtil;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AlignPose;
+import frc.robot.commands.AlignFeed;
 import frc.robot.commands.AlignIntakeAlgae;
 import frc.robot.commands.EjectAlgae;
 import frc.robot.commands.EjectCoral;
 import frc.robot.commands.AlignScoreCoral;
-import frc.robot.commands.CoralScoreReset;
 import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.IntakeCoral;
@@ -124,6 +117,8 @@ public class RobotContainer {
                         drive.resetGyroOffset();
                 }));
 
+                SmartDashboard.putData("Command scheduler", CommandScheduler.getInstance());
+
                 driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {
                         drive.resetGyroOffset();
                 }));
@@ -201,18 +196,18 @@ public class RobotContainer {
 
                 driverHID.button(XboxController.Button.kY.value).onTrue(new EjectAlgae(intake));
 
-                // commandGenericHID.povLeft().onTrue(new AlignScoreCoral(drive, true));
-                // commandGenericHID.povRight().onTrue(new AlignScoreCoral(drive, false));
+                commandGenericHID.povLeft().onTrue(new AlignScoreCoral(drive, true));
+                commandGenericHID.povRight().onTrue(new AlignScoreCoral(drive, false));
 
-                commandGenericHID.button(XboxController.Button.kBack.value)
-                                .onTrue(Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll()));
+                commandGenericHID.button(XboxController.Button.kBack.value).onTrue(new AlignFeed(drive));
 
-                commandGenericHID.povLeft()
-                                .onTrue(Commands.runOnce(() -> beaterBar.setSpeed(BeaterBarConstants.INTAKE_SPEED)));
-                commandGenericHID.povLeft().onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
-                commandGenericHID.povRight()
-                                .onTrue(Commands.runOnce(() -> beaterBar.setSpeed(-BeaterBarConstants.EJECT_SPEED)));
-                commandGenericHID.povRight().onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
+                // commandGenericHID.povLeft()
+                //                 .onTrue(Commands.runOnce(() -> beaterBar.setSpeed(BeaterBarConstants.INTAKE_SPEED)));
+                // commandGenericHID.povLeft().onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
+
+                // commandGenericHID.povRight()
+                //                 .onTrue(Commands.runOnce(() -> beaterBar.setSpeed(-BeaterBarConstants.EJECT_SPEED)));
+                // commandGenericHID.povRight().onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
 
                 Command c1 = new EndEffectorSetAngle(endEffector, elevator,
                                 EndEffectorConstants.SCORING_ANGLES[0]);
@@ -222,13 +217,15 @@ public class RobotContainer {
                 commandGenericHID.button(XboxController.Button.kA.value)
                                 .onTrue(c1);
 
-                commandGenericHID.button(XboxController.Button.kB.value)
-                                .onTrue(
-                                                Commands.race(
-                                                                new WaitController(driverHID, XboxController.Button.kA),
-                                                                new AlignPose(drive, FlippingUtil.flipFieldPose(
-                                                                                FieldConstants.FEEDER_POSES[0]),
-                                                                                AlignCamera.Back, null, 0.0)));
+                Command feeder_align = Commands.race(
+                        new WaitController(driverHID, XboxController.Button.kA),
+                        new AlignPose(drive, FlippingUtil.flipFieldPose(
+                                        FieldConstants.FEEDER_POSES[0]),
+                                        AlignCamera.Back));
+
+                commandGenericHID.button(XboxController.Button.kB.value).onTrue(feeder_align);
+                commandGenericHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.6).onTrue(Commands.runOnce(() ->
+                SmartDashboard.putBoolean("AlignScheduled", feeder_align.isScheduled())));
 
                 commandGenericHID.button(XboxController.Button.kStart.value)
                                 .onTrue(new ElevatorSetHeight(elevator, FieldConstants.PROCESSOR_HEIGHT)
