@@ -296,7 +296,7 @@ public final class Constants {
         }
 
         public class EndEffectorConstants {
-                public static final double P = 0.35;
+                public static final double P = 0.2;
                 public static final double I = 0.0;
                 public static final double D = 0.0;
 

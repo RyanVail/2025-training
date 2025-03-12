@@ -30,8 +30,8 @@ public class TeleopCommand extends Command {
     public void initialize() {
         last_x = 0.0;
         last_y = 0.0;
-        last_yaw = 0;
-        last_slew = 0;
+        last_yaw = 0.0;
+        last_slew = -1;
     }
 
     private double processAxis(double axis) {

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,9 +20,9 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AlignPose;
 import frc.robot.commands.AlignIntakeAlgae;
 import frc.robot.commands.EjectAlgae;
+import frc.robot.commands.EjectCoral;
 import frc.robot.commands.AlignScoreCoral;
 import frc.robot.commands.CoralScoreReset;
-import frc.robot.commands.EjectCoral;
 import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.IntakeCoral;
@@ -130,27 +128,27 @@ public class RobotContainer {
                 }));
 
                 SmartDashboard.putBoolean("Command Verbose Logging", false);
+                
+                // CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
+                //         if (!(c instanceof PrintCommand)
+                //                         && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+                //                 Commands.print(c.getName() + " initialized").schedule();
+                //         }
+                // });
 
-                CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
-                        if (!(c instanceof PrintCommand)
-                                        && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                                Commands.print(c.getName() + " initialized").schedule();
-                        }
-                });
+                // CommandScheduler.getInstance().onCommandFinish((Command c) -> {
+                //         if (!(c instanceof PrintCommand)
+                //                         && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+                //                 Commands.print(c.getName() + " initialized").schedule();
+                //         }
+                // });
 
-                CommandScheduler.getInstance().onCommandFinish((Command c) -> {
-                        if (!(c instanceof PrintCommand)
-                                        && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                                Commands.print(c.getName() + " initialized").schedule();
-                        }
-                });
-
-                CommandScheduler.getInstance().onCommandInterrupt((Command c1, Optional<Command> c2) -> {
-                        if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
-                                        false))
-                                Commands.print(c1.getName() + " interrupted by " + c2.get().getName()).schedule();
-                        ;
-                });
+                // CommandScheduler.getInstance().onCommandInterrupt((Command c1, Optional<Command> c2) -> {
+                //         if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
+                //                         false))
+                //                 Commands.print(c1.getName() + " interrupted by " + c2.get().getName()).schedule();
+                //         ;
+                // });
 
                 Command intake_command = Commands.sequence(
                                 Commands.parallel(
@@ -185,15 +183,19 @@ public class RobotContainer {
                 // .andThen(new EndEffectorSetAngle(endEffector, elevator,
                 // EndEffectorConstants.SCORING_ANGLES[0])));
 
+                Command c = Commands.sequence(
+                        new EjectCoral(intake),
+                        // new CoralScoreReset(drive),
+                        Commands.parallel(
+                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1]),
+                                new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.IDLE_ANGLE)
+                        )
+                );
+
+                c.setName("EjectAndResetCommand");
+
                 commandGenericHID.button(XboxController.Button.kY.value)
-                                .onTrue(Commands.sequence(
-                                        new EjectCoral(intake),
-                                        new CoralScoreReset(drive),
-                                        Commands.parallel(
-                                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1]),
-                                                new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.IDLE_ANGLE)
-                                        )
-                                ));
+                                .onTrue(c);
 
                 driverHID.button(XboxController.Button.kY.value).onTrue(new EjectAlgae(intake));
 
@@ -214,9 +216,13 @@ public class RobotContainer {
                 // commandGenericHID.povRight().onFalse(Commands.runOnce(() ->
                 // beaterBar.setSpeed(0)));
 
+                Command c1 = new EndEffectorSetAngle(endEffector, elevator,
+                        EndEffectorConstants.SCORING_ANGLES[0]);
+
+                c1.setName("EndEffectorScoreIdle");
+
                 commandGenericHID.button(XboxController.Button.kA.value)
-                                .onTrue(new EndEffectorSetAngle(endEffector, elevator,
-                                                EndEffectorConstants.SCORING_ANGLES[0]));
+                                .onTrue(c1);
 
                 commandGenericHID.button(XboxController.Button.kB.value)
                                 .onTrue(
