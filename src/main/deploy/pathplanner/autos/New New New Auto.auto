@@ -9,6 +9,37 @@
           "data": {
             "pathName": "S-GH"
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralAlignRight"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "EffectorDown"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EjectCoral"
+          }
         }
       ]
     }

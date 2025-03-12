@@ -226,11 +226,9 @@ public class RobotContainer {
                                 .onTrue(
                                                 Commands.race(
                                                                 new WaitController(driverHID, XboxController.Button.kA),
-                                                                new AlignPose(drive,
-                                                                                new ArrayList<Pose2d>(List.of(
-                                                                                                FlippingUtil.flipFieldPose(
-                                                                                                                FieldConstants.FEEDER_POSES[0]))),
-                                                                                AlignCamera.Back)));
+                                                                new AlignPose(drive, FlippingUtil.flipFieldPose(
+                                                                                FieldConstants.FEEDER_POSES[0]),
+                                                                                AlignCamera.Back, null, 0.0)));
 
                 commandGenericHID.button(XboxController.Button.kStart.value)
                                 .onTrue(new ElevatorSetHeight(elevator, FieldConstants.PROCESSOR_HEIGHT)
