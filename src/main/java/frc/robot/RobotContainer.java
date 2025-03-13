@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -83,29 +84,62 @@ public class RobotContainer {
         }
 
         private void configureAuto() {
-                // NamedCommands.registerCommand("ElevatorL1", new ElevatorSetHeight(elevator,
-                // ElevatorConstants.CORAL_SCORE_OFFSET +
-                // FieldConstants.CORAL_LEVEL_HEIGHTS[0]));
-                // NamedCommands.registerCommand("ElevatorL2", new ElevatorSetHeight(elevator,
-                // ElevatorConstants.CORAL_SCORE_OFFSET +
-                // FieldConstants.CORAL_LEVEL_HEIGHTS[1]));
-                // NamedCommands.registerCommand("ElevatorL3", new ElevatorSetHeight(elevator,
-                // ElevatorConstants.CORAL_SCORE_OFFSET +
-                // FieldConstants.CORAL_LEVEL_HEIGHTS[2]));
-                // NamedCommands.registerCommand("ElevatorL4", new ElevatorSetHeight(elevator,
-                // ElevatorConstants.CORAL_SCORE_OFFSET +
-                // FieldConstants.CORAL_LEVEL_HEIGHTS[3]));
-                // NamedCommands.registerCommand("ElevatorIntake",
-                // new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_INTAKE_HEIGHT));
+                NamedCommands.registerCommand(
+                                "ElevatorL4",
+                                new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_LEVEL_HEIGHTS[3]));
 
-                // NamedCommands.registerCommand("PrescoreCoral",
-                // new EndEffectorSetAngle(endEffector, EndEffectorConstants.PRESCORING_ANGLE));
-                // NamedCommands.registerCommand("ScoreCoral", new ScoreCoral(endEffector,
-                // elevator, intake));
+                NamedCommands.registerCommand(
+                                "AlignLeft",
+                                new AlignScoreCoral(drive, true));
 
-                // NamedCommands.registerCommand("FeedCoral", new FeedCoral(intake));
+                NamedCommands.registerCommand(
+                                "AlignRight",
+                                new AlignScoreCoral(drive, false));
 
-                // AutoManager.configureAutos();
+                NamedCommands.registerCommand(
+                                "EffectorDown",
+                                new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.HIGH_SCORE_ANGLE));
+
+                // TODO: It might be best if this were to also auto align with the feeder
+                // station.
+                NamedCommands.registerCommand(
+                                "IntakeCoral",
+                                Commands.sequence(
+                                                Commands.parallel(
+                                                                new ElevatorSetHeight(elevator,
+                                                                                ElevatorConstants.CORAL_INTAKE_HEIGHT),
+                                                                (new EndEffectorSetAngle(endEffector, elevator,
+                                                                                EndEffectorConstants.INTAKE_ANGLE))),
+                                                new IntakeCoral(intake),
+                                                new ElevatorSetHeight(elevator,
+                                                                ElevatorConstants.CORAL_LEVEL_HEIGHTS[1]),
+                                                new EndEffectorSetAngle(endEffector, elevator,
+                                                                EndEffectorConstants.IDLE_ANGLE)));
+
+                // TODO: There really should be a check within max align dist command.
+                NamedCommands.registerCommand("IntakeAlgae", Commands.parallel(
+                                new ElevatorSetHeight(elevator,
+                                                ElevatorConstants.ALGAE_LEVEL_HEIGHTS[1]),
+                                new EndEffectorSetAngle(endEffector, elevator,
+                                                EndEffectorConstants.ALGAE_INTAKE_ANGLE))
+                                .andThen(
+                                                Commands.deadline(
+                                                                new IntakeAlgae(intake),
+                                                                new AlignIntakeAlgae(drive))));
+
+                NamedCommands.registerCommand(
+                                "EjectCoral",
+                                Commands.sequence(
+                                                new EjectCoral(intake),
+                                                Commands.parallel(
+                                                                new ElevatorSetHeight(elevator,
+                                                                                ElevatorConstants.CORAL_LEVEL_HEIGHTS[1]),
+                                                                new EndEffectorSetAngle(endEffector, elevator,
+                                                                                EndEffectorConstants.IDLE_ANGLE))));
+
+                NamedCommands.registerCommand("EjectAlgae", new EjectAlgae(intake));
+
+                AutoManager.configureAutos();
         }
 
         /**
@@ -246,7 +280,8 @@ public class RobotContainer {
                                                                 .andThen(
                                                                                 Commands.deadline(
                                                                                                 new IntakeAlgae(intake),
-                                                                                                new AlignIntakeAlgae(drive))));
+                                                                                                new AlignIntakeAlgae(
+                                                                                                                drive))));
 
                 operatorHID.button(XboxController.Button.kRightBumper.value)
                                 .onTrue(
