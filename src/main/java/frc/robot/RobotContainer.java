@@ -160,7 +160,7 @@ public class RobotContainer {
                                                 (new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.INTAKE_ANGLE))),
                                 new IntakeCoral(intake),
-                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1]),
+                                new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_LEVEL_HEIGHTS[1]),
                                 new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.IDLE_ANGLE));
 
                 operatorHID.button(XboxController.Button.kX.value).onTrue(intake_command);
@@ -168,17 +168,17 @@ public class RobotContainer {
                                 new EndEffectorSetAngle(endEffector, elevator, EndEffectorConstants.IDLE_ANGLE));
 
                 operatorHID.povDown().onTrue(
-                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1])
+                                new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_LEVEL_HEIGHTS[1])
                                                 .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.LOW_SCORE_ANGLE)));
 
                 operatorHID.povUp().onTrue(
-                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[2])
+                                new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_LEVEL_HEIGHTS[2])
                                                 .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.LOW_SCORE_ANGLE)));
 
                 operatorHID.button(XboxController.Button.kLeftBumper.value).onTrue(
-                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[3])
+                                new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_LEVEL_HEIGHTS[3])
                                                 .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.HIGH_SCORE_ANGLE)));
 
@@ -186,7 +186,8 @@ public class RobotContainer {
                                 new EjectCoral(intake),
                                 // new CoralScoreReset(drive),
                                 Commands.parallel(
-                                                new ElevatorSetHeight(elevator, FieldConstants.CORAL_LEVEL_HEIGHTS[1]),
+                                                new ElevatorSetHeight(elevator,
+                                                                ElevatorConstants.CORAL_LEVEL_HEIGHTS[1]),
                                                 new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.IDLE_ANGLE)));
 
@@ -229,7 +230,7 @@ public class RobotContainer {
                 operatorHID.button(XboxController.Button.kB.value).onTrue(feeder_align);
 
                 operatorHID.button(XboxController.Button.kStart.value)
-                                .onTrue(new ElevatorSetHeight(elevator, FieldConstants.PROCESSOR_HEIGHT)
+                                .onTrue(new ElevatorSetHeight(elevator, ElevatorConstants.PROCESSOR_HEIGHT)
                                                 .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.PROCESSOR_ANGLE)));
 
@@ -239,20 +240,19 @@ public class RobotContainer {
                                 .onTrue(
                                                 Commands.parallel(
                                                                 new ElevatorSetHeight(elevator,
-                                                                                FieldConstants.ALGAE_LEVEL_HEIGHTS[1]),
+                                                                                ElevatorConstants.ALGAE_LEVEL_HEIGHTS[1]),
                                                                 new EndEffectorSetAngle(endEffector, elevator,
                                                                                 EndEffectorConstants.ALGAE_INTAKE_ANGLE))
                                                                 .andThen(
                                                                                 Commands.deadline(
                                                                                                 new IntakeAlgae(intake),
-                                                                                                new AlignIntakeAlgae(
-                                                                                                                drive))));
+                                                                                                new AlignIntakeAlgae(drive))));
 
                 operatorHID.button(XboxController.Button.kRightBumper.value)
                                 .onTrue(
                                                 Commands.parallel(
                                                                 new ElevatorSetHeight(elevator,
-                                                                                FieldConstants.ALGAE_LEVEL_HEIGHTS[0]),
+                                                                                ElevatorConstants.ALGAE_LEVEL_HEIGHTS[0]),
                                                                 new EndEffectorSetAngle(endEffector, elevator,
                                                                                 EndEffectorConstants.ALGAE_INTAKE_ANGLE))
                                                                 .andThen(

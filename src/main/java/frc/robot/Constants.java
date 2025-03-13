@@ -58,10 +58,8 @@ public final class Constants {
                 public static final double ALGAE_STALL_VOLTAGE = 0.2;
                 public static final double ALGAE_INTAKE_VOLTAGE = 4.0;
 
-                // TODO: See if unstall is even required.
                 public static final double ALGAE_INTAKE_START_VEL = 1700.0;
                 public static final double ALGAE_INTAKE_STALL_VEL = 1600.0;
-                public static final double ALGAE_INTAKE_UNSTALL_VEL = 800.0;
         }
 
         public class DriveConstants {
@@ -175,7 +173,22 @@ public final class Constants {
                 public static final int LEFT_PORT = 8;
                 public static final int RIGHT_PORT = 9;
 
-                // TODO: The height of the elevator is actually 2/3 of what it is in reality because it was configured wrong.
+                public static final double PROCESSOR_HEIGHT = Units.inchesToMeters(2.1);
+
+                public static final double[] CORAL_LEVEL_HEIGHTS = {
+                        Units.inchesToMeters(1),
+                        Units.inchesToMeters(4.25),
+                        Units.inchesToMeters(10.0),
+                        Units.inchesToMeters(21.75),
+                };
+
+                public static final double[] ALGAE_LEVEL_HEIGHTS = {
+                        Units.inchesToMeters(9),
+                        Units.inchesToMeters(15),
+                };
+
+                // TODO: The height of the elevator is actually 2/3 of what it is in reality
+                // because it was configured wrong.
                 public static final double VISUALIZATION_HEIGHT_MUL = 1.0 + (1.0 / 3.0);
         }
 
@@ -205,11 +218,7 @@ public final class Constants {
                                 Units.inchesToMeters(2.584),
                                 Units.inchesToMeters(0.0),
                                 Units.inchesToMeters(37.167),
-                                // TODO: Finish this calibration.
-                                new Rotation3d(
-                                                0,
-                                                Units.degreesToRadians(180 - 20),
-                                                0));
+                                new Rotation3d(0, Units.degreesToRadians(180 - 20), 0));
         }
 
         public class FieldConstants {
@@ -252,7 +261,6 @@ public final class Constants {
                 private static Translation2d ALGAE_INTAKE_OFFSET = new Translation2d(-0.118, -0.585)
                                 .rotateBy(new Rotation2d(Units.degreesToRadians(180)));
 
-                // TODO: Find a real value for this.
                 private static Translation2d ALGAE_PREINTAKE_OFFSET = new Translation2d(-0.26, -0.92)
                                 .rotateBy(new Rotation2d(Units.degreesToRadians(180)));
 
@@ -275,21 +283,6 @@ public final class Constants {
                                 rot = rot.rotateBy(angle);
                         }
                 }
-
-                // TODO: These should be in the elevator constants.
-                public static final double[] CORAL_LEVEL_HEIGHTS = {
-                                Units.inchesToMeters(1),
-                                Units.inchesToMeters(4.25),
-                                Units.inchesToMeters(10.0),
-                                Units.inchesToMeters(21.75),
-                };
-
-                public static final double PROCESSOR_HEIGHT = Units.inchesToMeters(2.1);
-
-                public static final double[] ALGAE_LEVEL_HEIGHTS = {
-                                Units.inchesToMeters(9),
-                                Units.inchesToMeters(15),
-                };
 
                 public static final Pose2d[] FEEDER_TAG_POSES = {
                                 LAYOUT.getTagPose(12).orElse(new Pose3d()).toPose2d(),
