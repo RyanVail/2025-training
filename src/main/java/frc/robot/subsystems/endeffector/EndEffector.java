@@ -81,8 +81,6 @@ public class EndEffector extends SubsystemBase {
 
         Logger.recordOutput(LPREFIX + "TVel", lastStateSetpoint.velocity);
         Logger.recordOutput(LPREFIX + "TPos", lastStateSetpoint.position);
-
-        this.io.periodic();
     }
 
     @Override

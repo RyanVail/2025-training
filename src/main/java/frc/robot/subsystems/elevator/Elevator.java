@@ -65,6 +65,8 @@ public class Elevator extends SubsystemBase {
         setpointLigament.setLineWeight(2);
         setpointLigament.setColor(new Color8Bit(0, 255, 0));
 
+        setpointLigament.setLength(0.0);
+
         SmartDashboard.putData("ElevatorPID", pid);
     }
 
@@ -87,7 +89,7 @@ public class Elevator extends SubsystemBase {
         voltage = Math.max(voltage, -RobotController.getBatteryVoltage());
         io.setVoltage(voltage);
 
-        realLigament.setLength(height);
+        realLigament.setLength(height * ElevatorConstants.VISUALIZATION_HEIGHT_MUL);
         SmartDashboard.putData(LPREFIX + "Mech2D", mechanism);
 
         Logger.recordOutput(LPREFIX + "Voltage", voltage);
@@ -102,7 +104,7 @@ public class Elevator extends SubsystemBase {
     public void setSetpoint(double setpoint) {
         this.setpoint = setpoint;
         stateSetpoint = new State(setpoint, 0.0);
-        setpointLigament.setLength(setpoint);
+        setpointLigament.setLength(setpoint * ElevatorConstants.VISUALIZATION_HEIGHT_MUL);
     }
 
     public double getSetpoint() {

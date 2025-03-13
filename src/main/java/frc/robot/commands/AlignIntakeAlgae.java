@@ -30,10 +30,10 @@ public class AlignIntakeAlgae extends AlignPose {
 
         // TODO: Prescore too.
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
-            target = FlippingUtil.flipFieldPose(target);
+            intake_pose = FlippingUtil.flipFieldPose(intake_pose);
         }
 
-        setTarget(target);
+        setTarget(intake_pose);
         super.initialize();
     }
 

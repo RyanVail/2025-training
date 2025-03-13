@@ -22,7 +22,10 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-        public static final int CONTROLLER_PORT = 0;
+        public class InputConstants {
+                public static final int OPERATOR_CONTROLLER_PORT = 0;
+                public static final int DRIVE_CONTROLLER_PORT = 1;
+        }
 
         public class IntakeConstants {
                 public static final double P = 0.05;
@@ -138,14 +141,14 @@ public final class Constants {
         public class ElevatorConstants {
                 public static final double GEAR_RATIO = 20.0;
 
-                public static final double GEAR_PERIMETER = (1 + (11 / 16)) * Math.PI;
+                public static final double GEAR_PERIMETER = (1.0 + (11.0 / 16.0)) * Math.PI;
                 public static final double METER_PER_ENCODER_UNIT = GEAR_PERIMETER / (GEAR_RATIO);
 
                 public static final double MASS = Units.lbsToKilograms(40.0);
                 public static final double RADIUS = Units.inchesToMeters(2.5);
 
                 // TODO: Set to real values.
-                public static final double MIN_HEIGHT = Units.inchesToMeters(4);
+                public static final double MIN_HEIGHT = Units.inchesToMeters(0);
                 public static final double MAX_HEIGHT = Units.inchesToMeters(72.0);
 
                 public static final double HEIGHT = MAX_HEIGHT - MIN_HEIGHT;
@@ -171,6 +174,9 @@ public final class Constants {
 
                 public static final int LEFT_PORT = 8;
                 public static final int RIGHT_PORT = 9;
+
+                // TODO: The height of the elevator is actually 2/3 of what it is in reality because it was configured wrong.
+                public static final double VISUALIZATION_HEIGHT_MUL = 1.0 + (1.0 / 3.0);
         }
 
         public class VisionConstants {
@@ -323,7 +329,7 @@ public final class Constants {
                                                 Units.degreesToRadians(750),
                                                 Units.degreesToRadians(450)));
 
-                public static final double LENGTH = Units.inchesToMeters(12);
+                public static final double LENGTH = Units.inchesToMeters(8);
 
                 public static final int PORT = 11;
 
@@ -331,20 +337,22 @@ public final class Constants {
 
                 public static final double GEAR_RATIO = 36.0;
 
-                public static final double MOMENT_OF_INERTIA = 0.5;
+                public static final double MASS = Units.lbsToKilograms(3);
 
-                public static final double MIN_ANGLE = Units.degreesToRadians(-40);
+                public static final double MIN_ANGLE = Units.degreesToRadians(95);
                 public static final double MAX_ANGLE = Units.degreesToRadians(240);
 
                 public static final double IDLE_ANGLE = 20;
 
-                public static final double STARTING_ANGLE = Units.degreesToRadians(0);
+                public static final double STARTING_ANGLE = Units.degreesToRadians(95);
                 public static final double VISUALIZATION_BASE_ANGLE = -90;
 
                 public static final double ALIGN_ANGLE = 25.0;
 
                 public static final double PRESCORING_ANGLE = 145;
-                public static final double[] SCORING_ANGLES = { 50.7, 75, 82.6 };
+
+                public static final double LOW_SCORE_ANGLE = 50.7;
+                public static final double HIGH_SCORE_ANGLE = 82.6;
 
                 public static final double INTAKE_ANGLE = 208;
                 public static final double ALGAE_INTAKE_ANGLE = 190;

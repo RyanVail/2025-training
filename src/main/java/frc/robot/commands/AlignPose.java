@@ -66,6 +66,12 @@ public class AlignPose extends Command {
         }
 
         Logger.recordOutput("AligningTo", target);
+
+        // Drive controllers have no builtin way of doing this because they're only
+        // meant to follow a single trajectory.
+        DriveConstants.DRIVE_CONTROLLER.getThetaController().reset(start.getRotation().getRadians());
+        DriveConstants.DRIVE_CONTROLLER.getXController().reset();
+        DriveConstants.DRIVE_CONTROLLER.getYController().reset();
     }
 
     @Override
@@ -81,7 +87,11 @@ public class AlignPose extends Command {
         }
 
         // TOOD: Put the rotation somewhere.
-        drive.driveRobotRelative(DriveConstants.DRIVE_CONTROLLER.calculate(drive.getPose(), target, 0.0, target.getRotation()));
+        drive.driveRobotRelative(DriveConstants.DRIVE_CONTROLLER.calculate(
+                drive.getPose(),
+                target,
+                0.0,
+                target.getRotation()));
     }
 
     @Override

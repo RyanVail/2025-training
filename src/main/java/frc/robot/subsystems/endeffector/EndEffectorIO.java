@@ -5,8 +5,6 @@ public interface EndEffectorIO {
 
     public double getAngle();
 
-    public void periodic();
-
     public void zeroEncoders();
 
     public default void simulationPeriodic() {};
