@@ -3,12 +3,15 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.FlippingUtil;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.FieldConstants;
@@ -19,6 +22,7 @@ import frc.robot.commands.AlignIntakeAlgae;
 import frc.robot.commands.EjectAlgae;
 import frc.robot.commands.EjectCoral;
 import frc.robot.commands.AlignScoreCoral;
+import frc.robot.commands.BeaterBarSpin;
 import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.IntakeCoral;
@@ -78,12 +82,23 @@ public class RobotContainer {
 
                 VisionManager.initialize();
 
-                configureBindings();
                 configureAuto();
+
+                configureBindings();
                 drive.resetGyroOffset();
         }
 
         private void configureAuto() {
+                NamedCommands.registerCommand(
+                        "StopDrive",
+                        Commands.runOnce(() -> drive.drive(new ChassisSpeeds(1, 1, 0.0)))
+                );
+
+                NamedCommands.registerCommand(
+                        "WaitController",
+                        new WaitController(operatorHID, XboxController.Button.kA)
+                );
+
                 NamedCommands.registerCommand(
                                 "ElevatorL4",
                                 new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_LEVEL_HEIGHTS[3]));
@@ -139,7 +154,7 @@ public class RobotContainer {
 
                 NamedCommands.registerCommand("EjectAlgae", new EjectAlgae(intake));
 
-                AutoManager.configureAutos();
+                AutoManager.configureAutos(drive);
         }
 
         /**
@@ -218,7 +233,6 @@ public class RobotContainer {
 
                 Command c = Commands.sequence(
                                 new EjectCoral(intake),
-                                // new CoralScoreReset(drive),
                                 Commands.parallel(
                                                 new ElevatorSetHeight(elevator,
                                                                 ElevatorConstants.CORAL_LEVEL_HEIGHTS[1]),
@@ -227,8 +241,14 @@ public class RobotContainer {
 
                 c.setName("EjectAndResetCommand");
 
-                operatorHID.button(XboxController.Button.kY.value)
-                                .onTrue(c);
+                Command eject_cancel = Commands.none();
+                eject_cancel.addRequirements(drive);
+
+                operatorHID.button(XboxController.Button.kY.value).onTrue(eject_cancel);
+                operatorHID.button(XboxController.Button.kY.value).onTrue(c);
+
+                operatorHID.button(XboxController.Button.kBack.value)
+                                .onTrue(Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll()));
 
                 if (Robot.isReal())
                         driverHID.button(XboxController.Button.kY.value).onTrue(new EjectAlgae(intake));
@@ -236,30 +256,29 @@ public class RobotContainer {
                 operatorHID.povLeft().onTrue(new AlignScoreCoral(drive, true));
                 operatorHID.povRight().onTrue(new AlignScoreCoral(drive, false));
 
-                operatorHID.button(XboxController.Button.kBack.value).onTrue(new AlignFeed(drive));
+                if (Robot.isReal()) {
+                        driverHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5).onTrue(
+                                        Commands.runOnce(() -> beaterBar.setSpeed(BeaterBarConstants.INTAKE_SPEED)));
+                        driverHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
+                                        .onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
 
-                // commandGenericHID.povLeft()
-                // .onTrue(Commands.runOnce(() ->
-                // beaterBar.setSpeed(BeaterBarConstants.INTAKE_SPEED)));
-                // commandGenericHID.povLeft().onFalse(Commands.runOnce(() ->
-                // beaterBar.setSpeed(0)));
-
-                // commandGenericHID.povRight()
-                // .onTrue(Commands.runOnce(() ->
-                // beaterBar.setSpeed(-BeaterBarConstants.EJECT_SPEED)));
-                // commandGenericHID.povRight().onFalse(Commands.runOnce(() ->
-                // beaterBar.setSpeed(0)));
+                        driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5).onTrue(
+                                        Commands.runOnce(() -> beaterBar.setSpeed(BeaterBarConstants.EJECT_SPEED)));
+                        driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
+                                        .onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
+                }
 
                 operatorHID.button(XboxController.Button.kA.value)
                                 .onTrue(new EndEffectorSetAngle(endEffector, elevator,
                                                 EndEffectorConstants.LOW_SCORE_ANGLE));
 
-                Command feeder_align = new AlignPose(drive, FlippingUtil.flipFieldPose(
-                                FieldConstants.FEEDER_POSES[0]),
-                                AlignCamera.Back);
+                Command feeder_align = Commands.race(
+                                new AlignFeed(drive),
+                                new BeaterBarSpin(beaterBar, BeaterBarConstants.FEEDER_SPEED));
 
                 if (Robot.isReal())
-                        feeder_align = feeder_align.raceWith(new WaitController(driverHID, XboxController.Button.kA));
+                        feeder_align = feeder_align
+                                        .raceWith(new WaitController(driverHID, XboxController.Button.kRightBumper));
 
                 operatorHID.button(XboxController.Button.kB.value).onTrue(feeder_align);
 
@@ -270,7 +289,7 @@ public class RobotContainer {
 
                 // TODO: Maybe these shouldn't run if they're out of the range.
                 operatorHID.axisMagnitudeGreaterThan(XboxController.Axis.kRightTrigger.value,
-                                0.6)
+                                0.4)
                                 .onTrue(
                                                 Commands.parallel(
                                                                 new ElevatorSetHeight(elevator,
@@ -280,8 +299,7 @@ public class RobotContainer {
                                                                 .andThen(
                                                                                 Commands.deadline(
                                                                                                 new IntakeAlgae(intake),
-                                                                                                new AlignIntakeAlgae(
-                                                                                                                drive))));
+                                                                                                new AlignIntakeAlgae(drive))));
 
                 operatorHID.button(XboxController.Button.kRightBumper.value)
                                 .onTrue(

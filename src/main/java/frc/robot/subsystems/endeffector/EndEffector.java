@@ -60,10 +60,16 @@ public class EndEffector extends SubsystemBase {
         setpointLigament.setColor(new Color8Bit(0, 255, 0));
 
         SmartDashboard.putData("EndEffectorPID", pid);
+
+        this.setSetpoint(EndEffectorConstants.IDLE_ANGLE);
     }
 
     @Override
     public void periodic() {
+        // TODO: See if required.
+        // if (setpoint <= Units.degreesToRadians(EndEffectorConstants.IDLE_ANGLE))
+        //     setSetpoint(EndEffectorConstants.IDLE_ANGLE);
+
         lastStateSetpoint = EndEffectorConstants.PROFILE.calculate(0.02, lastStateSetpoint, stateSetpoint);
 
         double angle = Units.degreesToRadians(getAngle());
@@ -79,6 +85,7 @@ public class EndEffector extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "Volts", volts);
         Logger.recordOutput(LPREFIX + "Angle", angle);
 
+        // TODO: TMP!
         Logger.recordOutput(LPREFIX + "TVel", lastStateSetpoint.velocity);
         Logger.recordOutput(LPREFIX + "TPos", lastStateSetpoint.position);
     }

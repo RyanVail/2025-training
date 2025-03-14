@@ -80,10 +80,10 @@ public final class Constants {
                                 new PIDConstants(2.0, 0.0, 0.0));
 
                 public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
-                                new PIDController(5, 0.0, 0.0),
-                                new PIDController(5, 0.0, 0.0),
-                                new ProfiledPIDController(2.5, 0.0, 0.0,
-                                                new TrapezoidProfile.Constraints(2.0, 0.5)));
+                                new PIDController(8.5, 0.0, 0.0),
+                                new PIDController(8.5, 0.0, 0.0),
+                                new ProfiledPIDController(6.0, 0.0, 0.0,
+                                                new TrapezoidProfile.Constraints(4.0, 2.0)));
 
                 static {
                         DRIVE_CONTROLLER.setTolerance(new Pose2d(Units.inchesToMeters(0.3), Units.inchesToMeters(0.3),
@@ -345,13 +345,13 @@ public final class Constants {
                 public static final double PRESCORING_ANGLE = 145;
 
                 public static final double LOW_SCORE_ANGLE = 50.7;
-                public static final double HIGH_SCORE_ANGLE = 82.6;
+                public static final double HIGH_SCORE_ANGLE = 70.0;
 
                 public static final double INTAKE_ANGLE = 208;
                 public static final double ALGAE_INTAKE_ANGLE = 190;
 
                 public static final double REQUIRED_ELEVATOR_HEIGHT = 0.037;
-                public static final double MIN_ELEVATOR_REQUIRED_ANGLE = 55;
+                public static final double MIN_ELEVATOR_REQUIRED_ANGLE = 120;
 
                 public static final double PROCESSOR_ANGLE = 250;
         }
@@ -359,7 +359,9 @@ public final class Constants {
         public class BeaterBarConstants {
                 public static final int PORT = 14;
 
-                public static final double INTAKE_SPEED = 0.2;
-                public static final double EJECT_SPEED = 0.5;
+                public static final double INTAKE_SPEED = 0.4;
+                public static final double EJECT_SPEED = -0.5;
+
+                public static final double FEEDER_SPEED = 0.15;
         }
 }

@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.DriveConstants;
@@ -30,6 +31,10 @@ public class AlignPose extends Command {
         this.drive = drive;
         this.camera = camera;
         this.endVelocity = 0.0;
+
+        SmartDashboard.putData("AlignXPID", DriveConstants.DRIVE_CONTROLLER.getXController());
+        SmartDashboard.putData("AlignYPID", DriveConstants.DRIVE_CONTROLLER.getYController());
+        SmartDashboard.putData("AlignThetaPID", DriveConstants.DRIVE_CONTROLLER.getThetaController());
     }
 
     public void setTarget(Pose2d target) {

@@ -18,7 +18,7 @@ public class WaitController extends Command {
     }
 
     @Override
-    public void execute()
+    public void initialize()
     {
         finished = false;
     }
