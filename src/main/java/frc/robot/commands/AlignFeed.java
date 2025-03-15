@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -9,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.VisionManager;
 
 public class AlignFeed extends AlignPose {
     public AlignFeed(Drive drive) {
@@ -18,9 +21,15 @@ public class AlignFeed extends AlignPose {
 
     @Override
     public void initialize() {
-        Pose2d pose = (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
-            ? FlippingUtil.flipFieldPose(drive.getPose())
-            : drive.getPose();
+        super.setCameras();
+        VisionManager.resetToCameraPose();
+        Pose2d pose = drive.getPose();
+
+        Logger.recordOutput("_EstimatedPose", pose);
+
+        pose = (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
+                ? FlippingUtil.flipFieldPose(pose)
+                : pose;
 
         Pose2d target = pose.nearest(List.of(FieldConstants.FEEDER_POSES));
 
@@ -28,10 +37,6 @@ public class AlignFeed extends AlignPose {
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
             target = FlippingUtil.flipFieldPose(target);
         }
-
-        // TODO: Remove.
-        // Logger.recordOutput("_Pose", pose);
-        // Logger.recordOutput("_Nearest", target);
 
         setTarget(target);
         super.initialize();

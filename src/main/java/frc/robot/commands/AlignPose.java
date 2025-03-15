@@ -2,12 +2,14 @@ package frc.robot.commands;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionManager;
@@ -17,6 +19,7 @@ public class AlignPose extends Command {
     Pose2d target;
     AlignCamera camera;
     double endVelocity;
+    boolean finished;
 
     public enum AlignCamera {
         None,
@@ -43,6 +46,10 @@ public class AlignPose extends Command {
 
     public void initialize() {
         Pose2d start = drive.getPose();
+
+        ChassisSpeeds speeds = drive.getRobotVelocity();
+        DriveConstants.AUTO_ALIGN_X_SLEW.reset(speeds.vxMetersPerSecond);
+        DriveConstants.AUTO_ALIGN_Y_SLEW.reset(speeds.vyMetersPerSecond);
 
         // TODO: This is just for testing and should be disabled during comp.
         if (drive.getPose().getTranslation().getDistance(start.getTranslation()) >= Units.inchesToMeters(1)) {
@@ -79,8 +86,7 @@ public class AlignPose extends Command {
         DriveConstants.DRIVE_CONTROLLER.getYController().reset();
     }
 
-    @Override
-    public void execute() {
+    public void setCameras() {
         if (camera == AlignCamera.Back) {
             VisionManager.onlyBack();
         } else if (camera == AlignCamera.Front) {
@@ -90,23 +96,34 @@ public class AlignPose extends Command {
         } else {
             VisionManager.noCameras();
         }
+    }
+
+    @Override
+    public void execute() {
+        setCameras();
 
         // TOOD: Put the rotation somewhere.
-        drive.driveRobotRelative(DriveConstants.DRIVE_CONTROLLER.calculate(
+        ChassisSpeeds speeds = DriveConstants.DRIVE_CONTROLLER.calculate(
                 drive.getPose(),
                 target,
                 0.0,
-                target.getRotation()));
+                target.getRotation());
+
+        speeds.vxMetersPerSecond = DriveConstants.AUTO_ALIGN_X_SLEW.calculate(speeds.vxMetersPerSecond);
+        speeds.vyMetersPerSecond = DriveConstants.AUTO_ALIGN_Y_SLEW.calculate(speeds.vyMetersPerSecond);
+
+        drive.driveRobotRelative(speeds);
     }
 
     @Override
     public boolean isFinished() {
+        this.finished = DriveConstants.DRIVE_CONTROLLER.atReference();
         return DriveConstants.DRIVE_CONTROLLER.atReference();
     }
 
     @Override
     public void end(boolean interrupted) {
-        drive.driveRobotRelative(new ChassisSpeeds());
+        drive.stop();
         VisionManager.defaultCameras();
     }
 }

@@ -5,20 +5,30 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.drive.Drive;
 
 public class VisionManager {
+    private static Drive drive;
+
     private static PhotonCamera frontCamera;
     private static PhotonCamera backCamera;
 
     private static PhotonPoseEstimator frontEstimator;
     private static PhotonPoseEstimator backEstimator;
 
+    private static EstimatedRobotPose frontPose;
+    private static EstimatedRobotPose backPose;
+
     private static boolean disableFront = false;
     private static boolean disableBack = true;
 
-    public static void initialize() {
+    public static void initialize(Drive drive) {
+        VisionManager.drive = drive;
+
         frontCamera = new PhotonCamera(VisionConstants.FRONT_CAMERA_NAME);
         backCamera = new PhotonCamera(VisionConstants.BACK_CAMERA_NAME);
 
@@ -34,6 +44,14 @@ public class VisionManager {
                     VisionConstants.BACK_CAMERA_TRANSFORM);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void resetToCameraPose() {
+        if (!disableFront && frontPose != null) {
+            VisionManager.drive.resetPose(frontPose.estimatedPose.toPose2d());
+        } else if (!disableBack && backPose != null) {
+            VisionManager.drive.resetPose(backPose.estimatedPose.toPose2d());
         }
     }
 
@@ -58,13 +76,27 @@ public class VisionManager {
     }
 
     public static void defaultCameras() {
-        onlyFront();
+        // TODO: When teleop starts this shouold switch back to only front.
+        if (DriverStation.isAutonomous()) {
+            noCameras();
+        } else {
+            onlyFront();
+        }
     }
 
     public static EstimatedRobotPose[] getEstimatedPoses() {
+        var fp = frontEstimator.update(frontCamera.getLatestResult()).orElse(null);
+        var bp = backEstimator.update(backCamera.getLatestResult()).orElse(null);
+
+        if (fp != null)
+            frontPose = fp;
+
+        if (bp != null)
+            backPose = bp;
+
         return new EstimatedRobotPose[] {
-                disableFront ? null : frontEstimator.update(frontCamera.getLatestResult()).orElse(null),
-                disableBack ? null : backEstimator.update(backCamera.getLatestResult()).orElse(null),
+                disableFront ? null : fp,
+                disableBack ? null : bp,
         };
     }
 }

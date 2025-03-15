@@ -1,22 +1,20 @@
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.util.FlippingUtil;
+import java.util.Optional;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.InputConstants;
-import frc.robot.commands.AlignPose;
 import frc.robot.commands.AlignFeed;
 import frc.robot.commands.AlignIntakeAlgae;
 import frc.robot.commands.EjectAlgae;
@@ -28,7 +26,6 @@ import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.WaitController;
-import frc.robot.commands.AlignPose.AlignCamera;
 import frc.robot.subsystems.beaterbar.BeaterBar;
 import frc.robot.subsystems.beaterbar.BeaterBarIOFlex;
 import frc.robot.subsystems.beaterbar.BeaterBarIOSim;
@@ -79,8 +76,10 @@ public class RobotContainer {
                 }
 
                 endEffector.zeroEncoders();
+                elevator.zeroEncoders();
 
-                VisionManager.initialize();
+                VisionManager.initialize(drive);
+                VisionManager.defaultCameras();
 
                 configureAuto();
 
@@ -90,14 +89,16 @@ public class RobotContainer {
 
         private void configureAuto() {
                 NamedCommands.registerCommand(
-                        "StopDrive",
-                        Commands.runOnce(() -> drive.drive(new ChassisSpeeds(1, 1, 0.0)))
-                );
+                                "StopDrive",
+                                Commands.runOnce(() -> drive.stop()));
 
                 NamedCommands.registerCommand(
-                        "WaitController",
-                        new WaitController(operatorHID, XboxController.Button.kA)
-                );
+                                "KeepStopDrive",
+                                Commands.run(() -> drive.stop()));
+
+                NamedCommands.registerCommand(
+                                "WaitController",
+                                new WaitController(operatorHID, XboxController.Button.kA));
 
                 NamedCommands.registerCommand(
                                 "ElevatorL4",
@@ -125,9 +126,12 @@ public class RobotContainer {
                                                                                 ElevatorConstants.CORAL_INTAKE_HEIGHT),
                                                                 (new EndEffectorSetAngle(endEffector, elevator,
                                                                                 EndEffectorConstants.INTAKE_ANGLE))),
-                                                new IntakeCoral(intake),
-                                                new ElevatorSetHeight(elevator,
-                                                                ElevatorConstants.CORAL_LEVEL_HEIGHTS[1]),
+                                                new IntakeCoral(intake)));
+
+                NamedCommands.registerCommand(
+                                "IdleCoral",
+                                Commands.sequence(new ElevatorSetHeight(elevator,
+                                                ElevatorConstants.CORAL_LEVEL_HEIGHTS[1]),
                                                 new EndEffectorSetAngle(endEffector, elevator,
                                                                 EndEffectorConstants.IDLE_ANGLE)));
 
@@ -141,6 +145,8 @@ public class RobotContainer {
                                                 Commands.deadline(
                                                                 new IntakeAlgae(intake),
                                                                 new AlignIntakeAlgae(drive))));
+
+                NamedCommands.registerCommand("AlignFeeder", new AlignFeed(drive));
 
                 NamedCommands.registerCommand(
                                 "EjectCoral",
@@ -180,28 +186,28 @@ public class RobotContainer {
 
                 SmartDashboard.putBoolean("Command Verbose Logging", false);
 
-                // CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
-                // if (!(c instanceof PrintCommand)
-                // && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                // Commands.print(c.getName() + " initialized").schedule();
-                // }
-                // });
+                CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
+                        if (!(c instanceof PrintCommand)
+                                        && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+                                Commands.print(c.getName() + " initialized").schedule();
+                        }
+                });
 
-                // CommandScheduler.getInstance().onCommandFinish((Command c) -> {
-                // if (!(c instanceof PrintCommand)
-                // && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                // Commands.print(c.getName() + " initialized").schedule();
-                // }
-                // });
+                CommandScheduler.getInstance().onCommandFinish((Command c) -> {
+                        if (!(c instanceof PrintCommand)
+                                        && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+                                Commands.print(c.getName() + " initialized").schedule();
+                        }
+                });
 
-                // CommandScheduler.getInstance().onCommandInterrupt((Command c1,
-                // Optional<Command> c2) -> {
-                // if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
-                // false))
-                // Commands.print(c1.getName() + " interrupted by " +
-                // c2.get().getName()).schedule();
-                // ;
-                // });
+                CommandScheduler.getInstance().onCommandInterrupt((Command c1,
+                                Optional<Command> c2) -> {
+                        if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
+                                        false))
+                                Commands.print(c1.getName() + " interrupted by " +
+                                                c2.get().getName()).schedule();
+                        ;
+                });
 
                 Command intake_command = Commands.sequence(
                                 Commands.parallel(
@@ -299,7 +305,8 @@ public class RobotContainer {
                                                                 .andThen(
                                                                                 Commands.deadline(
                                                                                                 new IntakeAlgae(intake),
-                                                                                                new AlignIntakeAlgae(drive))));
+                                                                                                new AlignIntakeAlgae(
+                                                                                                                drive))));
 
                 operatorHID.button(XboxController.Button.kRightBumper.value)
                                 .onTrue(

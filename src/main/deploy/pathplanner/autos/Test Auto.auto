@@ -5,9 +5,61 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Test Auto Start"
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.4
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ElevatorL4"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "EffectorDown"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "S-IJ"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AlignLeft"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -19,7 +71,279 @@
         {
           "type": "named",
           "data": {
-            "name": "WaitController"
+            "name": "EjectCoral"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.2
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeCoral"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "IJS-LeftCS"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AlignFeeder"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StopDrive"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.4
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IdleCoral"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.3
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ElevatorL4"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "EffectorDown"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "LeftCS-KL"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AlignRight"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopDrive"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EjectCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "KL-LeftCS"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.2
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakeCoral"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AlignFeeder"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StopDrive"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.4
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IdleCoral"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.3
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ElevatorL4"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "EffectorDown"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "LeftCS-KL"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AlignLeft"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StopDrive"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopDrive"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "EjectCoral"
           }
         }
       ]

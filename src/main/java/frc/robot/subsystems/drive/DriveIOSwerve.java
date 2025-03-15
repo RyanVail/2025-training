@@ -47,13 +47,8 @@ public class DriveIOSwerve implements DriveIO {
     }
 
     @Override
-    public ChassisSpeeds getCurrentSpeeds() {
-        return swerveDrive.getRobotVelocity();
-    }
-
-    @Override
     public ChassisSpeeds getRobotRelativeSpeeds() {
-        return swerveDrive.getFieldVelocity();
+        return swerveDrive.getRobotVelocity();
     }
 
     @Override
@@ -63,11 +58,8 @@ public class DriveIOSwerve implements DriveIO {
 
     @Override
     public void drive(ChassisSpeeds speeds) {
+        Logger.recordOutput("_TryingSpeeds", speeds);
         swerveDrive.drive(speeds);
-    }
-
-    public void driveFieldRelative(ChassisSpeeds speeds){
-        swerveDrive.driveFieldOriented(speeds);
     }
 
     @Override

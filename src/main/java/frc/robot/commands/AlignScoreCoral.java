@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -8,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.VisionManager;
 
 public class AlignScoreCoral extends AlignPose {
     boolean left;
@@ -19,9 +22,15 @@ public class AlignScoreCoral extends AlignPose {
 
     @Override
     public void initialize() {
-        Pose2d pose = (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
-                ? FlippingUtil.flipFieldPose(drive.getPose())
-                : drive.getPose();
+        super.setCameras();
+        VisionManager.resetToCameraPose();
+        Pose2d pose = drive.getPose();
+
+        Logger.recordOutput("_EstimatedPose", pose);
+
+        pose = (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
+                ? FlippingUtil.flipFieldPose(pose)
+                : pose;
 
         int index = getCoralScoreIndex(pose);
 

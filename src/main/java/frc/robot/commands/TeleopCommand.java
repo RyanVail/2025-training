@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -51,6 +52,11 @@ public class TeleopCommand extends Command {
 
     @Override
     public void execute() {
+        if (DriverStation.isAutonomous()) {
+            this.drive.stop();
+            return;
+        }
+
         double x = -processAxis(-controller.getRawAxis(1)); // 5
         double y = -processAxis(-controller.getRawAxis(0)); // 4
         double yaw = processAxis(-controller.getRawAxis(4)); // 0
@@ -77,7 +83,7 @@ public class TeleopCommand extends Command {
         }
 
         // TODO: Add something to do this.
-        drive.drive(
+        drive.driveRobotRelative(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         new ChassisSpeeds(
                                 -x * DriveConstants.MAX_SPEED,

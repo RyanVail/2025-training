@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
@@ -77,7 +78,15 @@ public class Drive extends SubsystemBase {
         io.periodic();
 
         EstimatedRobotPose[] poses = VisionManager.getEstimatedPoses();
-        io.addVisionEstimations(poses);
+        for (int i = 0; i < poses.length; i++) {
+            if (poses[i] == null)
+                continue;
+
+            Logger.recordOutput("_EstimatedPose" + i, poses[i].estimatedPose);
+        }
+
+        if (!DriverStation.isAutonomous())
+            io.addVisionEstimations(poses);
     }
 
     /**
@@ -87,19 +96,9 @@ public class Drive extends SubsystemBase {
         return new TeleopCommand(this, elevator, controller);
     }
 
-    /**
-     * Finds a path to a pose and creates a command to follow that path.
-     * 
-     * @param pose The pose to align to.
-     * @return The command to follow the found path.
-     */
-    public Command getPathCommand(Pose2d pose) {
-        return AutoBuilder.pathfindToPose(pose, DriveConstants.pathConstraints, 0.0);
-    }
-
     public void resetPose(Pose2d pose) {
         io.resetPose(pose);
-    }
+    }   
 
     public Supplier<Pose2d> getPoseSupplier() {
         return new PoseSupplier(this);
@@ -109,20 +108,8 @@ public class Drive extends SubsystemBase {
         return io.getPose();
     }
 
-    public ChassisSpeeds getCurrentSpeeds() {
-        return io.getCurrentSpeeds();
-    }
-
     public ChassisSpeeds getRobotRelativeSpeeds() {
         return io.getRobotRelativeSpeeds();
-    }
-
-    public void drive(double x, double y, double omega) {
-        this.drive(new ChassisSpeeds(x, y, omega));
-    }
-
-    public void drive(ChassisSpeeds speeds) {
-        this.io.drive(speeds);
     }
 
     public void driveRobotRelative(double x, double y, double omega) {
@@ -130,6 +117,13 @@ public class Drive extends SubsystemBase {
     }
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
+        // TODO: Remove.
+        // String s = "-----\nspeed: " + speeds;
+        // var trace = Thread.currentThread().getStackTrace();
+        // for (var t : trace) { s = s + t + "\n"; }
+
+        // Commands.print(s).schedule();
+
         this.io.drive(speeds);
     }
 
@@ -146,6 +140,6 @@ public class Drive extends SubsystemBase {
     }
 
     public void stop() {
-        this.drive(new ChassisSpeeds());
+        this.driveRobotRelative(new ChassisSpeeds());
     }
 }

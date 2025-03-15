@@ -69,24 +69,21 @@ public final class Constants {
                 public static final double CORAL_SCORE_RESET_VEL = Units.feetToMeters(0.2);
                 public static final double CORAL_SCORE_RESET_DIST = Units.inchesToMeters(3);
 
-                public static final PathConstraints pathConstraints = new PathConstraints(
-                                2.0,
-                                2.0,
-                                Units.degreesToRadians(540),
-                                Units.degreesToRadians(720));
-
                 public static final PPHolonomicDriveController PPDriveController = new PPHolonomicDriveController(
-                                new PIDConstants(2.0, 0.0, 0.0),
-                                new PIDConstants(2.0, 0.0, 0.0));
+                                new PIDConstants(4.0, 0.0, 0.0),
+                                new PIDConstants(3.0, 0.0, 0.0));
+
+                public static final SlewRateLimiter AUTO_ALIGN_X_SLEW = new SlewRateLimiter(3.5);
+                public static final SlewRateLimiter AUTO_ALIGN_Y_SLEW = new SlewRateLimiter(3.5);
 
                 public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
-                                new PIDController(8.5, 0.0, 0.0),
-                                new PIDController(8.5, 0.0, 0.0),
+                                new PIDController(4.5, 0.0, 0.0),
+                                new PIDController(4.5, 0.0, 0.0),
                                 new ProfiledPIDController(6.0, 0.0, 0.0,
-                                                new TrapezoidProfile.Constraints(4.0, 2.0)));
+                                                new TrapezoidProfile.Constraints(2.0, 1.0)));
 
                 static {
-                        DRIVE_CONTROLLER.setTolerance(new Pose2d(Units.inchesToMeters(0.3), Units.inchesToMeters(0.3),
+                        DRIVE_CONTROLLER.setTolerance(new Pose2d(Units.inchesToMeters(0.22), Units.inchesToMeters(0.22),
                                         new Rotation2d(Units.degreesToRadians(0.5))));
                 }
 
@@ -335,7 +332,7 @@ public final class Constants {
                 public static final double MIN_ANGLE = Units.degreesToRadians(95);
                 public static final double MAX_ANGLE = Units.degreesToRadians(240);
 
-                public static final double IDLE_ANGLE = 20;
+                public static final double IDLE_ANGLE = 30;
 
                 public static final double STARTING_ANGLE = Units.degreesToRadians(95);
                 public static final double VISUALIZATION_BASE_ANGLE = -90;
