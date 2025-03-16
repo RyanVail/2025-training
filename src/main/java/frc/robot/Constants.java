@@ -49,7 +49,7 @@ public final class Constants {
         public static final double CORAL_SCORE_VOLTAGE = -15;
         public static final double CORAL_INTAKE_VOLTAGE = 15;
         public static final double CORAL_INTAKE_REV = 1.0;
-        public static final double CORAL_EJECT_TIME = 0.2;
+        public static final double CORAL_EJECT_TIME = 0.1;
 
         public static final double ALGAE_SCORE_VOLTAGE = -12.0;
 
@@ -82,11 +82,10 @@ public final class Constants {
         public static final BetterTrapezoidProfile AUTO_ALIGN_Y_PROFILE = new BetterTrapezoidProfile(
                 new BetterTrapezoidProfile.Constraints(3.5, 2.0));
 
+        public static final double AUTO_ALIGN_TOLERANCE = Units.inchesToMeters(0.7);
+
         static {
             AUTO_ALIGN_THETA_CONTROLLER.enableContinuousInput(0, Units.degreesToRadians(360.0));
-
-            AUTO_ALIGN_X_CONTROLLER.setTolerance(Units.inchesToMeters(0.2));
-            AUTO_ALIGN_Y_CONTROLLER.setTolerance(Units.inchesToMeters(0.2));
             AUTO_ALIGN_THETA_CONTROLLER.setTolerance(Units.degreesToRadians(0.5));
         }
 

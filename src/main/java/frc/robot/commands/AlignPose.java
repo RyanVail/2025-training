@@ -155,9 +155,8 @@ public class AlignPose extends Command {
 
     @Override
     public boolean isFinished() {
-        return DriveConstants.AUTO_ALIGN_X_CONTROLLER.atSetpoint()
-                && DriveConstants.AUTO_ALIGN_Y_CONTROLLER.atSetpoint()
-                && DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.atSetpoint();
+        return drive.getPose().getTranslation().getDistance(target.getTranslation()) <= DriveConstants.AUTO_ALIGN_TOLERANCE
+            && DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.atSetpoint();
     }
 
     @Override
