@@ -23,17 +23,14 @@ public class AlignIntakeAlgae extends AlignPose {
                 : drive.getPose();
 
         int index = getClosestPoseIndex(pose);
-        Pose2d preintake_pose = FieldConstants.ALGAE_PREINTAKE_POSES[index];
         Pose2d intake_pose = FieldConstants.ALGAE_INTAKE_POSES[index];
-        Commands.print("preintake_pose " + preintake_pose).schedule();
         Commands.print("intake_pose  " + intake_pose).schedule();
 
-        // TODO: Prescore too.
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
             intake_pose = FlippingUtil.flipFieldPose(intake_pose);
         }
 
-        setTarget(intake_pose);
+        super.setTarget(intake_pose);
         super.initialize();
     }
 
@@ -50,7 +47,7 @@ public class AlignIntakeAlgae extends AlignPose {
                 closest_dist = dist;
             }
         }
- 
+
         return closest_pose_index;
     }
 }

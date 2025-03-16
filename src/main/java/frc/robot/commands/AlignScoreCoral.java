@@ -45,9 +45,7 @@ public class AlignScoreCoral extends AlignPose {
 
         Logger.recordOutput (
             "_AlignOffset",
-            FieldConstants.REEF_TAG_POSITIONS[0].minus (
-                FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()
-            )
+            FieldConstants.REEF_TAG_POSITIONS[0].minus(pose.getTranslation())
         );
 
         Logger.recordOutput(

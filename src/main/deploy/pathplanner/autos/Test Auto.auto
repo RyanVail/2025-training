@@ -116,12 +116,6 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "AlignFeeder"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
                         "name": "StopDrive"
                       }
                     }
@@ -238,12 +232,6 @@
                       "type": "path",
                       "data": {
                         "pathName": "KL-LeftCS"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "AlignFeeder"
                       }
                     },
                     {

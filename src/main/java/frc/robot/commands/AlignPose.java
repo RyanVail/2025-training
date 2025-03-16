@@ -3,11 +3,8 @@ package frc.robot.commands;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.IntegerArraySubscriber;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,6 +24,8 @@ public class AlignPose extends Command {
     State XStateSetpoint;
     State YStateSetpoint;
 
+    boolean finished;
+
     public enum AlignCamera {
         None,
         All,
@@ -34,11 +33,29 @@ public class AlignPose extends Command {
         Front,
     };
 
+    // TODO: Add and use this.
+    // public class Target {
+    //     // The target pose.
+    //     Pose2d pose;
+
+    //     // The minimum required distance from the target.
+    //     double dist;
+
+    //     // The minimum required distance from the rotation.
+    //     double rot_dist;
+
+    //     // The target velocity at the pose.
+    //     double vel;
+    // };
+
     public AlignPose(Drive drive, Pose2d target, AlignCamera camera) {
         addRequirements(drive);
         this.target = target;
         this.drive = drive;
         this.camera = camera;
+
+        if (this.target != null)
+            setTarget(this.target);
 
         SmartDashboard.putData("AlignXPID", DriveConstants.AUTO_ALIGN_X_CONTROLLER);
         SmartDashboard.putData("AlignYPID", DriveConstants.AUTO_ALIGN_Y_CONTROLLER);
@@ -47,9 +64,7 @@ public class AlignPose extends Command {
 
     public void setTarget(Pose2d target) {
         this.target = target;
-    }
 
-    public void initialize() {
         Pose2d start = drive.getPose();
 
         ChassisSpeeds speeds = drive.getRobotVelocity();
@@ -95,6 +110,13 @@ public class AlignPose extends Command {
         DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.setSetpoint(target.getRotation().getRadians());
     }
 
+    public void initialize() {
+        if (finished && this.target != null)
+            this.setTarget(this.target);
+
+        this.finished = false;
+    }
+
     public void setCameras() {
         if (camera == AlignCamera.Back) {
             VisionManager.onlyBack();
@@ -109,6 +131,9 @@ public class AlignPose extends Command {
 
     @Override
     public void execute() {
+        if (this.target == null)
+            return;
+
         setCameras();
 
         Pose2d pose = drive.getPose();
@@ -137,7 +162,9 @@ public class AlignPose extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        drive.stop();
+        this.finished = true;
+
+        this.drive.stop();
         VisionManager.defaultCameras();
     }
 }

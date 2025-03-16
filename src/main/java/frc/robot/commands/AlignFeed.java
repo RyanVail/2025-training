@@ -33,7 +33,6 @@ public class AlignFeed extends AlignPose {
 
         Pose2d target = pose.nearest(List.of(FieldConstants.FEEDER_POSES));
 
-        // TODO: Make consisten with the others.
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
             target = FlippingUtil.flipFieldPose(target);
         }

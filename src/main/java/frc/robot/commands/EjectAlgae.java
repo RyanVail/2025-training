@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Robot;
@@ -17,8 +18,6 @@ public class EjectAlgae extends Command {
 
     @Override
     public void initialize() {
-        senseTime = 0;
-
         if (intake.hasCoral() || intake.isCoralLoaded())
             super.cancel();
 
@@ -40,7 +39,7 @@ public class EjectAlgae extends Command {
 
         return Robot.isSimulation()
                 ? true
-                : ((System.currentTimeMillis() - senseTime) * 0.001) >= IntakeConstants.ALGAE_EJECT_TIME;
+                : Units.millisecondsToSeconds(System.currentTimeMillis() - senseTime) >= IntakeConstants.ALGAE_EJECT_TIME;
     }
 
     @Override

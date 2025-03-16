@@ -12,7 +12,7 @@ public class AutoManager {
     private static SendableChooser<PathPlannerAuto> chooser = new SendableChooser<>();
     private static Command command;
 
-    // TODO: Reset pose after-.
+    // TODO: The gyro has to be reset too.
     private static Drive drive;
 
     private static final String[] autos = {

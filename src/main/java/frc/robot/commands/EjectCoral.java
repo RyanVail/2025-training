@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
@@ -37,7 +38,7 @@ public class EjectCoral extends Command {
 
         return Robot.isSimulation()
                 ? true
-                : ((System.currentTimeMillis() - senseTime) * 0.001) >= IntakeConstants.CORAL_EJECT_TIME;
+                : Units.millisecondsToSeconds(System.currentTimeMillis() - senseTime) >= IntakeConstants.CORAL_EJECT_TIME;
     }
 
     @Override

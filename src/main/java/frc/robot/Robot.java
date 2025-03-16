@@ -9,7 +9,6 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.vision.VisionManager;
 
 public class Robot extends LoggedRobot {
     private RobotContainer robotContainer;
