@@ -6,7 +6,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -18,13 +17,14 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.control.BetterTrapezoidProfile;
 
 public final class Constants {
         public class InputConstants {
                 public static final int OPERATOR_CONTROLLER_PORT = 0;
                 public static final int DRIVE_CONTROLLER_PORT = 1;
+
+                public static final double TRIGGER_THRESHOLD = 0.4;
         }
 
         public class IntakeConstants {
@@ -188,6 +188,8 @@ public final class Constants {
                 // TODO: The height of the elevator is actually 2/3 of what it is in reality
                 // because it was configured wrong.
                 public static final double VISUALIZATION_HEIGHT_MUL = 1.0 + (1.0 / 3.0);
+
+                public static final double BARGE_HEIGHT = 22.5;
         }
 
         public class VisionConstants {
