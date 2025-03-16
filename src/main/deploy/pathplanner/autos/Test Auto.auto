@@ -15,7 +15,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.4
+                        "waitTime": 0.2
                       }
                     },
                     {
@@ -83,9 +83,15 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "IdleCoral"
+                      }
+                    },
+                    {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.2
+                        "waitTime": 0.1
                       }
                     },
                     {
@@ -136,19 +142,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.4
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IdleCoral"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.15
                       }
                     },
                     {
@@ -208,12 +202,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "KL-LeftCS"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -222,9 +210,15 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "IdleCoral"
+                      }
+                    },
+                    {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.2
+                        "waitTime": 0.1
                       }
                     },
                     {
@@ -240,6 +234,12 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "KL-LeftCS"
+                      }
+                    },
                     {
                       "type": "named",
                       "data": {
@@ -269,19 +269,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.4
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IdleCoral"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.15
                       }
                     },
                     {
@@ -321,12 +309,6 @@
                       "data": {
                         "name": "AlignLeft"
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "StopDrive"
-                      }
                     }
                   ]
                 }
@@ -344,6 +326,18 @@
           "type": "named",
           "data": {
             "name": "EjectCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IdleCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "KL-LeftCS"
           }
         }
       ]

@@ -85,8 +85,7 @@ public class Drive extends SubsystemBase {
             Logger.recordOutput("_EstimatedPose" + i, poses[i].estimatedPose);
         }
 
-        if (!DriverStation.isAutonomous())
-            io.addVisionEstimations(poses);
+        io.addVisionEstimations(poses);
     }
 
     /**

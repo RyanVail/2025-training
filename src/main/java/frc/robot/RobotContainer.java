@@ -153,8 +153,6 @@ public class RobotContainer {
                                 Commands.sequence(
                                                 new EjectCoral(intake),
                                                 Commands.parallel(
-                                                                new ElevatorSetHeight(elevator,
-                                                                                ElevatorConstants.CORAL_LEVEL_HEIGHTS[1]),
                                                                 new EndEffectorSetAngle(endEffector, elevator,
                                                                                 EndEffectorConstants.IDLE_ANGLE))));
 

@@ -2,15 +2,17 @@ package frc.robot.commands;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.IntegerArraySubscriber;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.control.BetterTrapezoidProfile.State;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionManager;
 
@@ -18,8 +20,12 @@ public class AlignPose extends Command {
     Drive drive;
     Pose2d target;
     AlignCamera camera;
-    double endVelocity;
-    boolean finished;
+
+    State lastXState;
+    State lastYState;
+
+    State XStateSetpoint;
+    State YStateSetpoint;
 
     public enum AlignCamera {
         None,
@@ -33,11 +39,10 @@ public class AlignPose extends Command {
         this.target = target;
         this.drive = drive;
         this.camera = camera;
-        this.endVelocity = 0.0;
 
-        SmartDashboard.putData("AlignXPID", DriveConstants.DRIVE_CONTROLLER.getXController());
-        SmartDashboard.putData("AlignYPID", DriveConstants.DRIVE_CONTROLLER.getYController());
-        SmartDashboard.putData("AlignThetaPID", DriveConstants.DRIVE_CONTROLLER.getThetaController());
+        SmartDashboard.putData("AlignXPID", DriveConstants.AUTO_ALIGN_X_CONTROLLER);
+        SmartDashboard.putData("AlignYPID", DriveConstants.AUTO_ALIGN_Y_CONTROLLER);
+        SmartDashboard.putData("AlignThetaPID", DriveConstants.AUTO_ALIGN_THETA_CONTROLLER);
     }
 
     public void setTarget(Pose2d target) {
@@ -48,8 +53,6 @@ public class AlignPose extends Command {
         Pose2d start = drive.getPose();
 
         ChassisSpeeds speeds = drive.getRobotVelocity();
-        DriveConstants.AUTO_ALIGN_X_SLEW.reset(speeds.vxMetersPerSecond);
-        DriveConstants.AUTO_ALIGN_Y_SLEW.reset(speeds.vyMetersPerSecond);
 
         // TODO: This is just for testing and should be disabled during comp.
         if (drive.getPose().getTranslation().getDistance(start.getTranslation()) >= Units.inchesToMeters(1)) {
@@ -79,11 +82,17 @@ public class AlignPose extends Command {
 
         Logger.recordOutput("AligningTo", target);
 
-        // Drive controllers have no builtin way of doing this because they're only
-        // meant to follow a single trajectory.
-        DriveConstants.DRIVE_CONTROLLER.getThetaController().reset(start.getRotation().getRadians());
-        DriveConstants.DRIVE_CONTROLLER.getXController().reset();
-        DriveConstants.DRIVE_CONTROLLER.getYController().reset();
+        XStateSetpoint = new State(target.getX(), 0);
+        YStateSetpoint = new State(target.getY(), 0);
+
+        lastXState = new State(start.getX(), speeds.vxMetersPerSecond);
+        lastYState = new State(start.getY(), speeds.vyMetersPerSecond);
+
+        DriveConstants.AUTO_ALIGN_X_CONTROLLER.reset();
+        DriveConstants.AUTO_ALIGN_Y_CONTROLLER.reset();
+        DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.reset();
+
+        DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.setSetpoint(target.getRotation().getRadians());
     }
 
     public void setCameras() {
@@ -102,23 +111,28 @@ public class AlignPose extends Command {
     public void execute() {
         setCameras();
 
-        // TOOD: Put the rotation somewhere.
-        ChassisSpeeds speeds = DriveConstants.DRIVE_CONTROLLER.calculate(
-                drive.getPose(),
-                target,
-                0.0,
-                target.getRotation());
+        Pose2d pose = drive.getPose();
 
-        speeds.vxMetersPerSecond = DriveConstants.AUTO_ALIGN_X_SLEW.calculate(speeds.vxMetersPerSecond);
-        speeds.vyMetersPerSecond = DriveConstants.AUTO_ALIGN_Y_SLEW.calculate(speeds.vyMetersPerSecond);
+        lastXState = DriveConstants.AUTO_ALIGN_X_PROFILE.calculate(0.02, XStateSetpoint, lastXState);
+        lastYState = DriveConstants.AUTO_ALIGN_Y_PROFILE.calculate(0.02, YStateSetpoint, lastYState);
+
+        DriveConstants.AUTO_ALIGN_X_CONTROLLER.setSetpoint(lastXState.position);
+        DriveConstants.AUTO_ALIGN_Y_CONTROLLER.setSetpoint(lastYState.position);
+
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                DriveConstants.AUTO_ALIGN_X_CONTROLLER.calculate(pose.getX()),
+                DriveConstants.AUTO_ALIGN_Y_CONTROLLER.calculate(pose.getY()),
+                DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.calculate(pose.getRotation().getRadians()),
+                pose.getRotation());
 
         drive.driveRobotRelative(speeds);
     }
 
     @Override
     public boolean isFinished() {
-        this.finished = DriveConstants.DRIVE_CONTROLLER.atReference();
-        return DriveConstants.DRIVE_CONTROLLER.atReference();
+        return DriveConstants.AUTO_ALIGN_X_CONTROLLER.atSetpoint()
+                && DriveConstants.AUTO_ALIGN_Y_CONTROLLER.atSetpoint()
+                && DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.atSetpoint();
     }
 
     @Override

@@ -5,9 +5,12 @@ import org.littletonrobotics.junction.Logger;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionManager;
@@ -34,16 +37,25 @@ public class AlignScoreCoral extends AlignPose {
 
         int index = getCoralScoreIndex(pose);
 
-        // Rotation2d angle = new Rotation2d(Units.degreesToRadians(-120))
-        //         .rotateBy(new Rotation2d(Units.degreesToRadians(-60) * index));
+        Rotation2d angle = new Rotation2d(Units.degreesToRadians(60 * (index / 2)));
+        Commands.print("Angle: " + angle).schedule();
 
-        // Logger.recordOutput("Drive pose", drive.getPose());
-        // Logger.recordOutput("Drive pose Flipped", FlippingUtil.flipFieldPose(drive.getPose()));
+        Logger.recordOutput("Drive pose", drive.getPose());
+        Logger.recordOutput("Drive pose Flipped", FlippingUtil.flipFieldPose(drive.getPose()));
 
-        // Logger.recordOutput(
-        //         "Align Offset",
-        //         FieldConstants.REEF_TAG_POSITIONS[index / 2].minus(
-        //                 FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle));
+        Logger.recordOutput (
+            "_AlignOffset",
+            FieldConstants.REEF_TAG_POSITIONS[0].minus (
+                FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()
+            )
+        );
+
+        Logger.recordOutput(
+                "Align Offset",
+                new Pose2d(
+                        FieldConstants.REEF_TAG_POSITIONS[index / 2].minus(
+                                FlippingUtil.flipFieldPose(drive.getPose()).getTranslation()).rotateBy(angle),
+                        new Rotation2d()));
 
         Pose2d align_pose = FieldConstants.CORAL_SCORE_POSES[index];
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
