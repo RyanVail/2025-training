@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S0 to R15"
+                  "pathName": null
                 }
               },
               {
@@ -57,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R15 to F0"
+            "pathName": null
           }
         },
         {
@@ -73,7 +73,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "F0 to F14"
+                  "pathName": null
                 }
               },
               {
@@ -119,7 +119,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "F14 to F0"
+            "pathName": null
           }
         },
         {
@@ -135,7 +135,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "F0 to F13"
+                  "pathName": null
                 }
               },
               {
