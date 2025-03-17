@@ -7,10 +7,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.VisionManager;
 import frc.robot.Constants.AutoAlignConstants;
 import frc.robot.control.BetterTrapezoidProfile.State;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.vision.VisionManager;
 
 public class AlignPose extends Command {
     Drive drive;

@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.vision.VisionManager;
+import frc.robot.VisionManager;
 
 public class Drive extends SubsystemBase {
     public class PoseSupplier implements Supplier<Pose2d> {
@@ -81,7 +81,7 @@ public class Drive extends SubsystemBase {
             if (poses[i] == null)
                 continue;
 
-            Logger.recordOutput("_VisionPose" + i, poses[i].estimatedPose);
+            Logger.recordOutput(LPREFIX + "VisionPose" + i, poses[i].estimatedPose);
         }
 
         io.addVisionEstimations(poses);

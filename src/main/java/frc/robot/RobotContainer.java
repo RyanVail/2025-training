@@ -37,7 +37,6 @@ import frc.robot.subsystems.endeffector.EndEffectorIOSpark;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSpark;
-import frc.robot.subsystems.vision.VisionManager;
 
 public class RobotContainer {
     CommandGenericHID operatorHID;

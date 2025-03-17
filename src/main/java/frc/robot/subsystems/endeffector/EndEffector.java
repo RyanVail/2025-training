@@ -84,10 +84,6 @@ public class EndEffector extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
         Logger.recordOutput(LPREFIX + "Volts", volts);
         Logger.recordOutput(LPREFIX + "Angle", angle);
-
-        // TODO: TMP!
-        Logger.recordOutput(LPREFIX + "TVel", lastStateSetpoint.velocity);
-        Logger.recordOutput(LPREFIX + "TPos", lastStateSetpoint.position);
     }
 
     @Override
