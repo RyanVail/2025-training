@@ -3,7 +3,6 @@ package frc.robot.subsystems.drive;
 import java.io.File;
 import java.io.IOException;
 
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -58,7 +57,6 @@ public class DriveIOSwerve implements DriveIO {
 
     @Override
     public void drive(ChassisSpeeds speeds) {
-        Logger.recordOutput("_TryingSpeeds", speeds);
         swerveDrive.drive(speeds);
     }
 
@@ -78,10 +76,6 @@ public class DriveIOSwerve implements DriveIO {
             if (pose != null && pose.estimatedPose != null)
                 swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                         pose.timestampSeconds);
-
-        if (poses[0] != null) {
-            Logger.recordOutput("_EstimatedPose", poses[0].estimatedPose);
-        }
     }
 
     @Override

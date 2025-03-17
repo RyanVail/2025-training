@@ -13,7 +13,6 @@ public class AutoManager {
     private static SendableChooser<PathPlannerAuto> chooser = new SendableChooser<>();
     private static PathPlannerAuto auto;
 
-    // TODO: The gyro has to be reset too.
     private static Drive drive;
     private static Elevator elevator;
     private static EndEffector endEffector;

@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import java.util.List;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,8 +22,6 @@ public class AlignFeed extends AlignPose {
         super.setCameras();
         VisionManager.resetToCameraPose();
         Pose2d pose = drive.getPose();
-
-        Logger.recordOutput("_EstimatedPose", pose);
 
         pose = (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
                 ? FlippingUtil.flipFieldPose(pose)

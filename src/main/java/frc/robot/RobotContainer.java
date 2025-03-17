@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.util.Optional;
-
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -9,7 +7,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
@@ -97,10 +94,6 @@ public class RobotContainer {
                 Commands.run(() -> drive.stop()));
 
         NamedCommands.registerCommand(
-                "WaitController",
-                new WaitController(operatorHID, XboxController.Button.kA));
-
-        NamedCommands.registerCommand(
                 "ElevatorL4",
                 new ElevatorSetHeight(elevator, ElevatorConstants.CORAL_LEVEL_HEIGHTS[3]));
 
@@ -133,25 +126,12 @@ public class RobotContainer {
                         new EndEffectorSetAngle(endEffector, elevator,
                                 EndEffectorConstants.IDLE_ANGLE)));
 
-        // TODO: There really should be a check within max align dist command.
-        NamedCommands.registerCommand("IntakeAlgae", Commands.parallel(
-                new ElevatorSetHeight(elevator,
-                        ElevatorConstants.ALGAE_LEVEL_HEIGHTS[1]),
-                new EndEffectorSetAngle(endEffector, elevator,
-                        EndEffectorConstants.ALGAE_INTAKE_ANGLE))
-                .andThen(
-                        Commands.deadline(
-                                new IntakeAlgae(intake),
-                                new AlignIntakeAlgae(drive))));
-
         NamedCommands.registerCommand("AlignFeeder", new AlignFeed(drive));
 
         NamedCommands.registerCommand(
                 "EjectCoral",
                 Commands.sequence(
                         new EjectCoral(intake)));
-
-        NamedCommands.registerCommand("EjectAlgae", new EjectAlgae(intake));
 
         AutoManager.configureAutos(drive, elevator, endEffector);
     }
@@ -179,28 +159,28 @@ public class RobotContainer {
 
         SmartDashboard.putBoolean("Command Verbose Logging", false);
 
-        CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
-            if (!(c instanceof PrintCommand)
-                    && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                Commands.print(c.getName() + " initialized").schedule();
-            }
-        });
+        // CommandScheduler.getInstance().onCommandInitialize((Command c) -> {
+        //     if (!(c instanceof PrintCommand)
+        //             && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+        //         Commands.print(c.getName() + " initialized").schedule();
+        //     }
+        // });
 
-        CommandScheduler.getInstance().onCommandFinish((Command c) -> {
-            if (!(c instanceof PrintCommand)
-                    && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
-                Commands.print(c.getName() + " initialized").schedule();
-            }
-        });
+        // CommandScheduler.getInstance().onCommandFinish((Command c) -> {
+        //     if (!(c instanceof PrintCommand)
+        //             && SmartDashboard.getBoolean("Command Verbose Logging", false)) {
+        //         Commands.print(c.getName() + " initialized").schedule();
+        //     }
+        // });
 
-        CommandScheduler.getInstance().onCommandInterrupt((Command c1,
-                Optional<Command> c2) -> {
-            if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
-                    false))
-                Commands.print(c1.getName() + " interrupted by " +
-                        c2.get().getName()).schedule();
-            ;
-        });
+        // CommandScheduler.getInstance().onCommandInterrupt((Command c1,
+        //         Optional<Command> c2) -> {
+        //     if (c2.isPresent() && SmartDashboard.getBoolean("Command Verbose Logging",
+        //             false))
+        //         Commands.print(c1.getName() + " interrupted by " +
+        //                 c2.get().getName()).schedule();
+        //     ;
+        // });
 
         Command intake_command = Commands.sequence(
                 Commands.parallel(
@@ -310,12 +290,18 @@ public class RobotContainer {
                                 Commands.parallel(
                                         new ElevatorSetHeight(elevator,
                                                 ElevatorConstants.ALGAE_LEVEL_HEIGHTS[1]),
-                                        new EndEffectorSetAngle(endEffector, elevator,
+                                        new EndEffectorSetAngle(endEffector,
+                                                elevator,
                                                 EndEffectorConstants.ALGAE_INTAKE_ANGLE))
                                         .andThen(
-                                                Commands.deadline(new IntakeAlgae(intake), algae_intake)),
+                                                Commands.deadline(
+                                                        new IntakeAlgae(intake),
+                                                        algae_intake)),
                                 Commands.none(),
-                                () -> algae_intake.canRun()));
+                                () -> {
+                                    algae_intake.findTargetPose();
+                                    return algae_intake.canRun();
+                                }));
 
         operatorHID.button(XboxController.Button.kRightBumper.value)
                 .onTrue(

@@ -6,9 +6,6 @@ public interface ElevatorIO {
     public default void simulationPeriodic() {
     };
 
-    /**
-     * @return Measured height of the elevator in meters.
-     */
     public double getHeight();
 
     public default void periodic() {

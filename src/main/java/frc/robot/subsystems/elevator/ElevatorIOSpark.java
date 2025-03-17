@@ -1,7 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -24,8 +22,6 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     @Override
     public double getHeight() {
-        Logger.recordOutput("Right spark Pos", rightSpark.getEncoder().getPosition());
-        Logger.recordOutput("Left spark Pos", leftSpark.getEncoder().getPosition());
         return leftSpark.getEncoder().getPosition();
     }
 

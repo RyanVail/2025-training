@@ -81,7 +81,7 @@ public class Drive extends SubsystemBase {
             if (poses[i] == null)
                 continue;
 
-            Logger.recordOutput("_EstimatedPose" + i, poses[i].estimatedPose);
+            Logger.recordOutput("_VisionPose" + i, poses[i].estimatedPose);
         }
 
         io.addVisionEstimations(poses);
@@ -115,13 +115,6 @@ public class Drive extends SubsystemBase {
     }
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
-        // TODO: Remove.
-        // String s = "-----\nspeed: " + speeds;
-        // var trace = Thread.currentThread().getStackTrace();
-        // for (var t : trace) { s = s + t + "\n"; }
-
-        // Commands.print(s).schedule();
-
         this.io.drive(speeds);
     }
 

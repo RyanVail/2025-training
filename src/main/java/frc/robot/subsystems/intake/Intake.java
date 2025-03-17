@@ -2,15 +2,10 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
     IntakeIO io;
-
-    PIDController pid;
-    SimpleMotorFeedforward feedforward;
 
     private static final String LPREFIX = "/Subsystems/Intake/";
 

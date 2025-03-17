@@ -7,7 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.AutoAlignConstants;
 import frc.robot.control.BetterTrapezoidProfile.State;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionManager;
@@ -56,9 +56,9 @@ public class AlignPose extends Command {
         if (this.target != null)
             setTarget(this.target);
 
-        SmartDashboard.putData("AlignXPID", DriveConstants.AUTO_ALIGN_X_CONTROLLER);
-        SmartDashboard.putData("AlignYPID", DriveConstants.AUTO_ALIGN_Y_CONTROLLER);
-        SmartDashboard.putData("AlignThetaPID", DriveConstants.AUTO_ALIGN_THETA_CONTROLLER);
+        SmartDashboard.putData("AlignXPID", AutoAlignConstants.X_CONTROLLER);
+        SmartDashboard.putData("AlignYPID", AutoAlignConstants.Y_CONTROLLER);
+        SmartDashboard.putData("AlignThetaPID", AutoAlignConstants.ANGLE_CONTROLLER);
     }
 
     public void setTarget(Pose2d target) {
@@ -67,8 +67,8 @@ public class AlignPose extends Command {
         Pose2d start = drive.getPose();
         ChassisSpeeds speeds = drive.getRobotVelocity();
 
-        if (!withinDistance(start, target)) {
-            Commands.print("Auto align dist too far").schedule();
+        if (!withinStartingDistance(start, target)) {
+            Commands.print("Auto align dist too far. Start: " + start + " target: " + this.target).schedule();
             super.cancel();
             return;
         }
@@ -81,15 +81,20 @@ public class AlignPose extends Command {
         lastXState = new State(start.getX(), speeds.vxMetersPerSecond);
         lastYState = new State(start.getY(), speeds.vyMetersPerSecond);
 
-        DriveConstants.AUTO_ALIGN_X_CONTROLLER.reset();
-        DriveConstants.AUTO_ALIGN_Y_CONTROLLER.reset();
-        DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.reset();
+        AutoAlignConstants.X_CONTROLLER.reset();
+        AutoAlignConstants.Y_CONTROLLER.reset();
+        AutoAlignConstants.ANGLE_CONTROLLER.reset();
 
-        DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.setSetpoint(target.getRotation().getRadians());
+        AutoAlignConstants.ANGLE_CONTROLLER.setSetpoint(target.getRotation().getRadians());
     }
 
-    public boolean withinDistance(Pose2d start, Pose2d target) {
-        return start.getTranslation().getDistance(target.getTranslation()) <= DriveConstants.AUTO_ALIGN_MAX_DIST;
+    /**
+     * @param start The starting position.
+     * @param target The position to align to.
+     * @return True if the start and target poses are close enough to allow for aligning, false otherwise.
+     */
+    public boolean withinStartingDistance(Pose2d start, Pose2d target) {
+        return start.getTranslation().getDistance(target.getTranslation()) <= AutoAlignConstants.MAX_DIST;
     }
 
     public void initialize() {
@@ -120,16 +125,16 @@ public class AlignPose extends Command {
 
         Pose2d pose = drive.getPose();
 
-        lastXState = DriveConstants.AUTO_ALIGN_X_PROFILE.calculate(0.02, XStateSetpoint, lastXState);
-        lastYState = DriveConstants.AUTO_ALIGN_Y_PROFILE.calculate(0.02, YStateSetpoint, lastYState);
+        lastXState = AutoAlignConstants.X_PROFILE.calculate(0.02, XStateSetpoint, lastXState);
+        lastYState = AutoAlignConstants.Y_PROFILE.calculate(0.02, YStateSetpoint, lastYState);
 
-        DriveConstants.AUTO_ALIGN_X_CONTROLLER.setSetpoint(lastXState.position);
-        DriveConstants.AUTO_ALIGN_Y_CONTROLLER.setSetpoint(lastYState.position);
+        AutoAlignConstants.X_CONTROLLER.setSetpoint(lastXState.position);
+        AutoAlignConstants.Y_CONTROLLER.setSetpoint(lastYState.position);
 
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                DriveConstants.AUTO_ALIGN_X_CONTROLLER.calculate(pose.getX()),
-                DriveConstants.AUTO_ALIGN_Y_CONTROLLER.calculate(pose.getY()),
-                DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.calculate(pose.getRotation().getRadians()),
+                AutoAlignConstants.X_CONTROLLER.calculate(pose.getX()),
+                AutoAlignConstants.Y_CONTROLLER.calculate(pose.getY()),
+                AutoAlignConstants.ANGLE_CONTROLLER.calculate(pose.getRotation().getRadians()),
                 pose.getRotation());
 
         drive.driveRobotRelative(speeds);
@@ -137,8 +142,8 @@ public class AlignPose extends Command {
 
     @Override
     public boolean isFinished() {
-        return drive.getPose().getTranslation().getDistance(target.getTranslation()) <= DriveConstants.AUTO_ALIGN_TOLERANCE
-            && DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.atSetpoint();
+        return drive.getPose().getTranslation().getDistance(target.getTranslation()) <= AutoAlignConstants.DIST_TOLERANCE
+            && AutoAlignConstants.ANGLE_CONTROLLER.atSetpoint();
     }
 
     @Override

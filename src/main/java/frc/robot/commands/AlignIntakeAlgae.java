@@ -16,33 +16,43 @@ public class AlignIntakeAlgae extends AlignPose {
     }
 
     private Pose2d intake_pose;
+    private Pose2d starting_pose;
 
     @Override
     public void initialize() {
-        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
-            this.intake_pose = FlippingUtil.flipFieldPose(this.intake_pose);
-
         super.setTarget(this.intake_pose);
         super.initialize();
     }
 
-    public boolean canRun() {
-        Pose2d pose = drive.getPose();
+    /**
+     * Finds and caches the target algae intake pose.
+     * 
+     * @warning This must be called before initializing this command.
+     */
+    public void findTargetPose() {
+        this.starting_pose = drive.getPose();
 
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
-            pose = FlippingUtil.flipFieldPose(pose);
+            this.starting_pose = FlippingUtil.flipFieldPose(this.starting_pose);
 
-        int index = getClosestPoseIndex(pose);
+        int index = getClosestPoseIndex(this.starting_pose);
 
         this.intake_pose = FieldConstants.ALGAE_INTAKE_POSES[index];
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
             this.intake_pose = FlippingUtil.flipFieldPose(this.intake_pose);
+    }
 
-        return super.withinDistance(pose, this.intake_pose);
+    /**
+     * @return True if the alignment can run, false otherwise.
+     * 
+     * @warning findTargetPose must be called before this method.
+     */
+    public boolean canRun() {
+        return super.withinStartingDistance(this.starting_pose, this.intake_pose);
     }
 
     @Override
-    public boolean withinDistance(Pose2d start, Pose2d target) {
+    public boolean withinStartingDistance(Pose2d start, Pose2d target) {
         // canRun tests the distance.
         return true;
     }
