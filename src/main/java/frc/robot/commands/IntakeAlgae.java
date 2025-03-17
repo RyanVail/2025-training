@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LEDManager;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.LEDManager.Mode;
 import frc.robot.subsystems.intake.Intake;
 
 public class IntakeAlgae extends Command {
@@ -15,6 +17,8 @@ public class IntakeAlgae extends Command {
 
     @Override
     public void initialize() {
+        LEDManager.setMode(Mode.INTAKE_ALGAE);
+
         intake.setVoltage(IntakeConstants.ALGAE_INTAKE_VOLTAGE);
         started = false;
     }
@@ -33,6 +37,8 @@ public class IntakeAlgae extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        LEDManager.stopMode(Mode.INTAKE_ALGAE);
+
         // TODO: This is terribe but I can't find a better way to do this.
         new StallAlgae(intake).schedule();
         intake.setVoltage(0);

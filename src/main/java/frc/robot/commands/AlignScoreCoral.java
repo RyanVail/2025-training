@@ -6,7 +6,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.LEDManager;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.LEDManager.Mode;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionManager;
 
@@ -20,6 +22,8 @@ public class AlignScoreCoral extends AlignPose {
 
     @Override
     public void initialize() {
+        LEDManager.setMode(Mode.AUTO_ALIGN_CORAL);
+
         super.setCameras();
         VisionManager.resetToCameraPose();
         Pose2d pose = drive.getPose();
@@ -67,5 +71,12 @@ public class AlignScoreCoral extends AlignPose {
         }
 
         return (closest_pose << 1) | (left ? 0 : 1);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        LEDManager.stopMode(Mode.AUTO_ALIGN_CORAL);
+
+        super.end(interrupted);
     }
 }

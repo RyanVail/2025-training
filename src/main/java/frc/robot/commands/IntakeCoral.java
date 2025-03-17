@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.LEDManager.Mode;
+import frc.robot.LEDManager;
 import frc.robot.Robot;
 import frc.robot.subsystems.intake.Intake;
 
@@ -22,6 +24,8 @@ public class IntakeCoral extends Command {
 
     @Override
     public void initialize() {
+        LEDManager.setMode(Mode.INTAKE_CORAL);
+
         sensePos = Double.MAX_VALUE;
         intake.setVoltage(IntakeConstants.CORAL_INTAKE_VOLTAGE);
     }
@@ -38,6 +42,8 @@ public class IntakeCoral extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        LEDManager.stopMode(Mode.INTAKE_CORAL);
+
         intake.setVoltage(0);
     }
 }
