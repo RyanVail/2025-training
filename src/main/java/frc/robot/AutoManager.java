@@ -16,9 +16,8 @@ public class AutoManager {
     private static Drive drive;
 
     private static final String[] autos = {
-            "S0 Greedy",
-            "Test Auto",
-            "Right Auto",
+            "left Coral Auto",
+            "Rigth Coral Auto",
     };
 
     public static void configureAutos(Drive drive) {
