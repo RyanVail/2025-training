@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 
@@ -16,22 +15,36 @@ public class AlignIntakeAlgae extends AlignPose {
         super.setName("AlignIntakeAlgae");
     }
 
+    private Pose2d intake_pose;
+
     @Override
     public void initialize() {
-        Pose2d pose = (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
-                ? FlippingUtil.flipFieldPose(drive.getPose())
-                : drive.getPose();
+        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
+            this.intake_pose = FlippingUtil.flipFieldPose(this.intake_pose);
+
+        super.setTarget(this.intake_pose);
+        super.initialize();
+    }
+
+    public boolean canRun() {
+        Pose2d pose = drive.getPose();
+
+        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
+            pose = FlippingUtil.flipFieldPose(pose);
 
         int index = getClosestPoseIndex(pose);
-        Pose2d intake_pose = FieldConstants.ALGAE_INTAKE_POSES[index];
-        Commands.print("intake_pose  " + intake_pose).schedule();
 
-        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
-            intake_pose = FlippingUtil.flipFieldPose(intake_pose);
-        }
+        this.intake_pose = FieldConstants.ALGAE_INTAKE_POSES[index];
+        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
+            this.intake_pose = FlippingUtil.flipFieldPose(this.intake_pose);
 
-        super.setTarget(intake_pose);
-        super.initialize();
+        return super.withinDistance(pose, this.intake_pose);
+    }
+
+    @Override
+    public boolean withinDistance(Pose2d start, Pose2d target) {
+        // canRun tests the distance.
+        return true;
     }
 
     public int getClosestPoseIndex(Pose2d pose) {

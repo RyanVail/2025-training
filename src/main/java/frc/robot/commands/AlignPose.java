@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -66,30 +65,9 @@ public class AlignPose extends Command {
         this.target = target;
 
         Pose2d start = drive.getPose();
-
         ChassisSpeeds speeds = drive.getRobotVelocity();
 
-        // TODO: This is just for testing and should be disabled during comp.
-        if (drive.getPose().getTranslation().getDistance(start.getTranslation()) >= Units.inchesToMeters(1)) {
-            Commands.print(
-                    "Starting position (" + start
-                            + ") isn't current drive position (" + drive.getPose()
-                            + ").")
-                    .schedule();
-        }
-
-        double dist = start.getTranslation().getDistance(target.getTranslation());
-
-        // If generateTrajectory is called with two identical translations it will
-        // throw.
-        if (dist <= DriveConstants.AUTO_ALIGN_CANCEL_DIST) {
-            Commands.print("Auto align dist too close").schedule();
-            super.cancel();
-            return;
-        }
-
-        // Ensuring the target position is within an acceptable distance.
-        if (dist >= DriveConstants.AUTO_ALIGN_MAX_DIST) {
+        if (!withinDistance(start, target)) {
             Commands.print("Auto align dist too far").schedule();
             super.cancel();
             return;
@@ -108,6 +86,10 @@ public class AlignPose extends Command {
         DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.reset();
 
         DriveConstants.AUTO_ALIGN_THETA_CONTROLLER.setSetpoint(target.getRotation().getRadians());
+    }
+
+    public boolean withinDistance(Pose2d start, Pose2d target) {
+        return start.getTranslation().getDistance(target.getTranslation()) <= DriveConstants.AUTO_ALIGN_MAX_DIST;
     }
 
     public void initialize() {

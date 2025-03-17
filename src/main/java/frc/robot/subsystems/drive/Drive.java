@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
@@ -124,6 +123,10 @@ public class Drive extends SubsystemBase {
         // Commands.print(s).schedule();
 
         this.io.drive(speeds);
+    }
+
+    public void setGryoOffset(Rotation2d rotation) {
+        this.gyroOffset = rotation;
     }
 
     public void resetGyroOffset() {

@@ -128,8 +128,6 @@ public final class Constants {
                 0.23,
                 0.08,
         };
-
-        public static final double AUTO_ALIGN_CANCEL_DIST = Units.inchesToMeters(0.025);
     }
 
     public class ElevatorConstants {

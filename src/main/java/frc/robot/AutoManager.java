@@ -4,20 +4,19 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.VisionManager;
 
 public class AutoManager {
     private static SendableChooser<PathPlannerAuto> chooser = new SendableChooser<>();
-    private static Command command;
+    private static PathPlannerAuto auto;
 
     // TODO: The gyro has to be reset too.
     private static Drive drive;
 
     private static final String[] autos = {
             "left Coral Auto",
-            "Rigth Coral Auto",
+            "Right Coral Auto",
     };
 
     public static void configureAutos(Drive drive) {
@@ -36,13 +35,15 @@ public class AutoManager {
     public static void start() {
         VisionManager.noCameras();
 
-        command = chooser.getSelected();
-        if (command != null)
-            command.schedule();
+        AutoManager.auto = chooser.getSelected();
+        if (AutoManager.auto != null)
+            AutoManager.auto.schedule();
+
+        drive.setGryoOffset(auto.getStartingPose().getRotation());
     }
 
     public static void cancel() {
-        if (command != null)
-            command.cancel();
+        if (AutoManager.auto != null)
+            AutoManager.auto.cancel();
     }
 }
