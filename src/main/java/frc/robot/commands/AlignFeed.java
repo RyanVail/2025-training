@@ -13,7 +13,7 @@ import frc.robot.subsystems.vision.VisionManager;
 
 public class AlignFeed extends AlignPose {
     public AlignFeed(Drive drive) {
-        super(drive, null, AlignCamera.Back);
+        super(drive, null, AlignCamera.BACK);
         super.setName("AlignFeed");
     }
 

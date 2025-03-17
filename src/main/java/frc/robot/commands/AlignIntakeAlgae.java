@@ -11,7 +11,7 @@ import frc.robot.subsystems.drive.Drive;
 
 public class AlignIntakeAlgae extends AlignPose {
     public AlignIntakeAlgae(Drive drive) {
-        super(drive, null, AlignCamera.Front);
+        super(drive, null, AlignCamera.FRONT);
         super.setName("AlignIntakeAlgae");
     }
 

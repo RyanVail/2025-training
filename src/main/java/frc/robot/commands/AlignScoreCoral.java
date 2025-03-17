@@ -16,7 +16,7 @@ public class AlignScoreCoral extends AlignPose {
     boolean left;
 
     public AlignScoreCoral(Drive drive, boolean left) {
-        super(drive, null, AlignCamera.Front);
+        super(drive, null, AlignCamera.FRONT);
         this.left = left;
     }
 

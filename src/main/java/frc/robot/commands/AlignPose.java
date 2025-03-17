@@ -26,10 +26,10 @@ public class AlignPose extends Command {
     boolean finished;
 
     public enum AlignCamera {
-        None,
-        All,
-        Back,
-        Front,
+        NONE,
+        ALL,
+        BACK,
+        FRONT,
     };
 
     // TODO: Add and use this.
@@ -105,14 +105,11 @@ public class AlignPose extends Command {
     }
 
     public void setCameras() {
-        if (camera == AlignCamera.Back) {
-            VisionManager.onlyBack();
-        } else if (camera == AlignCamera.Front) {
-            VisionManager.onlyFront();
-        } else if (camera == AlignCamera.All) {
-            VisionManager.allCameras();
-        } else {
-            VisionManager.noCameras();
+        switch (camera) {
+            case BACK -> VisionManager.onlyBack();
+            case FRONT -> VisionManager.onlyFront();
+            case ALL -> VisionManager.allCameras();
+            case NONE -> VisionManager.noCameras();
         }
     }
 
