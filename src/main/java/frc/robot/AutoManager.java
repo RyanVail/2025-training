@@ -5,6 +5,8 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.vision.VisionManager;
 
 public class AutoManager {
@@ -13,14 +15,18 @@ public class AutoManager {
 
     // TODO: The gyro has to be reset too.
     private static Drive drive;
+    private static Elevator elevator;
+    private static EndEffector endEffector;
 
     private static final String[] autos = {
             "left Coral Auto",
             "Right Coral Auto",
     };
 
-    public static void configureAutos(Drive drive) {
+    public static void configureAutos(Drive drive, Elevator elevator, EndEffector endEffector) {
         AutoManager.drive = drive;
+        AutoManager.elevator = elevator;
+        AutoManager.endEffector = endEffector;
 
         try {
             for (String str : autos)
@@ -45,5 +51,12 @@ public class AutoManager {
     public static void cancel() {
         if (AutoManager.auto != null)
             AutoManager.auto.cancel();
+
+        VisionManager.defaultCameras();
+
+        // This is done to prevent the scenario that the elevator or end effector tries
+        // to go down while over the reef.
+        AutoManager.elevator.setSetpoint(AutoManager.elevator.getHeight());
+        AutoManager.endEffector.setSetpoint(AutoManager.endEffector.getAngle());
     }
 }

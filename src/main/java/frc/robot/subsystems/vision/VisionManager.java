@@ -76,7 +76,6 @@ public class VisionManager {
     }
 
     public static void defaultCameras() {
-        // TODO: When teleop starts this shouold switch back to only front.
         if (DriverStation.isAutonomous()) {
             noCameras();
         } else {

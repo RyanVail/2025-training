@@ -153,7 +153,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("EjectAlgae", new EjectAlgae(intake));
 
-        AutoManager.configureAutos(drive);
+        AutoManager.configureAutos(drive, elevator, endEffector);
     }
 
     /**

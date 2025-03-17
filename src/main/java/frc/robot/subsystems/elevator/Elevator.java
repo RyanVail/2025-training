@@ -31,7 +31,6 @@ public class Elevator extends SubsystemBase {
     public Elevator(ElevatorIO io) {
         lastStateSetpoint = new State();
         stateSetpoint = new State();
-
         this.io = io;
         this.pid = new PIDController(
                 ElevatorConstants.P,
