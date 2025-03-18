@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
@@ -79,7 +80,7 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        lastStateSetpoint = ElevatorConstants.PROFILE.calculate(0.02, lastStateSetpoint, stateSetpoint);
+        lastStateSetpoint = ElevatorConstants.PROFILE.calculate(Constants.LOOP_TIME, lastStateSetpoint, stateSetpoint);
 
         double height = io.getHeight();
         double voltage = pid.calculate(height, lastStateSetpoint.position);

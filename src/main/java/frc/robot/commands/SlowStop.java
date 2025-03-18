@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
 
@@ -34,8 +35,8 @@ public class SlowStop extends Command {
 
     @Override
     public void execute() {
-        lastXState = DriveConstants.SLOW_STOP_X_PROFILE.calculate(0.02, XStateSetpoint, lastXState);
-        lastYState = DriveConstants.SLOW_STOP_Y_PROFILE.calculate(0.02, YStateSetpoint, lastYState);
+        lastXState = DriveConstants.SLOW_STOP_X_PROFILE.calculate(Constants.LOOP_TIME, XStateSetpoint, lastXState);
+        lastYState = DriveConstants.SLOW_STOP_Y_PROFILE.calculate(Constants.LOOP_TIME, YStateSetpoint, lastYState);
 
         drive.driveRobotRelative(new ChassisSpeeds(lastXState.velocity, lastYState.velocity, 0.0));
     }

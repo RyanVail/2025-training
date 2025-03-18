@@ -3,6 +3,7 @@ package frc.robot.subsystems.endeffector;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.Constants;
 import frc.robot.Constants.EndEffectorConstants;
 
 public class EndEffectorIOSim implements EndEffectorIO {
@@ -22,7 +23,7 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
     @Override
     public void simulationPeriodic() {
-        sim.update(0.02);
+        sim.update(Constants.LOOP_TIME);
     }
 
     @Override

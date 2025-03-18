@@ -22,6 +22,8 @@ import frc.robot.commands.AlignPose;
 import frc.robot.control.BetterTrapezoidProfile;
 
 public final class Constants {
+        public static final double LOOP_TIME = 0.02;
+
         public class InputConstants {
                 public static final int OPERATOR_CONTROLLER_PORT = 0;
                 public static final int DRIVE_CONTROLLER_PORT = 1;

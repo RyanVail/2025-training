@@ -7,6 +7,7 @@ import com.revrobotics.sim.SparkMaxSim;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeIOSim implements IntakeIO {
@@ -61,7 +62,7 @@ public class IntakeIOSim implements IntakeIO {
 
     @Override
     public void simulationPeriodic() {
-        flywheelSim.update(0.02);
+        flywheelSim.update(Constants.LOOP_TIME);
         // flywheelSparkSim.iterate();
     }
 }

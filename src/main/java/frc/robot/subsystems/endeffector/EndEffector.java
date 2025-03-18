@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.EndEffectorConstants;
 
 public class EndEffector extends SubsystemBase {
@@ -70,7 +71,7 @@ public class EndEffector extends SubsystemBase {
         // if (setpoint <= Units.degreesToRadians(EndEffectorConstants.IDLE_ANGLE))
         //     setSetpoint(EndEffectorConstants.IDLE_ANGLE);
 
-        lastStateSetpoint = EndEffectorConstants.PROFILE.calculate(0.02, lastStateSetpoint, stateSetpoint);
+        lastStateSetpoint = EndEffectorConstants.PROFILE.calculate(Constants.LOOP_TIME, lastStateSetpoint, stateSetpoint);
 
         double angle = Units.degreesToRadians(getAngle());
         double volts = this.pid.calculate(angle, lastStateSetpoint.position);

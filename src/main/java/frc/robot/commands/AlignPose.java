@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
 import frc.robot.VisionManager;
 import frc.robot.Constants.AutoAlignConstants;
 import frc.robot.control.BetterTrapezoidProfile.State;
@@ -134,8 +135,8 @@ public class AlignPose extends Command {
 
         Pose2d pose = drive.getPose();
 
-        lastXState = AutoAlignConstants.X_PROFILE.calculate(0.02, XStateSetpoint, lastXState);
-        lastYState = AutoAlignConstants.Y_PROFILE.calculate(0.02, YStateSetpoint, lastYState);
+        lastXState = AutoAlignConstants.X_PROFILE.calculate(Constants.LOOP_TIME, XStateSetpoint, lastXState);
+        lastYState = AutoAlignConstants.Y_PROFILE.calculate(Constants.LOOP_TIME, YStateSetpoint, lastYState);
 
         AutoAlignConstants.X_CONTROLLER.setSetpoint(lastXState.position);
         AutoAlignConstants.Y_CONTROLLER.setSetpoint(lastYState.position);

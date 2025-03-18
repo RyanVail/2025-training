@@ -21,7 +21,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
     @Override
     public void simulationPeriodic() {
-        sim.update(0.02);
+        sim.update(Constants.LOOP_TIME);
     }
 
     public double getHeight() {

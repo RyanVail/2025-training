@@ -74,7 +74,8 @@ public class LEDManager {
 							System.currentTimeMillis() / 1000.0);
 					leds.setData(buffer);
 				});
-		loadingNotifier.startPeriodic(0.02);
+
+		loadingNotifier.startPeriodic(Constants.LOOP_TIME);
 	}
 
 	public static void setMode(Mode mode) {
