@@ -39,7 +39,8 @@ public class AlignPose extends Command {
         // The rotational distance tolerance in radians.
         double rot_dist;
 
-        // The target velocity at the pose. Only the translational values of this are used.
+        // The target velocity at the pose. Only the translational values of this are
+        // used.
         ChassisSpeeds vel;
 
         public Constraints(double dist, double rot_dist, ChassisSpeeds vel) {
@@ -102,9 +103,10 @@ public class AlignPose extends Command {
     }
 
     /**
-     * @param start The starting position.
+     * @param start  The starting position.
      * @param target The position to align to.
-     * @return True if the start and target poses are close enough to allow for aligning, false otherwise.
+     * @return True if the start and target poses are close enough to allow for
+     *         aligning, false otherwise.
      */
     public boolean withinStartingDistance(Pose2d start, Pose2d target) {
         return start.getTranslation().getDistance(target.getTranslation()) <= AutoAlignConstants.MAX_DIST;
@@ -141,19 +143,18 @@ public class AlignPose extends Command {
         AutoAlignConstants.X_CONTROLLER.setSetpoint(lastXState.position);
         AutoAlignConstants.Y_CONTROLLER.setSetpoint(lastYState.position);
 
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+        // TODO: It might be better for this to be gyro relative once the gyro offset during auto starts working.
+        drive.driveVisionRelative(
                 AutoAlignConstants.X_CONTROLLER.calculate(pose.getX()),
                 AutoAlignConstants.Y_CONTROLLER.calculate(pose.getY()),
-                AutoAlignConstants.ANGLE_CONTROLLER.calculate(pose.getRotation().getRadians()),
-                pose.getRotation());
-
-        drive.driveRobotRelative(speeds);
+                AutoAlignConstants.ANGLE_CONTROLLER.calculate(pose.getRotation().getRadians()));
     }
 
     @Override
     public boolean isFinished() {
-        return drive.getPose().getTranslation().getDistance(target.pose.getTranslation()) <= this.target.constraints.dist
-            && AutoAlignConstants.ANGLE_CONTROLLER.atSetpoint();
+        return drive.getPose().getTranslation()
+                .getDistance(target.pose.getTranslation()) <= this.target.constraints.dist
+                && AutoAlignConstants.ANGLE_CONTROLLER.atSetpoint();
     }
 
     @Override

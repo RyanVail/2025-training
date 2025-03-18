@@ -118,6 +118,22 @@ public class Drive extends SubsystemBase {
         this.io.drive(speeds);
     }
 
+    public void driveGyroRelative(double x, double y, double omega) {
+        this.driveGyroRelative(new ChassisSpeeds(x, y, omega));
+    }
+
+    public void driveGyroRelative(ChassisSpeeds speeds) {
+        this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, this.getGyroRotation()));
+    }
+
+    public void driveVisionRelative(double x, double y, double omega) {
+        this.driveVisionRelative(new ChassisSpeeds(x, y, omega));
+    }
+
+    public void driveVisionRelative(ChassisSpeeds speeds) {
+        this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, this.getPose().getRotation()));
+    }
+
     public void setGryoOffset(Rotation2d rotation) {
         this.gyroOffset = rotation;
     }

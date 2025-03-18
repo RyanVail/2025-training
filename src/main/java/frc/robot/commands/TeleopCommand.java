@@ -82,14 +82,10 @@ public class TeleopCommand extends Command {
             }
         }
 
-        // TODO: Add something to do this.
-        drive.driveRobotRelative(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                        new ChassisSpeeds(
-                                -x * DriveConstants.MAX_SPEED,
-                                -y * DriveConstants.MAX_SPEED,
-                                yaw * DriveConstants.MAX_SPEED),
-                        drive.getGyroRotation()));
+        drive.driveGyroRelative(
+                -x * DriveConstants.MAX_SPEED,
+                -y * DriveConstants.MAX_SPEED,
+                yaw * DriveConstants.MAX_SPEED);
 
         last_x = x;
         last_y = y;
