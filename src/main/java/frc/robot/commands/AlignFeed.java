@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.VisionManager;
+import frc.robot.Constants.AutoAlignConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 
@@ -33,7 +34,7 @@ public class AlignFeed extends AlignPose {
             target = FlippingUtil.flipFieldPose(target);
         }
 
-        setTarget(target);
+        setTarget(new Target(target, AutoAlignConstants.FEEDER_ALIGN_CONSTRAINTS));
         super.initialize();
     }
 }

@@ -20,7 +20,7 @@ public class AlignIntakeAlgae extends AlignPose {
 
     @Override
     public void initialize() {
-        super.setTarget(this.intake_pose);
+        super.setTarget(new Target(this.intake_pose));
         super.initialize();
     }
 

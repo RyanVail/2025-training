@@ -43,7 +43,7 @@ public class AutoManager {
         if (AutoManager.auto != null)
             AutoManager.auto.schedule();
 
-        // TODO: This has to be cached somewhere.
+        // TODO: This    has to be cached somewhere.
         // drive.setGryoOffset(auto.getStartingPose().getRotation());
     }
 

@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.VisionManager;
@@ -14,7 +13,7 @@ import frc.robot.subsystems.drive.Drive;
 
 public class AlignPose extends Command {
     Drive drive;
-    Pose2d target;
+    Target target;
     AlignCamera camera;
 
     State lastXState;
@@ -32,51 +31,63 @@ public class AlignPose extends Command {
         FRONT,
     };
 
-    // TODO: Add and use this.
-    // public class Target {
-    //     // The target pose.
-    //     Pose2d pose;
+    public static class Constraints {
+        // The translational distance tolerance in meters.
+        double dist;
 
-    //     // The minimum required distance from the target.
-    //     double dist;
+        // The rotational distance tolerance in radians.
+        double rot_dist;
 
-    //     // The minimum required distance from the rotation.
-    //     double rot_dist;
+        // The target velocity at the pose. Only the translational values of this are used.
+        ChassisSpeeds vel;
 
-    //     // The target velocity at the pose.
-    //     double vel;
-    // };
+        public Constraints(double dist, double rot_dist, ChassisSpeeds vel) {
+            this.dist = dist;
+            this.rot_dist = rot_dist;
+            this.vel = vel;
+        }
+    }
 
-    public AlignPose(Drive drive, Pose2d target, AlignCamera camera) {
+    public static class Target {
+        private Pose2d pose;
+        private Constraints constraints;
+
+        public Target(Pose2d pose) {
+            this.pose = pose;
+            this.constraints = AutoAlignConstants.DEFAULT_CONSTRAINTS;
+        }
+
+        public Target(Pose2d pose, Constraints constraints) {
+            this.pose = pose;
+            this.constraints = constraints;
+        }
+    };
+
+    public AlignPose(Drive drive, Target target, AlignCamera camera) {
         addRequirements(drive);
-        this.target = target;
         this.drive = drive;
         this.camera = camera;
 
-        if (this.target != null)
-            setTarget(this.target);
-
-        SmartDashboard.putData("AlignXPID", AutoAlignConstants.X_CONTROLLER);
-        SmartDashboard.putData("AlignYPID", AutoAlignConstants.Y_CONTROLLER);
-        SmartDashboard.putData("AlignThetaPID", AutoAlignConstants.ANGLE_CONTROLLER);
+        if (target != null)
+            setTarget(target);
     }
 
-    public void setTarget(Pose2d target) {
+    public void setTarget(Target target) {
         this.target = target;
 
         Pose2d start = drive.getPose();
         ChassisSpeeds speeds = drive.getRobotVelocity();
 
-        if (!withinStartingDistance(start, target)) {
-            Commands.print("Auto align dist too far. Start: " + start + " target: " + this.target).schedule();
+        if (!withinStartingDistance(start, target.pose)) {
+            Commands.print("Auto align dist too far. Start: " + start + " target: " + this.target.pose).schedule();
             super.cancel();
             return;
         }
 
-        Logger.recordOutput("AligningTo", target);
+        Logger.recordOutput("AligningTo", target.pose);
 
-        XStateSetpoint = new State(target.getX(), 0);
-        YStateSetpoint = new State(target.getY(), 0);
+        XStateSetpoint = new State(target.pose.getX(), target.constraints.vel.vxMetersPerSecond);
+        YStateSetpoint = new State(target.pose.getY(), target.constraints.vel.vyMetersPerSecond);
 
         lastXState = new State(start.getX(), speeds.vxMetersPerSecond);
         lastYState = new State(start.getY(), speeds.vyMetersPerSecond);
@@ -85,7 +96,8 @@ public class AlignPose extends Command {
         AutoAlignConstants.Y_CONTROLLER.reset();
         AutoAlignConstants.ANGLE_CONTROLLER.reset();
 
-        AutoAlignConstants.ANGLE_CONTROLLER.setSetpoint(target.getRotation().getRadians());
+        AutoAlignConstants.ANGLE_CONTROLLER.setSetpoint(target.pose.getRotation().getRadians());
+        AutoAlignConstants.ANGLE_CONTROLLER.setTolerance(target.constraints.rot_dist);
     }
 
     /**
@@ -139,7 +151,7 @@ public class AlignPose extends Command {
 
     @Override
     public boolean isFinished() {
-        return drive.getPose().getTranslation().getDistance(target.getTranslation()) <= AutoAlignConstants.DIST_TOLERANCE
+        return drive.getPose().getTranslation().getDistance(target.pose.getTranslation()) <= this.target.constraints.dist
             && AutoAlignConstants.ANGLE_CONTROLLER.atSetpoint();
     }
 

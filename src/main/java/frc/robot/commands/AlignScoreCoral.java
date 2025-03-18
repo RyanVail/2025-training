@@ -48,7 +48,7 @@ public class AlignScoreCoral extends AlignPose {
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
             align_pose = FlippingUtil.flipFieldPose(align_pose);
 
-        setTarget(align_pose);
+        setTarget(new Target(align_pose));
         super.initialize();
     }
 

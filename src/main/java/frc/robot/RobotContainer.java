@@ -21,6 +21,7 @@ import frc.robot.commands.BeaterBarSpin;
 import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.IntakeCoral;
+import frc.robot.commands.SlowStop;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.WaitController;
 import frc.robot.subsystems.beaterbar.BeaterBar;
@@ -91,6 +92,10 @@ public class RobotContainer {
         NamedCommands.registerCommand(
                 "KeepStopDrive",
                 Commands.run(() -> drive.stop()));
+
+        NamedCommands.registerCommand(
+                "SlowStop",
+                new SlowStop(drive));
 
         NamedCommands.registerCommand(
                 "ElevatorL4",

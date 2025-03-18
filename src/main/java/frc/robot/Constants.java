@@ -14,9 +14,11 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import frc.robot.commands.AlignPose;
 import frc.robot.control.BetterTrapezoidProfile;
 
 public final class Constants {
@@ -95,6 +97,11 @@ public final class Constants {
                                 0.23,
                                 0.08,
                 };
+
+                public static final BetterTrapezoidProfile SLOW_STOP_X_PROFILE = new BetterTrapezoidProfile(
+                                new BetterTrapezoidProfile.Constraints(3.5, 2.0));
+                public static final BetterTrapezoidProfile SLOW_STOP_Y_PROFILE = new BetterTrapezoidProfile(
+                                new BetterTrapezoidProfile.Constraints(3.5, 2.0));
         }
 
         public class AutoAlignConstants {
@@ -112,13 +119,21 @@ public final class Constants {
                 // 0).
                 public static final double MAX_DIST = Units.feetToMeters(10.0);
 
-                public static final double DIST_TOLERANCE = Units.inchesToMeters(0.92);
-                public static final double ANGLE_TOLERANCE = Units.degreesToRadians(0.5);
+                public static final AlignPose.Constraints DEFAULT_CONSTRAINTS = new AlignPose.Constraints (
+                        Units.inchesToMeters(0.85),
+                        Units.degreesToRadians(0.5),
+                        new ChassisSpeeds(0.0, 0.0, 0.0)
+                );
 
                 static {
                         ANGLE_CONTROLLER.enableContinuousInput(0, Units.degreesToRadians(360.0));
-                        ANGLE_CONTROLLER.setTolerance(ANGLE_TOLERANCE);
                 }
+
+                public static final AlignPose.Constraints FEEDER_ALIGN_CONSTRAINTS = new AlignPose.Constraints (
+                        Units.inchesToMeters(2.0),
+                        Units.degreesToRadians(1.0),
+                        new ChassisSpeeds(0.5, 0.5, 0.0)
+                );
         }
 
         public class ElevatorConstants {

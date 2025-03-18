@@ -110,7 +110,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "KeepStopDrive"
+                        "name": "AlignFeeder"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "SlowStop"
                       }
                     }
                   ]
@@ -225,7 +231,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "KeepStopDrive"
+                        "name": "AlignFeeder"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "SlowStop"
                       }
                     }
                   ]
