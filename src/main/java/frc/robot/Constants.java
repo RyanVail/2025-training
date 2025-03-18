@@ -98,9 +98,9 @@ public final class Constants {
         }
 
         public class AutoAlignConstants {
-                public static final PIDController X_CONTROLLER = new PIDController(6.2, 0.0, 0.0);
-                public static final PIDController Y_CONTROLLER = new PIDController(6.2, 0.0, 0.0);
-                public static final PIDController ANGLE_CONTROLLER = new PIDController(6.0, 0.0, 0.0);
+                public static final PIDController X_CONTROLLER = new PIDController(6.3, 0.0, 0.0);
+                public static final PIDController Y_CONTROLLER = new PIDController(6.3, 0.0, 0.0);
+                public static final PIDController ANGLE_CONTROLLER = new PIDController(6.2, 0.0, 0.0);
 
                 public static final BetterTrapezoidProfile X_PROFILE = new BetterTrapezoidProfile(
                                 new BetterTrapezoidProfile.Constraints(3.5, 2.0));
@@ -112,7 +112,7 @@ public final class Constants {
                 // 0).
                 public static final double MAX_DIST = Units.feetToMeters(10.0);
 
-                public static final double DIST_TOLERANCE = Units.inchesToMeters(0.7);
+                public static final double DIST_TOLERANCE = Units.inchesToMeters(0.92);
                 public static final double ANGLE_TOLERANCE = Units.degreesToRadians(0.5);
 
                 static {
@@ -221,8 +221,8 @@ public final class Constants {
                                 LAYOUT.getTagPose(19).orElse(new Pose3d()).toPose2d().getTranslation(),
                 };
 
-                public static Translation2d LEFT_CORAL_SCORE_OFFSET = new Translation2d(0.072, 0.704);
-                public static Translation2d RIGHT_CORAL_SCORE_OFFSET = new Translation2d(0.363, 0.549);
+                public static Translation2d LEFT_CORAL_SCORE_OFFSET = new Translation2d(0.035, 0.779);
+                public static Translation2d RIGHT_CORAL_SCORE_OFFSET = new Translation2d(0.317, 0.605);
                 public static Rotation2d BASE_CORAL_SCORE_ROTATION = new Rotation2d(Units.degreesToRadians(-120));
 
                 public static final Pose2d[] CORAL_SCORE_POSES = new Pose2d[12];

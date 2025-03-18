@@ -1,9 +1,13 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.LEDManager;
@@ -34,10 +38,11 @@ public class AlignScoreCoral extends AlignPose {
 
         int index = getCoralScoreIndex(pose);
 
-        // Logger.recordOutput (
-        //     "_AlignOffset",
-        //     FieldConstants.REEF_TAG_POSITIONS[0].minus(pose.getTranslation())
-        // );
+        Logger.recordOutput (
+            "_AlignOffset",
+            FieldConstants.REEF_TAG_POSITIONS[index / 2].minus(pose.getTranslation())
+                .rotateBy(new Rotation2d(Units.degreesToRadians(60 * (index / 2))))
+        );
 
         Pose2d align_pose = FieldConstants.CORAL_SCORE_POSES[index];
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)

@@ -47,7 +47,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "S-EF"
+                        "pathName": "S-IJ"
                       }
                     },
                     {
@@ -85,7 +85,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.4
                       }
                     },
                     {
@@ -104,7 +104,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "EFS-LeftCS"
+                        "pathName": "IJS-LeftCS"
                       }
                     },
                     {
@@ -162,7 +162,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RightCS-CD"
+                        "pathName": "LeftCS-KL"
                       }
                     },
                     {
@@ -219,7 +219,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "CD-LeftCS"
+                        "pathName": "KL-LeftCS"
                       }
                     },
                     {
@@ -277,7 +277,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RightCS-CD"
+                        "pathName": "LeftCS-KL"
                       }
                     },
                     {
@@ -309,15 +309,9 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "EjectCoral"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
-                  "pathName": "CD-LeftCS"
+                  "pathName": "KL-LeftCS"
                 }
               },
               {
