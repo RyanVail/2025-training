@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,9 +12,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.InputConstants;
 import frc.robot.commands.AlignFeed;
 import frc.robot.commands.AlignIntakeAlgae;
+import frc.robot.commands.AlignPose;
 import frc.robot.commands.EjectAlgae;
 import frc.robot.commands.EjectCoral;
 import frc.robot.commands.AlignScoreCoral;
@@ -24,6 +27,8 @@ import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.SlowStop;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.WaitController;
+import frc.robot.commands.AlignPose.AlignCamera;
+import frc.robot.commands.AlignScoreCoral.Side;
 import frc.robot.subsystems.beaterbar.BeaterBar;
 import frc.robot.subsystems.beaterbar.BeaterBarIOFlex;
 import frc.robot.subsystems.beaterbar.BeaterBarIOSim;
@@ -103,11 +108,11 @@ public class RobotContainer {
 
         NamedCommands.registerCommand(
                 "AlignLeft",
-                new AlignScoreCoral(drive, true));
+                new AlignScoreCoral(drive, Side.LEFT));
 
         NamedCommands.registerCommand(
                 "AlignRight",
-                new AlignScoreCoral(drive, false));
+                new AlignScoreCoral(drive, Side.RIGHT));
 
         NamedCommands.registerCommand(
                 "EffectorDown",
@@ -239,8 +244,8 @@ public class RobotContainer {
         if (Robot.isReal())
             driverHID.button(XboxController.Button.kY.value).onTrue(new EjectAlgae(intake));
 
-        operatorHID.povLeft().onTrue(new AlignScoreCoral(drive, true));
-        operatorHID.povRight().onTrue(new AlignScoreCoral(drive, false));
+        operatorHID.povLeft().onTrue(new AlignScoreCoral(drive, Side.LEFT));
+        operatorHID.povRight().onTrue(new AlignScoreCoral(drive, Side.RIGHT));
 
         if (Robot.isReal()) {
             driverHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
@@ -289,45 +294,60 @@ public class RobotContainer {
                         .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                 EndEffectorConstants.PROCESSOR_ANGLE)));
 
-        // TODO: Change the other one too.
-        AlignIntakeAlgae algae_intake = new AlignIntakeAlgae(drive);
+        AlignIntakeAlgae high_algae_intake = new AlignIntakeAlgae(drive);
         operatorHID.axisMagnitudeGreaterThan(XboxController.Axis.kRightTrigger.value,
                 InputConstants.TRIGGER_THRESHOLD)
                 .onTrue(
                         Commands.either(
-                                Commands.parallel(
-                                        new ElevatorSetHeight(elevator,
-                                                ElevatorConstants.ALGAE_LEVEL_HEIGHTS[1]),
-                                        new EndEffectorSetAngle(endEffector,
-                                                elevator,
-                                                EndEffectorConstants.ALGAE_INTAKE_ANGLE))
+                                Commands.deadline(
+                                        Commands.parallel(
+                                                new ElevatorSetHeight(
+                                                        elevator,
+                                                        ElevatorConstants.ALGAE_LEVEL_HEIGHTS[1]),
+                                                new EndEffectorSetAngle(
+                                                        endEffector,
+                                                        elevator,
+                                                        EndEffectorConstants.ALGAE_INTAKE_ANGLE)),
+                                        new SlowStop(drive))
                                         .andThen(
                                                 Commands.deadline(
                                                         new IntakeAlgae(intake),
-                                                        algae_intake)),
+                                                        high_algae_intake)),
                                 Commands.none(),
                                 () -> {
-                                    algae_intake.findTargetPose();
-                                    return algae_intake.canRun();
+                                    high_algae_intake.findTargetPose();
+                                    return high_algae_intake.canRun();
                                 }));
 
+        AlignIntakeAlgae low_algae_intake = new AlignIntakeAlgae(drive);
         operatorHID.button(XboxController.Button.kRightBumper.value)
                 .onTrue(
-                        Commands.parallel(
-                                new ElevatorSetHeight(elevator,
-                                        ElevatorConstants.ALGAE_LEVEL_HEIGHTS[0]),
-                                new EndEffectorSetAngle(endEffector, elevator,
-                                        EndEffectorConstants.ALGAE_INTAKE_ANGLE))
-                                .andThen(
-                                        Commands.deadline(
-                                                new IntakeAlgae(intake),
-                                                new AlignIntakeAlgae(
-                                                        drive))));
+                        Commands.either(
+                                Commands.deadline(
+                                        Commands.parallel(
+                                                new ElevatorSetHeight(
+                                                        elevator,
+                                                        ElevatorConstants.ALGAE_LEVEL_HEIGHTS[0]),
+                                                new EndEffectorSetAngle(
+                                                        endEffector,
+                                                        elevator,
+                                                        EndEffectorConstants.ALGAE_INTAKE_ANGLE)),
+                                        new SlowStop(drive))
+                                        .andThen(
+                                                Commands.deadline(
+                                                        new IntakeAlgae(intake),
+                                                        low_algae_intake)),
+                                Commands.none(),
+                                () -> {
+                                    low_algae_intake.findTargetPose();
+                                    return low_algae_intake.canRun();
+                                }));
 
-        /*
-         * Set the drive subsystem to use the command returned by getTeleopCommand
-         * if no other command is scheduled for the subsystem
-         */
-        drive.setDefaultCommand(drive.getTeleopCommand(elevator, (Robot.isReal()) ? driverHID : operatorHID));
+        drive.setDefaultCommand(
+                Commands.either(
+                        drive.getTeleopCommand(elevator,
+                                (Robot.isReal()) ? driverHID : operatorHID),
+                        new SlowStop(drive),
+                        () -> DriverStation.isTeleop()));
     }
 }

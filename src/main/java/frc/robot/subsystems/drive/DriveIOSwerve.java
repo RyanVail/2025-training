@@ -11,8 +11,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.robot.Constants;
 import swervelib.SwerveDrive;
-import swervelib.SwerveModule;
 import swervelib.parser.SwerveParser;
 
 public class DriveIOSwerve implements DriveIO {
@@ -29,10 +29,13 @@ public class DriveIOSwerve implements DriveIO {
         swerveDrive.setCosineCompensator(false);
         swerveDrive.setHeadingCorrection(false);
 
+        swerveDrive.setOdometryPeriod(Constants.LOOP_TIME);
 
-        for (SwerveModule mod : swerveDrive.getModules()) {
-            mod.setAntiJitter(false);
-        }
+        // TODO: Is this required?
+        // swerveDrive.setAutoCenteringModules(true);
+        // for (SwerveModule mod : swerveDrive.getModules()) {
+        //     mod.setAntiJitter(false);
+        // }
     }
 
     @Override
@@ -52,7 +55,6 @@ public class DriveIOSwerve implements DriveIO {
 
     @Override
     public void periodic() {
-        swerveDrive.updateOdometry();
     }
 
     @Override
@@ -79,13 +81,11 @@ public class DriveIOSwerve implements DriveIO {
     }
 
     @Override
-    public Rotation2d getGyroRotation()
-    {
+    public Rotation2d getGyroRotation() {
         return swerveDrive.getGyroRotation3d().toRotation2d();
     }
 
-    public ChassisSpeeds getRobotVelocity()
-    {
+    public ChassisSpeeds getRobotVelocity() {
         return swerveDrive.getRobotVelocity();
     }
 }

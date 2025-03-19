@@ -57,7 +57,7 @@ public class IntakeIOSim implements IntakeIO {
     }
 
     public double getPosition() {
-        return 0.0; // TODO: Implement.
+        return 0.0;
     }
 
     @Override

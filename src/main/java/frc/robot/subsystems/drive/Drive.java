@@ -54,7 +54,7 @@ public class Drive extends SubsystemBase {
                 this::getPose,
                 this::resetPose,
                 this::getRobotRelativeSpeeds,
-                (speeds, feedforwards) -> driveRobotRelative(speeds),
+                (speeds) -> driveRobotRelative(speeds),
                 DriveConstants.PPDriveController,
                 config,
                 () -> {

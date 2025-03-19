@@ -16,17 +16,16 @@ public class SlowStop extends Command {
     public void initialize() {
         ChassisSpeeds speeds = drive.getRobotVelocity();
 
-        DriveConstants.X_SLEW_RATE.reset(speeds.vxMetersPerSecond);
-        DriveConstants.Y_SLEW_RATE.reset(speeds.vyMetersPerSecond);
+        DriveConstants.SLOW_STOP_X_SLEW.reset(speeds.vxMetersPerSecond);
+        DriveConstants.SLOW_STOP_Y_SLEW.reset(speeds.vyMetersPerSecond);
     }
 
     @Override
     public void execute() {
-        ChassisSpeeds speeds = drive.getRobotVelocity();
         drive.driveRobotRelative (
             new ChassisSpeeds (
-                DriveConstants.X_SLEW_RATE.calculate(0.0),
-                DriveConstants.Y_SLEW_RATE.calculate(0.0),
+                DriveConstants.SLOW_STOP_X_SLEW.calculate(0.0),
+                DriveConstants.SLOW_STOP_Y_SLEW.calculate(0.0),
                 0.0
             )
         );

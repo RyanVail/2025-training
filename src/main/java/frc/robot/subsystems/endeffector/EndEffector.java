@@ -82,6 +82,7 @@ public class EndEffector extends SubsystemBase {
 
         realLigament.setAngle(EndEffectorConstants.VISUALIZATION_BASE_ANGLE + getAngle());
 
+        Logger.recordOutput(LPREFIX + "ProfileSetpoint", lastStateSetpoint.position);
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
         Logger.recordOutput(LPREFIX + "Volts", volts);
         Logger.recordOutput(LPREFIX + "Angle", angle);

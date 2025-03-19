@@ -58,12 +58,12 @@ public final class Constants {
         }
 
         public class DriveConstants {
-                public static final double MAX_SPEED = Units.feetToMeters(15);
+                public static final double MAX_SPEED = Units.feetToMeters(14.5);
                 public static final double DEADZONE = 0.08;
-
+                
                 public static final PPHolonomicDriveController PPDriveController = new PPHolonomicDriveController(
-                                new PIDConstants(4.0, 0.0, 0.0),
-                                new PIDConstants(3.0, 0.0, 0.0));
+                                new PIDConstants(1.72, 0.0, 0.0),
+                                new PIDConstants(0.82, 0.0, 0.0));
 
                 public static final SlewRateLimiter[] X_SLEW_LIMITERS = {
                                 new SlewRateLimiter(0.8),
@@ -100,8 +100,8 @@ public final class Constants {
                                 0.08,
                 };
 
-                public static final SlewRateLimiter X_SLEW_RATE = new SlewRateLimiter(0.4);
-                public static final SlewRateLimiter Y_SLEW_RATE = new SlewRateLimiter(0.4);
+                public static final SlewRateLimiter SLOW_STOP_X_SLEW = new SlewRateLimiter(1.0);
+                public static final SlewRateLimiter SLOW_STOP_Y_SLEW = new SlewRateLimiter(1.0);
         }
 
         public class AutoAlignConstants {
@@ -306,14 +306,14 @@ public final class Constants {
                 public static final double I = 0.0;
                 public static final double D = 0.0;
 
-                public static final double S = 0.7;
+                public static final double S = 0.62;
                 public static final double G = 0.08;
                 public static final double V = 0.0;
 
                 public static final TrapezoidProfile PROFILE = new TrapezoidProfile(
                                 new Constraints(
-                                                Units.degreesToRadians(750),
-                                                Units.degreesToRadians(450)));
+                                                Units.degreesToRadians(2550),
+                                                Units.degreesToRadians(1500)));
 
                 public static final double LENGTH = Units.inchesToMeters(8);
 
