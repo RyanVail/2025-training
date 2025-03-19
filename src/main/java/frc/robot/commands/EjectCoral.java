@@ -24,8 +24,6 @@ public class EjectCoral extends Command {
 
         senseTime = 0;
         intake.setVoltage(IntakeConstants.CORAL_SCORE_VOLTAGE);
-
-        Commands.print("Eject Coral inited").schedule();
     }
 
     @Override

@@ -1,9 +1,13 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
@@ -20,6 +24,9 @@ public class AlignIntakeAlgae extends AlignPose {
 
     @Override
     public void initialize() {
+        if (this.intake_pose == null)
+            return;
+
         super.setTarget(new Target(this.intake_pose));
         super.initialize();
     }
@@ -36,6 +43,12 @@ public class AlignIntakeAlgae extends AlignPose {
             this.starting_pose = FlippingUtil.flipFieldPose(this.starting_pose);
 
         int index = getClosestPoseIndex(this.starting_pose);
+
+        Logger.recordOutput(
+                "AlgaeIntakeOffset",
+                FieldConstants.REEF_TAG_POSITIONS[index].minus(
+                        this.starting_pose.getTranslation())
+                        .rotateBy(new Rotation2d(Units.degreesToRadians(60 * index))));
 
         this.intake_pose = FieldConstants.ALGAE_INTAKE_POSES[index];
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)

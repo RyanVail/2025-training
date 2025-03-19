@@ -100,16 +100,14 @@ public final class Constants {
                                 0.08,
                 };
 
-                public static final BetterTrapezoidProfile SLOW_STOP_X_PROFILE = new BetterTrapezoidProfile(
-                                new BetterTrapezoidProfile.Constraints(3.5, 2.0));
-                public static final BetterTrapezoidProfile SLOW_STOP_Y_PROFILE = new BetterTrapezoidProfile(
-                                new BetterTrapezoidProfile.Constraints(3.5, 2.0));
+                public static final SlewRateLimiter X_SLEW_RATE = new SlewRateLimiter(0.4);
+                public static final SlewRateLimiter Y_SLEW_RATE = new SlewRateLimiter(0.4);
         }
 
         public class AutoAlignConstants {
-                public static final PIDController X_CONTROLLER = new PIDController(6.3, 0.0, 0.0);
-                public static final PIDController Y_CONTROLLER = new PIDController(6.3, 0.0, 0.0);
-                public static final PIDController ANGLE_CONTROLLER = new PIDController(6.2, 0.0, 0.0);
+                public static final PIDController X_CONTROLLER = new PIDController(6.1, 0.0, 0.0);
+                public static final PIDController Y_CONTROLLER = new PIDController(6.1, 0.0, 0.0);
+                public static final PIDController ANGLE_CONTROLLER = new PIDController(6.0, 0.0, 0.0);
 
                 public static final BetterTrapezoidProfile X_PROFILE = new BetterTrapezoidProfile(
                                 new BetterTrapezoidProfile.Constraints(3.5, 2.0));
@@ -122,7 +120,7 @@ public final class Constants {
                 public static final double MAX_DIST = Units.feetToMeters(10.0);
 
                 public static final AlignPose.Constraints DEFAULT_CONSTRAINTS = new AlignPose.Constraints (
-                        Units.inchesToMeters(0.85),
+                        Units.inchesToMeters(0.67),
                         Units.degreesToRadians(0.5),
                         new ChassisSpeeds(0.0, 0.0, 0.0)
                 );
@@ -132,9 +130,9 @@ public final class Constants {
                 }
 
                 public static final AlignPose.Constraints FEEDER_ALIGN_CONSTRAINTS = new AlignPose.Constraints (
-                        Units.inchesToMeters(2.0),
+                        Units.inchesToMeters(4.0),
                         Units.degreesToRadians(1.0),
-                        new ChassisSpeeds(0.5, 0.5, 0.0)
+                        new ChassisSpeeds(2.0, 2.0, 0.0)
                 );
         }
 
@@ -262,7 +260,7 @@ public final class Constants {
                         }
                 }
 
-                public static Translation2d ALGAE_INTAKE_OFFSET = new Translation2d(0.186, 0.536);
+                public static Translation2d ALGAE_INTAKE_OFFSET = new Translation2d(0.154, 0.559);
 
                 public static final Pose2d[] ALGAE_INTAKE_POSES = new Pose2d[6];
 
@@ -284,7 +282,7 @@ public final class Constants {
                                 LAYOUT.getTagPose(13).orElse(new Pose3d()).toPose2d(),
                 };
 
-                public static final Translation2d FEEDER_INTAKE_OFFSET = new Translation2d(0.349, 0.579);
+                public static final Translation2d FEEDER_INTAKE_OFFSET = new Translation2d(0.020, 0.482);
 
                 public static final Pose2d[] FEEDER_POSES = new Pose2d[2];
 

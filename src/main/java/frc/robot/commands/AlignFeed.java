@@ -30,9 +30,10 @@ public class AlignFeed extends AlignPose {
 
         Pose2d target = pose.nearest(List.of(FieldConstants.FEEDER_POSES));
 
-        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
+        if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
             target = FlippingUtil.flipFieldPose(target);
-        }
+
+        // Logger.recordOutput("FeederOffset", FieldConstants.FEEDER_TAG_POSES[0].minus(pose));
 
         setTarget(new Target(target, AutoAlignConstants.FEEDER_ALIGN_CONSTRAINTS));
         super.initialize();
