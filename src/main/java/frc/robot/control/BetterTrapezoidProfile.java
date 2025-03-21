@@ -286,6 +286,7 @@ public class BetterTrapezoidProfile extends TrapezoidProfile {
    * @param goal The desired state when the profile is complete.
    */
   private static boolean shouldFlipAcceleration(State initial, State goal) {
+    if(initial == null) return false;
     return initial.position > goal.position;
   }
 

@@ -23,6 +23,7 @@ import frc.robot.control.BetterTrapezoidProfile;
 
 public final class Constants {
         public static final double LOOP_TIME = 0.02;
+        public static final boolean ZERO_ENCODERS = false;
 
         public class InputConstants {
                 public static final int OPERATOR_CONTROLLER_PORT = 0;
@@ -105,14 +106,14 @@ public final class Constants {
         }
 
         public class AutoAlignConstants {
-                public static final PIDController X_CONTROLLER = new PIDController(6.1, 0.0, 0.0);
-                public static final PIDController Y_CONTROLLER = new PIDController(6.1, 0.0, 0.0);
+                public static final PIDController X_CONTROLLER = new PIDController(5.2, 0.0, 0.0);
+                public static final PIDController Y_CONTROLLER = new PIDController(5.2, 0.0, 0.0);
                 public static final PIDController ANGLE_CONTROLLER = new PIDController(6.0, 0.0, 0.0);
 
                 public static final BetterTrapezoidProfile X_PROFILE = new BetterTrapezoidProfile(
-                                new BetterTrapezoidProfile.Constraints(3.5, 2.0));
+                                new BetterTrapezoidProfile.Constraints(3.2, 1.4));
                 public static final BetterTrapezoidProfile Y_PROFILE = new BetterTrapezoidProfile(
-                                new BetterTrapezoidProfile.Constraints(3.5, 2.0));
+                                new BetterTrapezoidProfile.Constraints(3.2, 1.4));
 
                 // The distance past which auto alignment will not take place. This is meant to
                 // prevent acidental auto aligns and auto aligns to incorrect positions like (0,
@@ -191,7 +192,7 @@ public final class Constants {
                 // because it was configured wrong.
                 public static final double VISUALIZATION_HEIGHT_MUL = 1.0 + (1.0 / 3.0);
 
-                public static final double BARGE_HEIGHT = Units.inchesToMeters(22.25);
+                public static final double BARGE_HEIGHT = Units.inchesToMeters(22.5);
         }
 
         public class VisionConstants {
@@ -221,6 +222,8 @@ public final class Constants {
                                 Units.inchesToMeters(0.0),
                                 Units.inchesToMeters(37.167),
                                 new Rotation3d(0, Units.degreesToRadians(180 - 20), 0));
+
+                public static final double MAX_SECONDS = 0.8;
         }
 
         public class FieldConstants {
@@ -342,7 +345,7 @@ public final class Constants {
 
                 public static final double INTAKE_ANGLE = 208;
                 public static final double ALGAE_INTAKE_ANGLE = 190;
-                public static final double ALGAE_BARGE_EJECT_ANGLE = 142;
+                public static final double ALGAE_BARGE_EJECT_ANGLE = 120;
 
                 public static final double REQUIRED_ELEVATOR_HEIGHT = 0.037;
                 public static final double MIN_ELEVATOR_REQUIRED_ANGLE = 120;

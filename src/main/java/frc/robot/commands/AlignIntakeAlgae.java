@@ -11,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.VisionManager;
 import frc.robot.subsystems.drive.Drive;
 
 public class AlignIntakeAlgae extends AlignPose {
@@ -37,6 +38,8 @@ public class AlignIntakeAlgae extends AlignPose {
      * @warning This must be called before initializing this command.
      */
     public void findTargetPose() {
+        super.setCameras();
+        VisionManager.resetToCameraPose();
         this.starting_pose = drive.getPose();
 
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
@@ -45,7 +48,7 @@ public class AlignIntakeAlgae extends AlignPose {
         int index = getClosestPoseIndex(this.starting_pose);
 
         Logger.recordOutput(
-                "AlgaeIntakeOffset",
+                "AlgaeAlignOffset",
                 FieldConstants.REEF_TAG_POSITIONS[index].minus(
                         this.starting_pose.getTranslation())
                         .rotateBy(new Rotation2d(Units.degreesToRadians(60 * index))));
@@ -61,7 +64,10 @@ public class AlignIntakeAlgae extends AlignPose {
      * @warning findTargetPose must be called before this method.
      */
     public boolean canRun() {
-        return super.withinStartingDistance(this.starting_pose, this.intake_pose);
+        return super.withinStartingDistance (
+            this.starting_pose,
+            FlippingUtil.flipFieldPose(this.intake_pose)
+        );
     }
 
     @Override

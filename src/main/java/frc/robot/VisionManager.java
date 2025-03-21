@@ -5,6 +5,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
@@ -47,9 +48,11 @@ public class VisionManager {
     }
 
     public static void resetToCameraPose() {
-        if (!disableFront && frontPose != null) {
+        if (!disableFront && frontPose != null
+        && Units.millisecondsToSeconds(System.currentTimeMillis()) - frontPose.timestampSeconds < VisionConstants.MAX_SECONDS) {
             VisionManager.drive.resetPose(frontPose.estimatedPose.toPose2d());
-        } else if (!disableBack && backPose != null) {
+        } else if (!disableBack && backPose != null
+        && Units.millisecondsToSeconds(System.currentTimeMillis()) - backPose.timestampSeconds < VisionConstants.MAX_SECONDS) {
             VisionManager.drive.resetPose(backPose.estimatedPose.toPose2d());
         }
     }

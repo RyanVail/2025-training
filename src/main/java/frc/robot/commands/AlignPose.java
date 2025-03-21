@@ -3,6 +3,7 @@ package frc.robot.commands;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -14,7 +15,7 @@ import frc.robot.subsystems.drive.Drive;
 
 public class AlignPose extends Command {
     Drive drive;
-    Target target;
+    private Target target;
     AlignCamera camera;
 
     State lastXState;
@@ -80,13 +81,14 @@ public class AlignPose extends Command {
         Pose2d start = drive.getPose();
         ChassisSpeeds speeds = drive.getRobotVelocity();
 
+        Logger.recordOutput("AligningTo", target.pose);
+
         if (!withinStartingDistance(start, target.pose)) {
             Commands.print("Auto align dist too far. Start: " + start + " target: " + this.target.pose).schedule();
+            this.target = null;
             super.cancel();
             return;
         }
-
-        Logger.recordOutput("AligningTo", target.pose);
 
         XStateSetpoint = new State(target.pose.getX(), target.constraints.vel.vxMetersPerSecond);
         YStateSetpoint = new State(target.pose.getY(), target.constraints.vel.vyMetersPerSecond);
@@ -130,7 +132,7 @@ public class AlignPose extends Command {
 
     @Override
     public void execute() {
-        if (this.target == null)
+        if (this.target == null || lastXState == null || lastYState == null)
             return;
 
         setCameras();
@@ -143,6 +145,8 @@ public class AlignPose extends Command {
         AutoAlignConstants.X_CONTROLLER.setSetpoint(lastXState.position);
         AutoAlignConstants.Y_CONTROLLER.setSetpoint(lastYState.position);
 
+        Logger.recordOutput("AutoAlignState", new Pose2d(lastXState.position, lastYState.position, new Rotation2d()));
+
         // TODO: It might be better for this to be gyro relative once the gyro offset during auto starts working.
         drive.driveVisionRelative(
                 AutoAlignConstants.X_CONTROLLER.calculate(pose.getX()),
@@ -152,6 +156,9 @@ public class AlignPose extends Command {
 
     @Override
     public boolean isFinished() {
+        if (this.target == null)
+            return false;
+
         return drive.getPose().getTranslation()
                 .getDistance(target.pose.getTranslation()) <= this.target.constraints.dist
                 && AutoAlignConstants.ANGLE_CONTROLLER.atSetpoint();

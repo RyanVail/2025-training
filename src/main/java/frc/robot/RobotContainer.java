@@ -1,7 +1,11 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,29 +13,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import frc.robot.Constants.BeaterBarConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.InputConstants;
 import frc.robot.commands.AlignFeed;
 import frc.robot.commands.AlignIntakeAlgae;
-import frc.robot.commands.AlignPose;
 import frc.robot.commands.EjectAlgae;
 import frc.robot.commands.EjectCoral;
 import frc.robot.commands.AlignScoreCoral;
-import frc.robot.commands.BeaterBarSpin;
 import frc.robot.commands.ElevatorSetHeight;
 import frc.robot.commands.EndEffectorSetAngle;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.SlowStop;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.WaitController;
-import frc.robot.commands.AlignPose.AlignCamera;
 import frc.robot.commands.AlignScoreCoral.Side;
-import frc.robot.subsystems.beaterbar.BeaterBar;
-import frc.robot.subsystems.beaterbar.BeaterBarIOFlex;
-import frc.robot.subsystems.beaterbar.BeaterBarIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.elevator.Elevator;
@@ -52,7 +48,7 @@ public class RobotContainer {
     Intake intake;
     Elevator elevator;
     EndEffector endEffector;
-    BeaterBar beaterBar;
+    // BeaterBar beaterBar;
 
     public RobotContainer() {
         operatorHID = new CommandGenericHID(InputConstants.OPERATOR_CONTROLLER_PORT);
@@ -67,18 +63,20 @@ public class RobotContainer {
             elevator = new Elevator(new ElevatorIOSim());
             endEffector = new EndEffector(new EndEffectorIOSim(), elevator.getRealMech(),
                     elevator.getSetpointMech());
-            beaterBar = new BeaterBar(new BeaterBarIOSim());
+            // beaterBar = new BeaterBar(new BeaterBarIOSim());
         } else {
             drive = new Drive(new DriveIOSwerve());
             intake = new Intake(new IntakeIOSpark());
             elevator = new Elevator(new ElevatorIOSpark());
             endEffector = new EndEffector(new EndEffectorIOSpark(), elevator.getRealMech(),
                     elevator.getSetpointMech());
-            beaterBar = new BeaterBar(new BeaterBarIOFlex());
+            // beaterBar = new BeaterBar(new BeaterBarIOFlex());
         }
 
-        endEffector.zeroEncoders();
-        elevator.zeroEncoders();
+        if (Constants.ZERO_ENCODERS) {
+            endEffector.zeroEncoders();
+            elevator.zeroEncoders();
+        }
 
         VisionManager.initialize(drive);
         VisionManager.defaultCameras();
@@ -247,23 +245,23 @@ public class RobotContainer {
         operatorHID.povLeft().onTrue(new AlignScoreCoral(drive, Side.LEFT));
         operatorHID.povRight().onTrue(new AlignScoreCoral(drive, Side.RIGHT));
 
-        if (Robot.isReal()) {
-            driverHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-                    InputConstants.TRIGGER_THRESHOLD).onTrue(
-                            Commands.runOnce(() -> beaterBar
-                                    .setSpeed(BeaterBarConstants.INTAKE_SPEED)));
-            driverHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-                    InputConstants.TRIGGER_THRESHOLD)
-                    .onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
+        // if (Robot.isReal()) {
+        //     driverHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
+        //             InputConstants.TRIGGER_THRESHOLD).onTrue(
+        //                     Commands.runOnce(() -> beaterBar
+        //                             .setSpeed(BeaterBarConstants.INTAKE_SPEED)));
+        //     driverHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
+        //             InputConstants.TRIGGER_THRESHOLD)
+        //             .onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
 
-            driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
-                    InputConstants.TRIGGER_THRESHOLD).onTrue(
-                            Commands.runOnce(() -> beaterBar
-                                    .setSpeed(BeaterBarConstants.EJECT_SPEED)));
-            driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
-                    InputConstants.TRIGGER_THRESHOLD)
-                    .onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
-        }
+        //     driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
+        //             InputConstants.TRIGGER_THRESHOLD).onTrue(
+        //                     Commands.runOnce(() -> beaterBar
+        //                             .setSpeed(BeaterBarConstants.EJECT_SPEED)));
+        //     driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
+        //             InputConstants.TRIGGER_THRESHOLD)
+        //             .onFalse(Commands.runOnce(() -> beaterBar.setSpeed(0)));
+        // }
 
         operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, InputConstants.TRIGGER_THRESHOLD)
                 .onTrue(
@@ -279,9 +277,7 @@ public class RobotContainer {
                 .onTrue(new EndEffectorSetAngle(endEffector, elevator,
                         EndEffectorConstants.LOW_SCORE_ANGLE));
 
-        Command feeder_align = Commands.race(
-                new AlignFeed(drive),
-                new BeaterBarSpin(beaterBar, BeaterBarConstants.FEEDER_SPEED));
+        Command feeder_align = Commands.race(new AlignFeed(drive));
 
         if (Robot.isReal())
             feeder_align = feeder_align
@@ -294,12 +290,9 @@ public class RobotContainer {
                         .andThen(new EndEffectorSetAngle(endEffector, elevator,
                                 EndEffectorConstants.PROCESSOR_ANGLE)));
 
-        AlignIntakeAlgae high_algae_intake = new AlignIntakeAlgae(drive);
         operatorHID.axisMagnitudeGreaterThan(XboxController.Axis.kRightTrigger.value,
                 InputConstants.TRIGGER_THRESHOLD)
                 .onTrue(
-                        Commands.either(
-                                Commands.deadline(
                                         Commands.parallel(
                                                 new ElevatorSetHeight(
                                                         elevator,
@@ -307,23 +300,12 @@ public class RobotContainer {
                                                 new EndEffectorSetAngle(
                                                         endEffector,
                                                         elevator,
-                                                        EndEffectorConstants.ALGAE_INTAKE_ANGLE)),
-                                        new SlowStop(drive))
-                                        .andThen(
-                                                Commands.deadline(
-                                                        new IntakeAlgae(intake),
-                                                        high_algae_intake)),
-                                Commands.none(),
-                                () -> {
-                                    high_algae_intake.findTargetPose();
-                                    return high_algae_intake.canRun();
-                                }));
+                                                        EndEffectorConstants.ALGAE_INTAKE_ANGLE),
+                                                new IntakeAlgae(intake)
+                                        ));
 
-        AlignIntakeAlgae low_algae_intake = new AlignIntakeAlgae(drive);
         operatorHID.button(XboxController.Button.kRightBumper.value)
                 .onTrue(
-                        Commands.either(
-                                Commands.deadline(
                                         Commands.parallel(
                                                 new ElevatorSetHeight(
                                                         elevator,
@@ -331,17 +313,9 @@ public class RobotContainer {
                                                 new EndEffectorSetAngle(
                                                         endEffector,
                                                         elevator,
-                                                        EndEffectorConstants.ALGAE_INTAKE_ANGLE)),
-                                        new SlowStop(drive))
-                                        .andThen(
-                                                Commands.deadline(
-                                                        new IntakeAlgae(intake),
-                                                        low_algae_intake)),
-                                Commands.none(),
-                                () -> {
-                                    low_algae_intake.findTargetPose();
-                                    return low_algae_intake.canRun();
-                                }));
+                                                        EndEffectorConstants.ALGAE_INTAKE_ANGLE),
+                                                new IntakeAlgae(intake)
+                                        ));
 
         drive.setDefaultCommand(
                 Commands.either(

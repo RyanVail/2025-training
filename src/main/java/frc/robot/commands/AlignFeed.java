@@ -33,9 +33,7 @@ public class AlignFeed extends AlignPose {
         if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red)
             target = FlippingUtil.flipFieldPose(target);
 
-        // Logger.recordOutput("FeederOffset", FieldConstants.FEEDER_TAG_POSES[0].minus(pose));
-
-        setTarget(new Target(target, AutoAlignConstants.FEEDER_ALIGN_CONSTRAINTS));
+        super.setTarget(new Target(target, AutoAlignConstants.FEEDER_ALIGN_CONSTRAINTS));
         super.initialize();
     }
 }

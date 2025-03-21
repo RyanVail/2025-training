@@ -16,9 +16,12 @@ public class AutoManager {
     private static Elevator elevator;
     private static EndEffector endEffector;
 
+    private static boolean inited;
+
     private static final String[] autos = {
-            "left Coral Auto",
+            "Left Coral Auto",
             "Right Coral Auto",
+            "Middle Auto",
     };
 
     public static void configureAutos(Drive drive, Elevator elevator, EndEffector endEffector) {
@@ -27,8 +30,11 @@ public class AutoManager {
         AutoManager.endEffector = endEffector;
 
         try {
-            for (String str : autos)
+            for (String str : autos) {
                 chooser.addOption(str, new PathPlannerAuto(str));
+                // str += " Flipped";
+                // chooser.addOption(str, new PathPlannerAuto(str, true));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -37,6 +43,8 @@ public class AutoManager {
     }
 
     public static void start() {
+        AutoManager.inited = true;
+
         VisionManager.noCameras();
 
         AutoManager.auto = chooser.getSelected();
@@ -48,6 +56,9 @@ public class AutoManager {
     }
 
     public static void cancel() {
+        if (!AutoManager.inited)
+            return;
+
         if (AutoManager.auto != null)
             AutoManager.auto.cancel();
 
