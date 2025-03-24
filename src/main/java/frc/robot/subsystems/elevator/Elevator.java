@@ -4,7 +4,10 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -27,9 +30,16 @@ public class Elevator extends SubsystemBase {
     MechanismLigament2d setpointLigament;
     double setpoint;
 
+    double maxVel = 5.0;
+    double maxAccel = 3.25;
+
     public static final String LPREFIX = "/Subsystems/Elevator/";
 
     public Elevator(ElevatorIO io) {
+        SmartDashboard.putNumber(LPREFIX + "MaxVel", maxVel);
+        SmartDashboard.putNumber(LPREFIX + "MaxAccel", maxAccel);
+        SmartDashboard.putString(LPREFIX + "Name", "Elevator");
+
         lastStateSetpoint = new State();
         stateSetpoint = new State();
         this.io = io;
@@ -37,6 +47,8 @@ public class Elevator extends SubsystemBase {
                 ElevatorConstants.P,
                 ElevatorConstants.I,
                 ElevatorConstants.D);
+
+        SmartDashboard.putData(LPREFIX + "PID", pid);
 
         this.feedForward = new ElevatorFeedforward(
                 ElevatorConstants.S,
@@ -66,8 +78,6 @@ public class Elevator extends SubsystemBase {
         setpointLigament.setColor(new Color8Bit(0, 255, 0));
 
         setpointLigament.setLength(0.0);
-
-        SmartDashboard.putData("ElevatorPID", pid);
     }
 
     public MechanismLigament2d getRealMech() {
@@ -80,6 +90,15 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
+        double max_vel = SmartDashboard.getNumber(LPREFIX + "MaxVel", maxVel);
+        double max_accel = SmartDashboard.getNumber(LPREFIX + "MaxAccel", maxAccel);
+
+        if (max_vel != this.maxVel || max_accel != this.maxAccel) {
+            ElevatorConstants.PROFILE = new TrapezoidProfile(new Constraints(Units.feetToMeters(max_vel), Units.feetToMeters(max_accel)));
+            this.maxVel = max_vel;
+            this.maxAccel = max_accel;
+        }
+
         lastStateSetpoint = ElevatorConstants.PROFILE.calculate(Constants.LOOP_TIME, lastStateSetpoint, stateSetpoint);
 
         double height = io.getHeight();
@@ -95,6 +114,8 @@ public class Elevator extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "Voltage", voltage);
         Logger.recordOutput(LPREFIX + "Height", height);
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
+
+        SmartDashboard.putNumber(LPREFIX + "SetpointDiff", setpoint - height);
     }
 
     public void simulationPeriodic() {

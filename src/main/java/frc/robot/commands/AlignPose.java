@@ -5,11 +5,14 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.VisionManager;
 import frc.robot.Constants.AutoAlignConstants;
+import frc.robot.control.BetterTrapezoidProfile;
 import frc.robot.control.BetterTrapezoidProfile.State;
 import frc.robot.subsystems.drive.Drive;
 
@@ -25,6 +28,9 @@ public class AlignPose extends Command {
     State YStateSetpoint;
 
     boolean finished;
+
+    double maxVel = 5.0;
+    double maxAccel = 3.25;
 
     public enum AlignCamera {
         NONE,
@@ -67,6 +73,13 @@ public class AlignPose extends Command {
     };
 
     public AlignPose(Drive drive, Target target, AlignCamera camera) {
+        SmartDashboard.putString("AutoAlignName", "AutoAlign");
+        SmartDashboard.putData("AutoAlignXPID", AutoAlignConstants.X_CONTROLLER);
+        SmartDashboard.putData("AutoAlignYPID", AutoAlignConstants.Y_CONTROLLER);
+        SmartDashboard.putData("AutoAlignRotPID", AutoAlignConstants.ANGLE_CONTROLLER);
+        SmartDashboard.putNumber("AutoAlignMaxVel", this.maxVel);
+        SmartDashboard.putNumber("AutoAlignMaxAccel", this.maxAccel);
+
         addRequirements(drive);
         this.drive = drive;
         this.camera = camera;
@@ -115,6 +128,17 @@ public class AlignPose extends Command {
     }
 
     public void initialize() {
+        double max_vel = SmartDashboard.getNumber("AutoAlignMaxVel", maxVel);
+        double max_accel = SmartDashboard.getNumber("AutoAlignMaxAccel", maxAccel);
+
+        if (max_vel != this.maxVel || max_accel != this.maxAccel) {
+            AutoAlignConstants.X_PROFILE = new BetterTrapezoidProfile(new BetterTrapezoidProfile.Constraints(Units.feetToMeters(max_vel), Units.feetToMeters(max_accel)));
+            AutoAlignConstants.Y_PROFILE = new BetterTrapezoidProfile(new BetterTrapezoidProfile.Constraints(Units.feetToMeters(max_vel), Units.feetToMeters(max_accel)));
+
+            this.maxVel = max_vel;
+            this.maxAccel = max_accel;
+        }
+
         if (finished && this.target != null)
             this.setTarget(this.target);
 

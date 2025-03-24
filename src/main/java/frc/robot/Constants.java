@@ -29,7 +29,7 @@ public final class Constants {
                 public static final int OPERATOR_CONTROLLER_PORT = 0;
                 public static final int DRIVE_CONTROLLER_PORT = 1;
 
-                public static final double RUMBLE_VALUE = 0.7;
+                public static final double RUMBLE_VALUE = 1.0;
                 public static final double RUMBLE_SECONDS = 0.3;
 
                 public static final double TRIGGER_THRESHOLD = 0.4;
@@ -51,18 +51,20 @@ public final class Constants {
                 public static final double CORAL_INTAKE_REV = 1.0;
                 public static final double CORAL_EJECT_TIME = 0.1;
 
-                public static final double ALGAE_SCORE_VOLTAGE = -12.0;
+                public static final double ALGAE_SCORE_VOLTAGE = -6.0;
 
-                public static final double ALGAE_EJECT_TIME = 1.25;
-                public static final double ALGAE_STALL_VOLTAGE = 0.5;
-                public static final double ALGAE_INTAKE_VOLTAGE = 4.0;
+                public static final double ALGAE_EJECT_TIME = 0.5;
 
-                public static final double ALGAE_INTAKE_START_VEL = 1700.0;
-                public static final double ALGAE_INTAKE_STALL_VEL = 1600.0;
+                // TODO: Name not consistent.
+                public static final double ALGAE_STALL_VOLTAGE = 0.6;
+
+                public static double ALGAE_INTAKE_VOLTAGE = 7.0;
+                public static double ALGAE_INTAKE_START_VEL = 3252.0;
+                public static double ALGAE_INTAKE_STALL_VEL = 3147.0;
         }
 
         public class DriveConstants {
-                public static final double MAX_SPEED = Units.feetToMeters(14.5);
+                public static double MAX_SPEED = Units.feetToMeters(14.5);
                 public static final double DEADZONE = 0.08;
                 
                 public static final PPHolonomicDriveController PPDriveController = new PPHolonomicDriveController(
@@ -70,25 +72,27 @@ public final class Constants {
                                 new PIDConstants(0.82, 0.0, 0.0));
 
                 public static final SlewRateLimiter[] X_SLEW_LIMITERS = {
-                                new SlewRateLimiter(0.8),
+                                new SlewRateLimiter(1.1),
+                                new SlewRateLimiter(1.1),
                                 new SlewRateLimiter(0.75),
-                                new SlewRateLimiter(0.72),
-                                new SlewRateLimiter(0.50),
+                                new SlewRateLimiter(0.75),
                 };
 
-                public static final SlewRateLimiter[] Y_SLEW_LIMITERS = {
-                                new SlewRateLimiter(0.8),
+                public static SlewRateLimiter[] Y_SLEW_LIMITERS = {
+                                new SlewRateLimiter(1.1),
+                                new SlewRateLimiter(1.1),
                                 new SlewRateLimiter(0.75),
-                                new SlewRateLimiter(0.72),
-                                new SlewRateLimiter(0.50),
+                                new SlewRateLimiter(0.75),
                 };
 
-                public static final SlewRateLimiter[] ROT_SLEW_LIMITERS = {
+                public static SlewRateLimiter[] ROT_SLEW_LIMITERS = {
                                 new SlewRateLimiter(2.5),
                                 new SlewRateLimiter(2.125),
                                 new SlewRateLimiter(1.25),
                                 new SlewRateLimiter(1.0),
                 };
+
+                public static final double MAX_ROT_SPEED_MUL = 1.75;
 
                 public static final double[] HEIGHT_LEVELS = {
                                 Units.inchesToMeters(-1.0),
@@ -97,11 +101,11 @@ public final class Constants {
                                 Units.inchesToMeters(15.0),
                 };
 
-                public static final double[] MAX_SPEEDS = {
+                public static double[] MAX_SPEEDS = {
                                 1.0,
-                                0.65,
-                                0.23,
-                                0.08,
+                                1.0,
+                                0.75,
+                                0.4,
                 };
 
                 public static final SlewRateLimiter SLOW_STOP_X_SLEW = new SlewRateLimiter(1.0);
@@ -113,9 +117,9 @@ public final class Constants {
                 public static final PIDController Y_CONTROLLER = new PIDController(5.2, 0.0, 0.0);
                 public static final PIDController ANGLE_CONTROLLER = new PIDController(6.0, 0.0, 0.0);
 
-                public static final BetterTrapezoidProfile X_PROFILE = new BetterTrapezoidProfile(
+                public static BetterTrapezoidProfile X_PROFILE = new BetterTrapezoidProfile(
                                 new BetterTrapezoidProfile.Constraints(3.2, 1.4));
-                public static final BetterTrapezoidProfile Y_PROFILE = new BetterTrapezoidProfile(
+                public static BetterTrapezoidProfile Y_PROFILE = new BetterTrapezoidProfile(
                                 new BetterTrapezoidProfile.Constraints(3.2, 1.4));
 
                 // The distance past which auto alignment will not take place. This is meant to
@@ -166,8 +170,8 @@ public final class Constants {
                 public static final double G = 0.0;
                 public static final double V = 0.0;
 
-                public static final TrapezoidProfile PROFILE = new TrapezoidProfile(
-                                new Constraints(Units.feetToMeters(5.0), Units.feetToMeters(3.25)));
+                public static TrapezoidProfile PROFILE = new TrapezoidProfile(
+                                new Constraints(Units.feetToMeters(20), Units.feetToMeters(10)));
 
                 public static final double CORAL_SCORE_OFFSET = 0.0;
 

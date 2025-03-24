@@ -13,7 +13,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -66,10 +68,14 @@ public class Drive extends SubsystemBase {
                 this);
 
         this.io.resetPose(new Pose2d(new Translation2d(1.0, 1.0), new Rotation2d()));
+
+        SmartDashboard.putNumber(LPREFIX + "MaxSpeed", Units.metersToFeet(DriveConstants.MAX_SPEED));
     }
 
     @Override
     public void periodic() {
+        DriveConstants.MAX_SPEED = Units.feetToMeters(SmartDashboard.getNumber(LPREFIX + "MaxSpeed", 0.0));
+
         Logger.recordOutput(LPREFIX + "Pose", io.getPose());
         Logger.recordOutput(LPREFIX + "FlippedPose", FlippingUtil.flipFieldPose(io.getPose()));
         Logger.recordOutput(LPREFIX + "SwerveStates", io.getSwerveStates());

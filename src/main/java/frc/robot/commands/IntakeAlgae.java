@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LEDManager;
 import frc.robot.Constants.IntakeConstants;
@@ -13,26 +14,31 @@ public class IntakeAlgae extends Command {
     public IntakeAlgae(Intake intake) {
         super.addRequirements(intake);
         this.intake = intake;
+
+        SmartDashboard.putNumber("AlgaeIntakeStallVolts", IntakeConstants.ALGAE_STALL_VOLTAGE);
+        SmartDashboard.putNumber("AlgaeIntakeStallVel", IntakeConstants.ALGAE_INTAKE_STALL_VEL);
+        SmartDashboard.putNumber("AlgaeIntakeVolts", IntakeConstants.ALGAE_INTAKE_VOLTAGE);
+        SmartDashboard.putNumber("AlgaeIntakeStartVel", IntakeConstants.ALGAE_INTAKE_START_VEL);
     }
 
     @Override
     public void initialize() {
         LEDManager.setMode(Mode.INTAKE_ALGAE);
 
-        intake.setVoltage(IntakeConstants.ALGAE_INTAKE_VOLTAGE);
+        intake.setVoltage(SmartDashboard.getNumber("AlgaeIntakeVolts", 0.0));
         started = false;
     }
 
     @Override
     public void execute() {
         if (!started) {
-            started = intake.getVelocity() >= IntakeConstants.ALGAE_INTAKE_START_VEL;
+            started = intake.getVelocity() >= SmartDashboard.getNumber("AlgaeIntakeStartVel", 0.0);
         }
     }
 
     @Override
     public boolean isFinished() {
-        return started && intake.getVelocity() <= IntakeConstants.ALGAE_INTAKE_STALL_VEL;
+        return started && intake.getVelocity() <= SmartDashboard.getNumber("AlgaeIntakeStallVel", 0.0);
     }
 
     @Override

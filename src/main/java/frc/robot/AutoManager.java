@@ -20,8 +20,8 @@ public class AutoManager {
 
     private static final String[] autos = {
             "Left Coral Auto",
-            "Right Coral Auto",
             "Middle Auto",
+            "Right Coral Auto",
     };
 
     public static void configureAutos(Drive drive, Elevator elevator, EndEffector endEffector) {

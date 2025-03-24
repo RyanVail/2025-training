@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -22,6 +22,9 @@ public class TeleopCommand extends Command {
     double last_yaw;
     int last_slew;
 
+    double[] translation_slews = { 1.1, 1.1, 0.72, 0.75 };
+    double[] rotation_slews = { 0.8, 0.75, 0.75, 0.5 };
+
     private Notifier rumble;
 
     public TeleopCommand(Drive drive, Elevator elevator, CommandGenericHID controller) {
@@ -31,6 +34,40 @@ public class TeleopCommand extends Command {
         this.controller = controller;
 
         SmartDashboard.putNumber("ControlPow", 3);
+
+        SmartDashboard.putNumber("RotMul", DriveConstants.MAX_ROT_SPEED_MUL);
+        SmartDashboard.putString("TeleopName", "Teleop");
+        SmartDashboard.putNumberArray("translation_slews", translation_slews);
+        SmartDashboard.putNumberArray("rotation_slews", rotation_slews);
+        SmartDashboard.putNumberArray("maxs", DriveConstants.MAX_SPEEDS);
+        SmartDashboard.putNumber("DeadZone", DriveConstants.DEADZONE);
+    }
+
+    private void checkChange() {
+        double[] translations = SmartDashboard.getNumberArray("translation_slews", translation_slews);
+        for (int i = 0; i < translation_slews.length; i++) {
+            double val = translations[i];
+            if (val == translation_slews[i])
+                continue;
+
+            last_slew = -1;
+            translation_slews[i] = val;
+            DriveConstants.X_SLEW_LIMITERS[i] = new SlewRateLimiter(val);
+            DriveConstants.Y_SLEW_LIMITERS[i] = new SlewRateLimiter(val);
+        }
+
+        double[] rots = SmartDashboard.getNumberArray("rotation_slews", rotation_slews);
+        for (int i = 0; i < rotation_slews.length; i++) {
+            double val = rots[i];
+            if (val == rotation_slews[i])
+                continue;
+
+            last_slew = -1;
+            rotation_slews[i] = val;
+            DriveConstants.ROT_SLEW_LIMITERS[i] = new SlewRateLimiter(val);
+        }
+
+        DriveConstants.MAX_SPEEDS = SmartDashboard.getNumberArray("maxs", DriveConstants.MAX_SPEEDS);
     }
 
     private void startRumble() {
@@ -60,7 +97,7 @@ public class TeleopCommand extends Command {
         axis = Math.abs(axis);
 
         // Apply deadzone.
-        if (axis <= DriveConstants.DEADZONE)
+        if (axis <= SmartDashboard.getNumber("DeadZone", DriveConstants.DEADZONE))
             return 0;
 
         // Make the drive speed exponential.
@@ -76,6 +113,8 @@ public class TeleopCommand extends Command {
             this.drive.stop();
             return;
         }
+
+        checkChange();
 
         double x = -processAxis(-controller.getRawAxis(1)); // 5
         double y = -processAxis(-controller.getRawAxis(0)); // 4
@@ -105,7 +144,7 @@ public class TeleopCommand extends Command {
         drive.driveGyroRelative(
                 -x * DriveConstants.MAX_SPEED,
                 -y * DriveConstants.MAX_SPEED,
-                yaw * DriveConstants.MAX_SPEED);
+                yaw * DriveConstants.MAX_SPEED * SmartDashboard.getNumber("RotMul", DriveConstants.MAX_ROT_SPEED_MUL));
 
         last_x = x;
         last_y = y;

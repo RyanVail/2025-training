@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
@@ -19,6 +20,8 @@ public class Intake extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "IsCoralLoaded", isCoralLoaded());
         Logger.recordOutput(LPREFIX + "Velocity", getVelocity());
         Logger.recordOutput(LPREFIX + "Voltage", getVoltage());
+
+        SmartDashboard.putNumber(LPREFIX + "Velocity", getVelocity());
 
         io.simulationPeriodic();
     }

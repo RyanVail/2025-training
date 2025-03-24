@@ -1,11 +1,7 @@
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +13,6 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.Constants.InputConstants;
 import frc.robot.commands.AlignFeed;
-import frc.robot.commands.AlignIntakeAlgae;
 import frc.robot.commands.EjectAlgae;
 import frc.robot.commands.EjectCoral;
 import frc.robot.commands.AlignScoreCoral;
@@ -239,8 +234,22 @@ public class RobotContainer {
         operatorHID.button(XboxController.Button.kBack.value)
                 .onTrue(Commands.runOnce(() -> CommandScheduler.getInstance().cancelAll()));
 
-        if (Robot.isReal())
+        if (Robot.isReal()) {
             driverHID.button(XboxController.Button.kY.value).onTrue(new EjectAlgae(intake));
+
+            driverHID.button(XboxController.Button.kX.value).onTrue(
+                Commands.sequence(
+                        new EndEffectorSetAngle(endEffector, elevator, 225),
+                        Commands.parallel(
+                                new EndEffectorSetAngle(endEffector, elevator, 20),
+                                Commands.sequence(
+                                        Commands.waitSeconds(0.4), // TODO: Make constant.
+                                        new EjectAlgae(intake)
+                                )
+                        )
+                )
+            );
+        }
 
         operatorHID.povLeft().onTrue(new AlignScoreCoral(drive, Side.LEFT, operatorHID));
         operatorHID.povRight().onTrue(new AlignScoreCoral(drive, Side.RIGHT, operatorHID));

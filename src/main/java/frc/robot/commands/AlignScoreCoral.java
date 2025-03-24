@@ -33,6 +33,7 @@ public class AlignScoreCoral extends AlignPose {
 
     public AlignScoreCoral(Drive drive, Side side, CommandGenericHID controller) {
         super(drive, null, AlignCamera.FRONT);
+        this.controller = controller;
         this.side = side;
     }
 

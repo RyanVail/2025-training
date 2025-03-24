@@ -1,8 +1,9 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.LEDManager;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.LEDManager;
 import frc.robot.LEDManager.Mode;
 import frc.robot.subsystems.intake.Intake;
 
@@ -18,7 +19,7 @@ public class StallAlgae extends Command {
     public void initialize() {
         LEDManager.setMode(Mode.STALL_ALGAE);
 
-        intake.setVoltage(IntakeConstants.ALGAE_STALL_VOLTAGE);
+        intake.setVoltage(SmartDashboard.getNumber("AlgaeIntakeStallVolts", 0.0));
     }
 
     @Override
