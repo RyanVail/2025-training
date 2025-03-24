@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.7696729447972785,
-        "y": 2.8202983341305097
+        "x": 5.772468389025742,
+        "y": 2.8077072196144868
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 1.0940061475409835
       },
       "prevControl": {
-        "x": 1.8537465456232667,
-        "y": 1.3208449424521298
+        "x": 1.8695807818491748,
+        "y": 1.3325487351217986
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,15 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 3.2,
+    "maxAcceleration": 3.1,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.6,
+    "velocity": 2.4,
     "rotation": 56.65929265352305
   },
   "reversed": false,

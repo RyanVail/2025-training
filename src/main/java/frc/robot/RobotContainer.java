@@ -106,11 +106,11 @@ public class RobotContainer {
 
         NamedCommands.registerCommand(
                 "AlignLeft",
-                new AlignScoreCoral(drive, Side.LEFT));
+                new AlignScoreCoral(drive, Side.LEFT, null));
 
         NamedCommands.registerCommand(
                 "AlignRight",
-                new AlignScoreCoral(drive, Side.RIGHT));
+                new AlignScoreCoral(drive, Side.RIGHT, null));
 
         NamedCommands.registerCommand(
                 "EffectorDown",
@@ -242,8 +242,8 @@ public class RobotContainer {
         if (Robot.isReal())
             driverHID.button(XboxController.Button.kY.value).onTrue(new EjectAlgae(intake));
 
-        operatorHID.povLeft().onTrue(new AlignScoreCoral(drive, Side.LEFT));
-        operatorHID.povRight().onTrue(new AlignScoreCoral(drive, Side.RIGHT));
+        operatorHID.povLeft().onTrue(new AlignScoreCoral(drive, Side.LEFT, operatorHID));
+        operatorHID.povRight().onTrue(new AlignScoreCoral(drive, Side.RIGHT, operatorHID));
 
         // if (Robot.isReal()) {
         //     driverHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
@@ -266,12 +266,11 @@ public class RobotContainer {
         operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, InputConstants.TRIGGER_THRESHOLD)
                 .onTrue(
                         Commands.sequence(
-                                Commands.parallel(
-                                        new ElevatorSetHeight(elevator,
-                                                ElevatorConstants.BARGE_HEIGHT),
-                                        new EndEffectorSetAngle(endEffector,
-                                                elevator,
-                                                EndEffectorConstants.ALGAE_BARGE_EJECT_ANGLE))));
+                                new ElevatorSetHeight(elevator,
+                                        ElevatorConstants.L0_HEIGHT),
+                                new EndEffectorSetAngle(endEffector,
+                                        elevator,
+                                        EndEffectorConstants.L0_EJECT_ANGLE)));
 
         operatorHID.button(XboxController.Button.kA.value)
                 .onTrue(new EndEffectorSetAngle(endEffector, elevator,

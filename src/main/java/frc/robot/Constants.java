@@ -29,6 +29,9 @@ public final class Constants {
                 public static final int OPERATOR_CONTROLLER_PORT = 0;
                 public static final int DRIVE_CONTROLLER_PORT = 1;
 
+                public static final double RUMBLE_VALUE = 0.7;
+                public static final double RUMBLE_SECONDS = 0.3;
+
                 public static final double TRIGGER_THRESHOLD = 0.4;
         }
 
@@ -151,6 +154,7 @@ public final class Constants {
                 public static final double MAX_HEIGHT = Units.inchesToMeters(72.0);
 
                 public static final double HEIGHT = MAX_HEIGHT - MIN_HEIGHT;
+                public static final double L0_HEIGHT = 0.0;
 
                 public static final Translation2d POS = new Translation2d(0.35, 0.0);
 
@@ -345,7 +349,8 @@ public final class Constants {
 
                 public static final double INTAKE_ANGLE = 208;
                 public static final double ALGAE_INTAKE_ANGLE = 190;
-                public static final double ALGAE_BARGE_EJECT_ANGLE = 120;
+
+                public static final double L0_EJECT_ANGLE = 10;
 
                 public static final double REQUIRED_ELEVATOR_HEIGHT = 0.037;
                 public static final double MIN_ELEVATOR_REQUIRED_ANGLE = 120;

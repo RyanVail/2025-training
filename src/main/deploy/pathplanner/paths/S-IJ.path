@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.302822507936766,
-        "y": 5.458303690522906
+        "x": 6.6549037130466,
+        "y": 5.532653830683251
       },
       "isLocked": false,
       "linkedName": "S-Cage"
     },
     {
       "anchor": {
-        "x": 5.99625,
-        "y": 5.41925
+        "x": 5.945901639344262,
+        "y": 5.53
       },
       "prevControl": {
-        "x": 5.748284975134826,
-        "y": 5.387416897047042
+        "x": 5.614594384852456,
+        "y": 5.529681933105903
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,16 +33,16 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 3.2,
+    "maxAcceleration": 3.1,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.85,
-    "rotation": -108.03428556712991
+    "velocity": 1.25,
+    "rotation": -116.94355846590801
   },
   "reversed": false,
   "folder": "Left",

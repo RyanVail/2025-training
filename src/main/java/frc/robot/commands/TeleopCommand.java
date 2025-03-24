@@ -1,11 +1,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.InputConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 
@@ -18,6 +22,8 @@ public class TeleopCommand extends Command {
     double last_yaw;
     int last_slew;
 
+    private Notifier rumble;
+
     public TeleopCommand(Drive drive, Elevator elevator, CommandGenericHID controller) {
         super.addRequirements(drive);
         this.drive = drive;
@@ -27,11 +33,26 @@ public class TeleopCommand extends Command {
         SmartDashboard.putNumber("ControlPow", 3);
     }
 
+    private void startRumble() {
+        if (this.rumble != null)
+            this.rumble.close();
+
+        controller.setRumble(RumbleType.kBothRumble, InputConstants.RUMBLE_VALUE);
+        this.rumble = new Notifier(
+                () -> {
+                    controller.setRumble(RumbleType.kBothRumble, 0.0);
+                });
+
+        this.rumble.startSingle(InputConstants.RUMBLE_SECONDS);
+    }
+
     public void initialize() {
         last_x = 0.0;
         last_y = 0.0;
         last_yaw = 0.0;
         last_slew = -1;
+
+        startRumble();
     }
 
     private double processAxis(double axis) {
@@ -91,9 +112,8 @@ public class TeleopCommand extends Command {
         last_yaw = yaw;
     }
 
-    // TODO: Is this required?
-    // @Override
-    // public void end(boolean interrupted) {
-    // drive.drive(new ChassisSpeeds());
-    // }
+    @Override
+    public void end(boolean interrupted) {
+        startRumble();
+    }
 }

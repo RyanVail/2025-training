@@ -10,23 +10,46 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.LEDManager;
 import frc.robot.VisionManager;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.InputConstants;
 import frc.robot.LEDManager.Mode;
 import frc.robot.subsystems.drive.Drive;
 
 public class AlignScoreCoral extends AlignPose {
     Side side;
+    CommandGenericHID controller;
+
+    private Notifier rumble;
 
     public enum Side {
         LEFT,
         RIGHT,
     }
 
-    public AlignScoreCoral(Drive drive, Side side) {
+    public AlignScoreCoral(Drive drive, Side side, CommandGenericHID controller) {
         super(drive, null, AlignCamera.FRONT);
         this.side = side;
+    }
+
+    private void startRumble() {
+        if (this.controller == null)
+            return;
+
+        if (this.rumble != null)
+            this.rumble.close();
+
+        controller.setRumble(RumbleType.kBothRumble, InputConstants.RUMBLE_VALUE);
+        this.rumble = new Notifier(
+                () -> {
+                    controller.setRumble(RumbleType.kBothRumble, 0.0);
+                });
+
+        this.rumble.startSingle(InputConstants.RUMBLE_SECONDS);
     }
 
     @Override
@@ -86,6 +109,7 @@ public class AlignScoreCoral extends AlignPose {
     @Override
     public void end(boolean interrupted) {
         LEDManager.stopMode(Mode.AUTO_ALIGN_CORAL);
+        startRumble();
 
         super.end(interrupted);
     }

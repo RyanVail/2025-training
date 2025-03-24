@@ -32,8 +32,6 @@ public class AutoManager {
         try {
             for (String str : autos) {
                 chooser.addOption(str, new PathPlannerAuto(str));
-                // str += " Flipped";
-                // chooser.addOption(str, new PathPlannerAuto(str, true));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,9 +48,6 @@ public class AutoManager {
         AutoManager.auto = chooser.getSelected();
         if (AutoManager.auto != null)
             AutoManager.auto.schedule();
-
-        // TODO: This    has to be cached somewhere.
-        // drive.setGryoOffset(auto.getStartingPose().getRotation());
     }
 
     public static void cancel() {
